@@ -1,0 +1,722 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Zestro - Brewed for Brilliance</title>
+    <link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@300;400;500;600&display=swap"
+        rel="stylesheet">
+    <style>
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        a {
+            text-decoration: none;
+        }
+
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            font-family: 'Inter', sans-serif;
+        }
+
+        /* BACKGROUND SPLIT */
+        .bg-green {
+            position: fixed;
+            inset: 0;
+            right: 30%;
+            background: #003F29;
+            z-index: 0;
+        }
+
+        .bg-beige {
+            position: fixed;
+            inset: 0;
+            left: 70%;
+            background: linear-gradient(180deg, rgba(228, 183, 126, 1) 0%, rgba(228, 199, 163, 1) 100%);
+            transition: background 0.9s ease;
+            z-index: 0;
+        }
+
+        /* ANIMATIONS */
+        @keyframes floatA {
+
+            0%,
+            100% {
+                transform: translateY(0px) rotate(0deg);
+            }
+
+            50% {
+                transform: translateY(-18px) rotate(14deg);
+            }
+        }
+
+        @keyframes floatB {
+
+            0%,
+            100% {
+                transform: translateY(0px) rotate(0deg);
+            }
+
+            50% {
+                transform: translateY(16px) rotate(-12deg);
+            }
+        }
+
+        @keyframes floatC {
+
+            0%,
+            100% {
+                transform: translateY(0px) rotate(0deg);
+            }
+
+            50% {
+                transform: translateY(-12px) rotate(22deg);
+            }
+        }
+
+        /* Float: slight clockwise tilt */
+        @keyframes heroFloat {
+
+            0%,
+            100% {
+                transform: translateX(-50%) translateY(-50%) rotate(12deg);
+            }
+
+            50% {
+                transform: translateX(-50%) translateY(calc(-50% - 20px)) rotate(12deg);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(28px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-36px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        /* FLOATING BEANS */
+        .bean {
+            position: fixed;
+            pointer-events: none;
+            z-index: 2;
+            object-fit: contain;
+        }
+
+        .b1 {
+            width: 52px;
+            top: 12%;
+            left: 55%;
+            animation: floatA 5.2s ease-in-out infinite;
+            opacity: .85;
+            filter: blur(1.5px);
+        }
+
+        .b2 {
+            width: 44px;
+            top: 6%;
+            right: 3%;
+            animation: floatB 6.1s ease-in-out infinite .6s;
+            opacity: .80;
+            filter: blur(2px);
+        }
+
+        .b3 {
+            width: 68px;
+            top: 40%;
+            right: 0%;
+            animation: floatA 7.0s ease-in-out infinite 1s;
+            opacity: .90;
+            filter: blur(1px);
+        }
+
+        .b4 {
+            width: 56px;
+            bottom: 20%;
+            right: 4%;
+            animation: floatB 5.0s ease-in-out infinite 2s;
+            opacity: .85;
+            filter: blur(1.5px);
+        }
+
+        .b5 {
+            width: 38px;
+            bottom: 8%;
+            right: 27%;
+            animation: floatC 6.4s ease-in-out infinite .9s;
+            opacity: .65;
+            filter: blur(3.5px);
+        }
+
+        .b6 {
+            width: 34px;
+            bottom: 31%;
+            left: 71%;
+            animation: floatA 4.6s ease-in-out infinite 1.6s;
+            opacity: .50;
+            filter: blur(5px);
+        }
+
+        .b7 {
+            width: 46px;
+            top: 67%;
+            right: 26%;
+            animation: floatB 6.2s ease-in-out infinite 3s;
+            opacity: .50;
+            filter: blur(6px);
+        }
+
+        .b8 {
+            width: 40px;
+            top: 50%;
+            left: 61%;
+            animation: floatB 6.8s ease-in-out infinite 1.4s;
+            opacity: .60;
+            filter: blur(4px);
+        }
+
+        /* HERO DRINK Very large, slight tilt, straddles the 70% divider */
+        #hero-drink-wrap {
+            position: fixed;
+            left: 62%;
+            top: 50%;
+            animation: heroFloat 7s ease-in-out infinite;
+            width: 62vw;
+            max-width: 900px;
+            height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 15;
+            pointer-events: none;
+            transition: opacity 0.5s ease;
+        }
+
+        #hero-drink-wrap img#main-drink {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            filter: drop-shadow(0 30px 70px rgba(0, 0, 0, 0.40));
+        }
+
+        /* VERTICAL DRINK NAME Standalone container covering exactly the beige panel. Text is rotated inside so it reads bottom→top. */
+        #drink-name-panel {
+            /* Cover the beige side exactly */
+            position: fixed;
+            left: 70%;
+            top: 0;
+            width: 30%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 5;
+            pointer-events: none;
+            overflow: hidden;
+        }
+
+        #drink-name {
+            font-family: 'Anton', sans-serif;
+            /* Size is clamped so it fits within the 30vw panel when rotated */
+            font-size: clamp(52px, 7vw, 108px);
+            color: #ffffff;
+            white-space: nowrap;
+            letter-spacing: 5px;
+            text-transform: uppercase;
+            /* Rotate 90deg clockwise: text reads bottom→top */
+            transform: rotate(90deg);
+            transition: opacity 0.5s ease;
+            line-height: 1;
+        }
+
+        /* TOP-RIGHT ICONS */
+        #top-icons {
+            position: fixed;
+            top: 40px;
+            right: 100px;
+            display: flex;
+            gap: 20px;
+            align-items: center;
+            z-index: 20;
+            color: #003F29;
+            animation: fadeInUp 0.8s ease both 1.9s;
+        }
+
+        #top-icons button {
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #003F29;
+            transition: transform 0.2s;
+            padding: 0;
+        }
+
+        #top-icons button:hover {
+            transform: scale(1.14);
+        }
+
+        /* LEFT PANEL */
+        #left-panel {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 70%;
+            height: 100%;
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            padding: 40px 50px 40px 100px;
+        }
+
+        /* NAV */
+        nav {
+            display: flex;
+            align-items: center;
+            gap: 16px;
+            flex-shrink: 0;
+            animation: slideInLeft 0.8s ease both 1.6s;
+        }
+
+        nav img.logo {
+            width: 38px;
+            height: 52px;
+            object-fit: contain;
+        }
+
+        nav .links {
+            display: flex;
+            gap: 24px;
+            font-size: 15px;
+            font-weight: 400;
+            margin-left: 16px;
+        }
+
+        nav .links a {
+            color: rgba(255, 255, 255, 0.70);
+            transition: color 0.2s;
+            letter-spacing: 0.3px;
+        }
+
+        nav .links a.active {
+            color: #fff;
+            font-weight: 600;
+        }
+
+        nav .links a:hover {
+            color: #fff;
+        }
+
+        /* HERO TEXT — top-aligned, close to nav */
+        .hero-text {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            padding-top: 6vh;
+            animation: fadeInUp 1.0s ease both 1.8s;
+        }
+
+        .hero-text h1 {
+            font-family: 'Anton', sans-serif;
+            font-weight: 400;
+            font-size: clamp(64px, 9vw, 150px);
+            line-height: 0.95;
+            color: #ffffff;
+            text-transform: uppercase;
+        }
+
+        .hero-text h1 .line {
+            display: block;
+            white-space: nowrap;
+        }
+
+        .hero-text p {
+            margin-top: 16px;
+            font-size: clamp(13px, 1.3vw, 17px);
+            font-weight: 400;
+            color: rgba(255, 255, 255, 0.80);
+            max-width: 400px;
+            line-height: 1.6;
+        }
+
+        /* CTA */
+        .cta-row {
+            display: flex;
+            align-items: center;
+            gap: 14px;
+            margin-top: 26px;
+        }
+
+        .btn-order {
+            background: #ffffff;
+            color: #003F29;
+            font-family: 'Anton', sans-serif;
+            font-weight: 400;
+            font-size: clamp(15px, 1.6vw, 22px);
+            letter-spacing: 0.5px;
+            border: none;
+            padding: 16px 44px;
+            border-radius: 100px;
+            cursor: pointer;
+            transition: transform 0.22s, box-shadow 0.22s;
+            box-shadow: 0 6px 22px rgba(0, 0, 0, 0.22);
+        }
+
+        .btn-order:hover {
+            transform: scale(1.05);
+            box-shadow: 0 10px 32px rgba(0, 0, 0, 0.30);
+        }
+
+        .btn-bag {
+            background: #ffffff;
+            color: #003F29;
+            border: none;
+            width: 58px;
+            height: 58px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: transform 0.22s;
+            box-shadow: 0 6px 22px rgba(0, 0, 0, 0.18);
+            flex-shrink: 0;
+        }
+
+        .btn-bag:hover {
+            transform: scale(1.1);
+        }
+
+        /* THUMBNAILS — 3 equal circles, bottom-left */
+        #thumbnails {
+            position: fixed;
+            bottom: 100px;
+            left: 100px;
+            display: flex;
+            align-items: center;
+            gap: 22px;
+            z-index: 30;
+            animation: fadeInUp 1.0s ease both 2.2s;
+        }
+
+        .thumb-item {
+            position: relative;
+            width: 168px;
+            height: 168px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            flex-shrink: 0;
+            transition: transform 0.3s ease;
+        }
+
+        .thumb-item:hover {
+            transform: scale(1.06);
+        }
+
+        .thumb-item .circle {
+            position: absolute;
+            inset: 0;
+            border-radius: 50%;
+            background: rgba(255, 255, 255, 0.90);
+            transition: background 0.35s ease, border 0.35s ease, transform 0.35s ease;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+        }
+
+        .thumb-item.active .circle {
+            background: #003F29;
+            border: 6px solid #ffffff;
+            transform: scale(1.1);
+            box-shadow: 0 8px 30px rgba(0, 0, 0, 0.25);
+        }
+
+        .thumb-item img {
+            position: relative;
+            z-index: 2;
+            height: 142px;
+            width: auto;
+            object-fit: contain;
+            filter: drop-shadow(0 3px 10px rgba(0, 0, 0, 0.20));
+            transition: transform 0.35s ease;
+        }
+
+        .thumb-item.active img {
+            transform: scale(1.1) translateY(-5px);
+        }
+
+        /* FADE TRANSITION */
+        .fade-out {
+            opacity: 0 !important;
+        }
+
+        /* LOADER */
+        #loader-wrapper {
+            position: fixed;
+            inset: 0;
+            background: #003F29;
+            z-index: 9999;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.6s ease, visibility 0.6s ease;
+        }
+
+        #loader-wrapper.hidden {
+            opacity: 0;
+            visibility: hidden;
+        }
+
+        .loader-logo {
+            width: 160px;
+            height: auto;
+            object-fit: contain;
+            animation: loaderPulse 1.8s infinite ease-in-out;
+            margin-bottom: 40px;
+        }
+
+        .loader-progress-bar {
+            width: 220px;
+            height: 3px;
+            background: rgba(255, 255, 255, 0.15);
+            border-radius: 4px;
+            overflow: hidden;
+            position: relative;
+        }
+
+        .loader-progress {
+            position: absolute;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 0%;
+            background: #ffffff;
+            animation: loaderFill 1.5s ease-out forwards;
+        }
+
+        @keyframes loaderPulse {
+            0%, 100% { transform: scale(1); opacity: 0.85; }
+            50% { transform: scale(1.06); opacity: 1; }
+        }
+
+        @keyframes loaderFill {
+            0% { width: 0%; }
+            40% { width: 60%; }
+            100% { width: 100%; }
+        }
+    </style>
+    <link rel="stylesheet" href="/modern-animations.css">
+</head>
+
+<body>
+
+    <!-- Premium Loader -->
+    <div id="loader-wrapper">
+        <img src="/img/zestro-logo-white.png" class="loader-logo" alt="Zestro Logo">
+        <div class="loader-progress-bar">
+            <div class="loader-progress"></div>
+        </div>
+    </div>
+
+    <!-- Backgrounds -->
+    <div class="bg-green"></div>
+    <div class="bg-beige" id="bg-beige"></div>
+
+    <!-- Floating Beans -->
+    <img src="/img/bean.png?v=4" class="bean b1" alt="">
+    <img src="/img/bean.png?v=4" class="bean b2" alt="">
+    <img src="/img/bean.png?v=4" class="bean b3" alt="">
+    <img src="/img/bean.png?v=4" class="bean b4" alt="">
+    <img src="/img/bean.png?v=4" class="bean b5" alt="">
+    <img src="/img/bean.png?v=4" class="bean b6" alt="">
+    <img src="/img/bean.png?v=4" class="bean b7" alt="">
+    <img src="/img/bean.png?v=4" class="bean b8" alt="">
+
+    <!-- Hero Drink -->
+    <div id="hero-drink-wrap">
+        <img id="main-drink" src="/img/drink-1.png?v=4" alt="Drink">
+    </div>
+
+    <!-- Vertical Product Name — standalone in beige panel -->
+    <div id="drink-name-panel">
+        <div id="drink-name">Frappuccino!</div>
+    </div>
+
+    <!-- Top-Right Icons -->
+    <div id="top-icons">
+        <button aria-label="Account">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"
+                stroke-linecap="round" stroke-linejoin="round">
+                <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
+                <circle cx="12" cy="7" r="4" />
+            </svg>
+        </button>
+        <button aria-label="Cart" onclick="window.location.href='/cart.html'">
+            <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"
+                stroke-linecap="round" stroke-linejoin="round">
+                <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z" />
+                <path d="M3 6h18" />
+                <path d="M16 10a4 4 0 0 1-8 0" />
+            </svg>
+        </button>
+    </div>
+
+    <!-- Left Panel -->
+    <div id="left-panel">
+        <nav>
+            <img src="/img/zestro-logo-white.png" class="logo" alt="Logo">
+            <div class="links">
+                <a href="#" class="active">Home</a>
+                <a href="#">Shop</a>
+                <a href="#">Contact</a>
+            </div>
+        </nav>
+
+        <div class="hero-text">
+            <h1>
+                <span class="line">BREWED FOR</span>
+                <span class="line">BRILLIANCE</span>
+            </h1>
+            <p>Lorem ipsum dolor sit amet, consectetur adipiscing elit. Duis vel posuere ipsum.</p>
+            <div class="cta-row">
+                <button class="btn-order" id="btn-order-now" onclick="window.location.href='/order.html'">ORDER NOW</button>
+                <button class="btn-bag" aria-label="Shopping Bag" onclick="window.location.href='/cart.html'">
+                    <svg width="19" height="19" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z" />
+                        <path d="M3 6h18" />
+                        <path d="M16 10a4 4 0 0 1-8 0" />
+                    </svg>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Thumbnails -->
+    <div id="thumbnails">
+        <div class="thumb-item active" id="slot-0">
+            <div class="circle"></div>
+            <img src="/img/drink-1.png?v=4" alt="Drink 1">
+        </div>
+        <div class="thumb-item" id="slot-1">
+            <div class="circle"></div>
+            <img src="/img/drink-2.png?v=4" alt="Drink 2">
+        </div>
+        <div class="thumb-item" id="slot-2">
+            <div class="circle"></div>
+            <img src="/img/drink-3.png?v=4" alt="Drink 3">
+        </div>
+    </div>
+
+    <script>
+        const drinks = [
+            { name: "Frappuccino!", image: "/img/drink-1.png?v=4", bg: "linear-gradient(180deg,rgba(228,183,126,1)0%,rgba(228,199,163,1)100%)" },
+            { name: "Espresso Frappe!", image: "/img/drink-2.png?v=4", bg: "linear-gradient(180deg,rgba(200,169,122,1)0%,rgba(223,192,144,1)100%)" },
+            { name: "Chocolate Frappe!", image: "/img/drink-3.png?v=4", bg: "linear-gradient(180deg,rgba(184,144,112,1)0%,rgba(212,170,136,1)100%)" }
+        ];
+
+        let current = 0, transitioning = false, auto;
+
+        const heroDrinkWrap = document.getElementById('hero-drink-wrap');
+        const mainDrink = document.getElementById('main-drink');
+        const drinkName = document.getElementById('drink-name');
+        const bgBeige = document.getElementById('bg-beige');
+        const slots = [
+            document.getElementById('slot-0'),
+            document.getElementById('slot-1'),
+            document.getElementById('slot-2')
+        ];
+
+        function selectDrink(idx) {
+            if (idx === current || transitioning) return;
+            transitioning = true;
+            clearInterval(auto);
+
+            // Fade out hero + name
+            heroDrinkWrap.classList.add('fade-out');
+            drinkName.classList.add('fade-out');
+
+            // Move active ring instantly to the new slot
+            slots.forEach(s => s.classList.remove('active'));
+            slots[idx].classList.add('active');
+
+            setTimeout(() => {
+                current = idx;
+                const d = drinks[current];
+                mainDrink.src = d.image;
+                drinkName.textContent = d.name;
+                bgBeige.style.background = d.bg;
+
+                requestAnimationFrame(() => requestAnimationFrame(() => {
+                    heroDrinkWrap.classList.remove('fade-out');
+                    drinkName.classList.remove('fade-out');
+                    setTimeout(() => { transitioning = false; }, 520);
+                }));
+            }, 480);
+
+            startAuto();
+        }
+
+        slots.forEach((slot, idx) => slot.addEventListener('click', () => selectDrink(idx)));
+
+        function startAuto() {
+            clearInterval(auto);
+            auto = setInterval(() => selectDrink((current + 1) % drinks.length), 5000);
+        }
+
+        startAuto();
+
+        /* Parallax */
+        document.addEventListener('mousemove', e => {
+            const dx = (window.innerWidth / 2 - e.pageX) / 55;
+            const dy = (window.innerHeight / 2 - e.pageY) / 55;
+
+            document.querySelectorAll('.bean').forEach((b, i) => {
+                const s = (i % 3) + 1.2;
+                b.style.marginLeft = `${dx * s}px`;
+                b.style.marginTop = `${dy * s}px`;
+            });
+
+            heroDrinkWrap.style.marginLeft = `${-dx * 1.8}px`;
+            heroDrinkWrap.style.marginTop = `${-dy * 1.8}px`;
+        });
+
+        /* Loader */
+        window.addEventListener('load', () => {
+            // Ensure minimum display time of 1.5s for premium loading feel
+            setTimeout(() => {
+                document.getElementById('loader-wrapper').classList.add('hidden');
+            }, 1500);
+        });
+    </script>
+    <script src="/modern-animations.js"></script>
+</body>
+
+</html>

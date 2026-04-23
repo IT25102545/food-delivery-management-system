@@ -1,0 +1,128 @@
+package com.fooddelivery.dao;
+
+import com.fooddelivery.models.MenuItem;
+import com.fooddelivery.utils.DatabaseConnection;
+
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
+
+public class MenuDAO {
+
+    private static final List<MenuItem> fallbackItems = new ArrayList<>();
+    private static int fallbackIdCounter = 1;
+
+    public void initializeTable() {
+        String sql = "CREATE TABLE IF NOT EXISTS menu_items (" +
+                     "id INT AUTO_INCREMENT PRIMARY KEY, " +
+                     "name VARCHAR(255) NOT NULL, " +
+                     "description TEXT, " +
+                     "price DECIMAL(10,2) NOT NULL" +
+                     ")";
+        try {
+            Connection conn = DatabaseConnection.getInstance().getConnection();
+            if (conn == null) return;
+            try (Statement stmt = conn.createStatement()) {
+                stmt.execute(sql);
+                // Attempt to add the image_url column if it doesn't exist yet
+                try {
+                    stmt.execute("ALTER TABLE menu_items ADD COLUMN image_url VARCHAR(512)");
+                } catch (SQLException ignored) {
+                    // Column already exists
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
+
+    public List<MenuItem> getAllMenuItems() {
+        List<MenuItem> items = new ArrayList<>();
+        String sql = "SELECT * FROM menu_items";
+        try {
+            Connection conn = DatabaseConnection.getInstance().getConnection();
+            if (conn == null) return new ArrayList<>(fallbackItems);
+            try (Statement stmt = conn.createStatement();
+                 ResultSet rs = stmt.executeQuery(sql)) {
+                while (rs.next()) {
+                    items.add(new MenuItem(
+                        rs.getInt("id"),
+                        rs.getString("name"),
+                        rs.getString("description"),
+                        rs.getDouble("price"),
+                        rs.getString("image_url")
+                    ));
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return items;
+    }
+
+    public boolean addMenuItem(MenuItem item) {
+        String sql = "INSERT INTO menu_items (name, description, price, image_url) VALUES (?, ?, ?, ?)";
+        try {
+            Connection conn = DatabaseConnection.getInstance().getConnection();
+            if (conn == null) {
+                item.setId(fallbackIdCounter++);
+                fallbackItems.add(item);
+                return true;
+            }
+            try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+                pstmt.setString(1, item.getName());
+                pstmt.setString(2, item.getDescription());
+                pstmt.setDouble(3, item.getPrice());
+                pstmt.setString(4, item.getImageUrl());
+                return pstmt.executeUpdate() > 0;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public boolean deleteMenuItem(int id) {
+        String sql = "DELETE FROM menu_items WHERE id = ?";
+        try {
+            Connection conn = DatabaseConnection.getInstance().getConnection();
+            if (conn == null) {
+                return fallbackItems.removeIf(i -> i.getId() == id);
+            }
+            try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+                pstmt.setInt(1, id);
+                return pstmt.executeUpdate() > 0;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public boolean updateMenuItem(MenuItem item) {
+        String sql = "UPDATE menu_items SET name=?, description=?, price=?, image_url=? WHERE id=?";
+        try {
+            Connection conn = DatabaseConnection.getInstance().getConnection();
+            if (conn == null) {
+                for (int i = 0; i < fallbackItems.size(); i++) {
+                    if (fallbackItems.get(i).getId() == item.getId()) {
+                        fallbackItems.set(i, item);
+                        return true;
+                    }
+                }
+                return false;
+            }
+            try (PreparedStatement pstmt = conn.prepareStatement(sql)) {
+                pstmt.setString(1, item.getName());
+                pstmt.setString(2, item.getDescription());
+                pstmt.setDouble(3, item.getPrice());
+                pstmt.setString(4, item.getImageUrl());
+                pstmt.setInt(5, item.getId());
+                return pstmt.executeUpdate() > 0;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+}

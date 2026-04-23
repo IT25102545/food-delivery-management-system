@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order Now – Zestro</title>
+    <meta name="description"
+        content="Enter your delivery address and order your favourite coffee straight to your door.">
+    <link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@300;400;500;600&display=swap"
+        rel="stylesheet">
+
+    <!-- Spline Viewer Web Component -->
+    <script type="module" src="https://unpkg.com/@splinetool/viewer@1.9.82/build/spline-viewer.js"></script>
+
+    <style>
+        *,
+        *::before,
+        *::after {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            -webkit-font-smoothing: antialiased;
+        }
+
+        a {
+            text-decoration: none;
+        }
+
+        html,
+        body {
+            width: 100%;
+            height: 100%;
+            overflow: hidden;
+            font-family: 'Inter', sans-serif;
+            background: #003F29;
+        }
+
+        /* BACKGROUND GRADIENT */
+        .bg-full {
+            position: fixed;
+            inset: 0;
+            /* Dark green top fading to a bright yellow-green glow at bottom-center */
+            background:
+                radial-gradient(ellipse 80% 50% at 50% 105%, #b8e04a 0%, #4db84a 18%, transparent 55%),
+                radial-gradient(ellipse at 50% 80%, #1a6645 0%, #003F29 50%, #001d14 100%);
+            z-index: 0;
+        }
+
+        /* ANIMATIONS */
+        @keyframes floatA {
+
+            0%,
+            100% {
+                transform: translateY(0px) rotate(0deg);
+            }
+
+            50% {
+                transform: translateY(-18px) rotate(14deg);
+            }
+        }
+
+        @keyframes floatB {
+
+            0%,
+            100% {
+                transform: translateY(0px) rotate(0deg);
+            }
+
+            50% {
+                transform: translateY(16px) rotate(-12deg);
+            }
+        }
+
+        @keyframes floatC {
+
+            0%,
+            100% {
+                transform: translateY(0px) rotate(0deg);
+            }
+
+            50% {
+                transform: translateY(-12px) rotate(22deg);
+            }
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(28px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideInLeft {
+            from {
+                opacity: 0;
+                transform: translateX(-36px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        @keyframes slideInDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes bunnyFloat {
+
+            0%,
+            100% {
+                transform: translateY(0px);
+            }
+
+            50% {
+                transform: translateY(-14px);
+            }
+        }
+
+        @keyframes pulseGlow {
+
+            0%,
+            100% {
+                box-shadow: 0 0 0 0 rgba(255, 255, 255, 0.15);
+            }
+
+            50% {
+                box-shadow: 0 0 32px 12px rgba(255, 255, 255, 0.08);
+            }
+        }
+
+        /* FLOATING BEANS */
+        .bean {
+            position: fixed;
+            pointer-events: none;
+            z-index: 2;
+            object-fit: contain;
+        }
+
+        /* Top-left */
+        .b1 {
+            width: 50px;
+            top: 8%;
+            left: 4%;
+            animation: floatA 5.2s ease-in-out infinite;
+            opacity: .80;
+            filter: blur(1px);
+        }
+
+        .b2 {
+            width: 44px;
+            top: 48%;
+            left: 2%;
+            animation: floatB 6.8s ease-in-out infinite 1s;
+            opacity: .60;
+            filter: blur(2px);
+        }
+
+        .b3 {
+            width: 36px;
+            bottom: 18%;
+            left: 18%;
+            animation: floatC 7.0s ease-in-out infinite 1.8s;
+            opacity: .50;
+            filter: blur(3px);
+        }
+
+        /* Top-right */
+        .b4 {
+            width: 52px;
+            top: 6%;
+            right: 4%;
+            animation: floatC 5.8s ease-in-out infinite .5s;
+            opacity: .80;
+            filter: blur(1px);
+        }
+
+        .b5 {
+            width: 68px;
+            top: 28%;
+            right: 0%;
+            animation: floatA 7.0s ease-in-out infinite 1.5s;
+            opacity: .85;
+            filter: blur(.5px);
+        }
+
+        /* Bottom sides */
+        .b6 {
+            width: 42px;
+            bottom: 22%;
+            right: 7%;
+            animation: floatB 6.2s ease-in-out infinite 2s;
+            opacity: .65;
+            filter: blur(1.5px);
+        }
+
+        .b7 {
+            width: 38px;
+            bottom: 8%;
+            right: 25%;
+            animation: floatC 5.0s ease-in-out infinite .8s;
+            opacity: .55;
+            filter: blur(2px);
+        }
+
+        .b8 {
+            width: 46px;
+            bottom: 14%;
+            left: 5%;
+            animation: floatA 6.5s ease-in-out infinite 3s;
+            opacity: .60;
+            filter: blur(1.5px);
+        }
+
+        /* FLOATING DRINKS */
+        .drink {
+            position: fixed;
+            pointer-events: none;
+            z-index: 2;
+            object-fit: contain;
+        }
+
+        /* Left drink — large blurred cup */
+        .d1 {
+            width: 140px;
+            top: 42%;
+            left: 4%;
+            opacity: .45;
+            filter: blur(3px) brightness(0.75);
+            animation: floatB 7.5s ease-in-out infinite 0.5s;
+        }
+
+        /* Right drink — slightly smaller */
+        .d2 {
+            width: 110px;
+            top: 38%;
+            right: 3%;
+            opacity: .40;
+            filter: blur(3.5px) brightness(0.75);
+            animation: floatA 6.8s ease-in-out infinite 1.2s;
+        }
+
+        /* Extra right — lower */
+        .d3 {
+            width: 90px;
+            bottom: 22%;
+            right: 14%;
+            opacity: .30;
+            filter: blur(5px) brightness(0.65);
+            animation: floatC 8.0s ease-in-out infinite 2s;
+        }
+
+        /* NAV */
+        nav {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            z-index: 20;
+            display: flex;
+            align-items: center;
+            padding: 28px 60px;
+            gap: 16px;
+            animation: slideInDown 0.7s ease both 0.1s;
+        }
+
+        nav img.logo {
+            width: 38px;
+            height: 52px;
+            object-fit: contain;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 24px;
+            font-size: 15px;
+            font-weight: 400;
+            margin-left: 16px;
+        }
+
+        .nav-links a {
+            color: rgba(255, 255, 255, 0.70);
+            transition: color 0.2s;
+            letter-spacing: 0.3px;
+        }
+
+        .nav-links a.active {
+            color: #fff;
+            font-weight: 600;
+        }
+
+        .nav-links a:hover {
+            color: #fff;
+        }
+
+        /* Top-right icons */
+        .nav-icons {
+            margin-left: auto;
+            display: flex;
+            gap: 20px;
+            align-items: center;
+            color: #fff;
+        }
+
+        .nav-icons button {
+            background: none;
+            border: none;
+            cursor: pointer;
+            color: #fff;
+            opacity: 0.80;
+            transition: opacity 0.2s, transform 0.2s;
+            padding: 0;
+        }
+
+        .nav-icons button:hover {
+            opacity: 1;
+            transform: scale(1.14);
+        }
+
+        /* HERO CONTENT */
+        #hero {
+            position: fixed;
+            inset: 0;
+            z-index: 10;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: flex-start;
+            padding-top: 120px;
+            pointer-events: none;
+        }
+
+        /* Heading */
+        #hero h1 {
+            font-family: 'Anton', sans-serif;
+            font-size: clamp(48px, 7vw, 96px);
+            font-weight: 400;
+            color: #ffffff;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            text-align: center;
+            line-height: 1;
+            animation: fadeInUp 0.9s ease both 0.2s;
+            pointer-events: none;
+        }
+
+        /* Search bar */
+        #search-bar {
+            margin-top: 36px;
+            display: flex;
+            align-items: center;
+            background: #ffffff;
+            border-radius: 100px;
+            padding: 6px 6px 6px 24px;
+            width: min(900px, 88vw);
+            box-shadow: 0 8px 40px rgba(0, 0, 0, 0.35);
+            animation: fadeInUp 0.9s ease both 0.35s;
+            pointer-events: all;
+            gap: 8px;
+        }
+
+        #search-bar input {
+            flex: 1;
+            border: none;
+            outline: none;
+            background: transparent;
+            font-family: 'Inter', sans-serif;
+            font-size: 15px;
+            font-weight: 400;
+            color: #333;
+        }
+
+        #search-bar input::placeholder {
+            color: #aaa;
+        }
+
+        .btn-order-now {
+            background: #003F29;
+            color: #ffffff;
+            font-family: 'Anton', sans-serif;
+            font-size: clamp(14px, 1.4vw, 18px);
+            letter-spacing: 0.5px;
+            border: none;
+            padding: 14px 32px;
+            border-radius: 100px;
+            cursor: pointer;
+            white-space: nowrap;
+            transition: transform 0.22s, background 0.22s, box-shadow 0.22s;
+            flex-shrink: 0;
+        }
+
+        .btn-order-now:hover {
+            background: #004d33;
+            transform: scale(1.04);
+            box-shadow: 0 6px 24px rgba(0, 0, 0, 0.30);
+        }
+
+        .btn-search-icon {
+            background: #003F29;
+            color: #fff;
+            border: none;
+            width: 48px;
+            height: 48px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            flex-shrink: 0;
+            transition: transform 0.2s, background 0.2s;
+        }
+
+        .btn-search-icon:hover {
+            background: #005c3d;
+            transform: scale(1.10);
+        }
+
+        /* Subtext */
+        #hero p {
+            margin-top: 20px;
+            font-size: clamp(13px, 1.2vw, 15px);
+            color: rgba(255, 255, 255, 0.65);
+            text-align: center;
+            line-height: 1.6;
+            max-width: 380px;
+            animation: fadeInUp 0.9s ease both 0.45s;
+            pointer-events: none;
+        }
+
+        /* SPLINE BUNNY — centred at bottom, taller box so ears stay visible */
+        #spline-wrap {
+            position: fixed;
+            /* sit right at the bottom edge — platform peeks out naturally */
+            bottom: -80px;
+            left: 25%;
+            /* ONLY horizontal centering; no vertical translateY so bottom stays pinned */
+            transform: translateX(-50%);
+            /* Wide enough for the scene, tall enough that ears are never clipped */
+            width: min(780px, 95vw);
+            height: min(600px, 72vh);
+            z-index: 5;
+            pointer-events: none;
+            /* overflow must be visible so the 3-D canvas isn't clipped */
+            overflow: visible;
+            animation: bunnyFloat 6s ease-in-out infinite;
+        }
+
+        spline-viewer {
+            width: 100%;
+            height: 100%;
+            --logo-display: none;
+        }
+
+        /* PARALLAX */
+        .parallax-layer {
+            transition: margin 0.08s linear;
+        }
+    </style>
+    <link rel="stylesheet" href="/modern-animations.css">
+</head>
+
+<body>
+
+    <!-- Full background -->
+    <div class="bg-full"></div>
+
+    <!-- Floating Beans -->
+    <img src="/img/bean.png?v=4" class="bean b1 parallax-layer" alt="">
+    <img src="/img/bean.png?v=4" class="bean b2 parallax-layer" alt="">
+    <img src="/img/bean.png?v=4" class="bean b3 parallax-layer" alt="">
+    <img src="/img/bean.png?v=4" class="bean b4 parallax-layer" alt="">
+    <img src="/img/bean.png?v=4" class="bean b5 parallax-layer" alt="">
+    <img src="/img/bean.png?v=4" class="bean b6 parallax-layer" alt="">
+    <img src="/img/bean.png?v=4" class="bean b7 parallax-layer" alt="">
+    <img src="/img/bean.png?v=4" class="bean b8 parallax-layer" alt="">
+
+    <!-- Floating Drink Cups (background decoration) -->
+    <img src="/img/drink-1.png?v=4" class="drink d1 parallax-layer" alt="">
+    <img src="/img/drink-2.png?v=4" class="drink d2 parallax-layer" alt="">
+    <img src="/img/drink-3.png?v=4" class="drink d3 parallax-layer" alt="">
+
+    <!-- Navbar -->
+    <nav>
+        <a href="/index.html">
+            <img src="/img/zestro-logo-white.png" class="logo" alt="Zestro Logo">
+        </a>
+        <div class="nav-links">
+            <a href="/index.html">Home</a>
+            <a href="#" class="active">Shop</a>
+            <a href="#">Contact</a>
+        </div>
+        <div class="nav-icons">
+            <button aria-label="Account">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
+                    <circle cx="12" cy="7" r="4" />
+                </svg>
+            </button>
+            <button aria-label="Cart" onclick="window.location.href='/cart.html'">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z" />
+                    <path d="M3 6h18" />
+                    <path d="M16 10a4 4 0 0 1-8 0" />
+                </svg>
+            </button>
+        </div>
+    </nav>
+
+    <!-- Hero Content -->
+    <section id="hero">
+        <h1>Enter Your Address</h1>
+
+        <div id="search-bar">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#aaa" stroke-width="2"
+                stroke-linecap="round" stroke-linejoin="round" style="flex-shrink:0;">
+                <path d="M12 2C8.13 2 5 5.13 5 9c0 5.25 7 13 7 13s7-7.75 7-13c0-3.87-3.13-7-7-7z" />
+                <circle cx="12" cy="9" r="2.5" />
+            </svg>
+            <input type="text" id="address-input" placeholder="Enter Your Delivery Address.." autocomplete="off">
+            <button class="btn-order-now" id="btn-confirm-order" onclick="confirmOrder()">ORDER NOW</button>
+            <button class="btn-search-icon" aria-label="Search">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2"
+                    stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="11" cy="11" r="8" />
+                    <line x1="21" y1="21" x2="16.65" y2="16.65" />
+                </svg>
+            </button>
+        </div>
+
+        <p>Lorem ipsum dolor sit amet, consectetur<br>adipiscing elit. Duis vel posuere ipsum.</p>
+    </section>
+
+    <!-- Spline Delivery Bunny -->
+    <div id="spline-wrap">
+        <spline-viewer url="https://prod.spline.design/EbTN4XO7qP8AExZL/scene.splinecode"
+            loading-anim-type="spinner-big-dark">
+        </spline-viewer>
+    </div>
+
+    <script>
+        /* Parallax on mouse move */
+        document.addEventListener('mousemove', e => {
+            const dx = (window.innerWidth / 2 - e.pageX) / 60;
+            const dy = (window.innerHeight / 2 - e.pageY) / 60;
+
+            document.querySelectorAll('.parallax-layer').forEach((b, i) => {
+                const s = (i % 3) + 1.2;
+                b.style.marginLeft = `${dx * s}px`;
+                b.style.marginTop = `${dy * s}px`;
+            });
+        });
+
+        /* Order confirmation */
+        function confirmOrder() {
+            const addr = document.getElementById('address-input').value.trim();
+            if (!addr) {
+                document.getElementById('address-input').focus();
+                document.getElementById('search-bar').style.boxShadow = '0 0 0 3px rgba(255,80,80,0.5), 0 8px 40px rgba(0,0,0,0.35)';
+                setTimeout(() => {
+                    document.getElementById('search-bar').style.boxShadow = '0 8px 40px rgba(0,0,0,0.35)';
+                }, 1200);
+                return;
+            }
+            /* Save address for checkout, then navigate to menu */
+            localStorage.setItem('deliveryAddress', addr);
+            window.location.href = `/menu.html?address=${encodeURIComponent(addr)}`;
+        }
+
+        /* Allow Enter key to submit */
+        document.getElementById('address-input').addEventListener('keydown', e => {
+            if (e.key === 'Enter') confirmOrder();
+        });
+    </script>
+
+    <script src="/modern-animations.js"></script>
+</body>
+
+</html>

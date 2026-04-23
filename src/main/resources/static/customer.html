@@ -1,0 +1,1032 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Zestro - Premium Food Delivery</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link
+    href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&family=Poppins:wght@400;600;700;800&display=swap"
+    rel="stylesheet">
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            'c-white': '#FFFDF7',
+            'c-cream': '#F5E0CA',
+            'c-beige': '#DCC1AA',
+            'c-coffee': '#6F4E37',
+            'c-espresso': '#483832',
+          },
+          fontFamily: {
+            poppins: ['Poppins', 'sans-serif'],
+            outfit: ['Outfit', 'sans-serif'],
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    body {
+      font-family: 'Outfit', sans-serif;
+      background-color: #FFFDF7;
+      /* Initial White */
+      transition: background-color 0.8s ease-in-out;
+      overflow-x: hidden;
+    }
+
+    h1,
+    h2,
+    h3,
+    h4,
+    .font-poppins {
+      font-family: 'Poppins', sans-serif;
+    }
+
+    /* Navigation */
+    .nav-scrolled {
+      background: rgba(255, 253, 247, 0.95);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border-bottom: 1px solid rgba(111, 78, 55, 0.1);
+      box-shadow: 0 4px 20px rgba(72, 56, 50, 0.05);
+    }
+
+    .nav-text {
+      transition: color 0.3s ease;
+    }
+
+    /* Text Animation classes */
+    .reveal-text {
+      opacity: 0;
+      transform: translateY(40px);
+      transition: all 0.8s cubic-bezier(0.16, 1, 0.3, 1);
+    }
+
+    .reveal-text.active {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
+    .parallax-el {
+      will-change: transform;
+    }
+
+    /* Floating Blobs for more Parallax */
+    .blob {
+      position: absolute;
+      border-radius: 50%;
+      filter: blur(40px);
+      z-index: -1;
+      opacity: 0.6;
+    }
+
+    /* Hedgehog Animations from User */
+    .hedgehog-container {
+      width: 320px;
+      height: 320px;
+      margin: 0 auto;
+      filter: drop-shadow(0 25px 35px rgba(72, 56, 50, 0.15));
+    }
+
+    .jump-group {
+      transform-origin: 100px 185px;
+      animation: idleJump 8s ease-in-out infinite;
+    }
+
+    .shadow-el {
+      transform-origin: 100px 185px;
+      animation: shadowShrink 8s ease-in-out infinite;
+    }
+
+    .standing-group {
+      transform-origin: 100px 185px;
+      animation: breathe 3.5s ease-in-out infinite;
+    }
+
+    .eye {
+      transform-origin: center center;
+      animation: blink 4s infinite;
+    }
+
+    .nose {
+      transform-origin: 100px 140px;
+      animation: sniff 2.8s ease-in-out infinite;
+    }
+
+    .hi-arm {
+      transform-origin: 65px 145px;
+      animation: hiWave 3s ease-in-out infinite;
+    }
+
+    .eating-arm {
+      transform-origin: 135px 145px;
+      animation: eatMove 4s ease-in-out infinite;
+    }
+
+    .food-wrapper {
+      animation: foodHideBite 4s ease-in-out infinite;
+    }
+
+    .food-burger {
+      animation: cycleBurger 12s infinite;
+    }
+
+    .food-apple {
+      animation: cycleApple 12s infinite;
+    }
+
+    .food-cookie {
+      animation: cycleCookie 12s infinite;
+    }
+
+    @keyframes breathe {
+
+      0%,
+      100% {
+        transform: scaleY(1) scaleX(1);
+      }
+
+      50% {
+        transform: scaleY(1.03) scaleX(1.02);
+      }
+    }
+
+    @keyframes blink {
+
+      0%,
+      95%,
+      100% {
+        transform: scaleY(1);
+      }
+
+      97.5% {
+        transform: scaleY(0.1);
+      }
+    }
+
+    @keyframes sniff {
+
+      0%,
+      100% {
+        transform: rotate(0deg) translate(0, 0);
+      }
+
+      15%,
+      35% {
+        transform: rotate(-8deg) translate(-2px, -1px);
+      }
+
+      25%,
+      45% {
+        transform: rotate(8deg) translate(2px, -1px);
+      }
+
+      55% {
+        transform: rotate(0deg) translate(0, 0);
+      }
+    }
+
+    @keyframes hiWave {
+
+      0%,
+      40%,
+      100% {
+        transform: rotate(0deg);
+      }
+
+      50%,
+      70% {
+        transform: rotate(-30deg);
+      }
+
+      60% {
+        transform: rotate(-10deg);
+      }
+    }
+
+    @keyframes eatMove {
+
+      0%,
+      100% {
+        transform: translate(0, 0) rotate(0deg);
+      }
+
+      40%,
+      60% {
+        transform: translate(-38px, -3px) rotate(-10deg);
+      }
+    }
+
+    @keyframes foodHideBite {
+
+      0%,
+      35%,
+      100% {
+        opacity: 1;
+      }
+
+      40%,
+      60% {
+        opacity: 0;
+      }
+    }
+
+    @keyframes idleJump {
+
+      0%,
+      82% {
+        transform: translateY(0);
+      }
+
+      86% {
+        transform: translateY(-20px) scaleY(1.05);
+      }
+
+      90% {
+        transform: translateY(0) scaleY(0.95);
+      }
+
+      94% {
+        transform: translateY(-10px) scaleY(1.02);
+      }
+
+      98% {
+        transform: translateY(0) scaleY(0.98);
+      }
+
+      100% {
+        transform: translateY(0) scaleY(1);
+      }
+    }
+
+    @keyframes shadowShrink {
+
+      0%,
+      82% {
+        transform: scale(1);
+        opacity: 1;
+      }
+
+      86% {
+        transform: scale(0.75);
+        opacity: 0.5;
+      }
+
+      90% {
+        transform: scale(1);
+        opacity: 1;
+      }
+
+      94% {
+        transform: scale(0.85);
+        opacity: 0.7;
+      }
+
+      98%,
+      100% {
+        transform: scale(1);
+        opacity: 1;
+      }
+    }
+
+    @keyframes cycleBurger {
+
+      0%,
+      32% {
+        opacity: 1;
+      }
+
+      33%,
+      100% {
+        opacity: 0;
+      }
+    }
+
+    @keyframes cycleApple {
+
+      0%,
+      32% {
+        opacity: 0;
+      }
+
+      33%,
+      65% {
+        opacity: 1;
+      }
+
+      66%,
+      100% {
+        opacity: 0;
+      }
+    }
+
+    @keyframes cycleCookie {
+
+      0%,
+      65% {
+        opacity: 0;
+      }
+
+      66%,
+      99% {
+        opacity: 1;
+      }
+
+      100% {
+        opacity: 0;
+      }
+    }
+
+    /* Floating Animations for Hero Background Elements */
+    @keyframes float1 {
+
+      0%,
+      100% {
+        transform: translateY(0px) rotate(12deg) scale(1);
+      }
+
+      50% {
+        transform: translateY(-20px) rotate(18deg) scale(1.05);
+      }
+    }
+
+    @keyframes float2 {
+
+      0%,
+      100% {
+        transform: translateY(0px) rotate(-15deg) scale(1);
+      }
+
+      50% {
+        transform: translateY(-25px) rotate(-5deg) scale(1.02);
+      }
+    }
+
+    @keyframes float3 {
+
+      0%,
+      100% {
+        transform: translateY(0px) rotate(45deg) scale(1);
+      }
+
+      50% {
+        transform: translateY(-15px) rotate(50deg) scale(1.08);
+      }
+    }
+
+    @keyframes float4 {
+
+      0%,
+      100% {
+        transform: translateY(0px) rotate(-30deg) scale(1);
+      }
+
+      50% {
+        transform: translateY(-20px) rotate(-20deg) scale(1.05);
+      }
+    }
+
+    .float-anim-1 {
+      animation: float1 6s ease-in-out infinite;
+    }
+
+    .float-anim-2 {
+      animation: float2 7s ease-in-out infinite;
+    }
+
+    .float-anim-3 {
+      animation: float3 5s ease-in-out infinite;
+    }
+
+    .float-anim-4 {
+      animation: float4 8s ease-in-out infinite;
+    }
+
+    .float-item {
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      cursor: pointer;
+    }
+
+    .float-item:hover {
+      transform: scale(1.3) !important;
+      opacity: 1 !important;
+      filter: drop-shadow(0 20px 25px rgba(72, 56, 50, 0.3));
+    }
+
+    /* Location Active States */
+    body.location-active .eye {
+      transform: scale(1.15);
+      transition: 0.2s;
+      animation: none;
+    }
+
+    body.location-active .hi-arm {
+      animation: point 1s ease-in-out forwards;
+    }
+
+    @keyframes point {
+      0% {
+        transform: rotate(0deg);
+      }
+
+      100% {
+        transform: rotate(-45deg) translate(-10px, -5px);
+      }
+    }
+  </style>
+    <link rel="stylesheet" href="/modern-animations.css">
+</head>
+
+<body id="main-body" class="m-0 text-c-espresso">
+
+  <!-- Navbar -->
+  <nav id="navbar" class="fixed w-full z-50 py-6 transition-all duration-300">
+    <div class="max-w-7xl mx-auto px-6 flex justify-between items-center relative">
+      <div class="hidden md:flex space-x-8 text-c-espresso font-bold text-base nav-text z-10 w-1/3">
+        <a href="#" class="hover:text-c-coffee transition">Restaurants</a>
+        <a href="#" class="hover:text-c-coffee transition">Offers</a>
+        <a href="#" class="hover:text-c-coffee transition">About</a>
+      </div>
+      <div class="flex items-center gap-2 absolute left-1/2 transform -translate-x-1/2 z-20 cursor-pointer">
+        <!-- Zestro Logo Mascot -->
+        <svg viewBox="0 0 200 200" class="w-12 h-12 drop-shadow-sm transition-transform hover:scale-110 duration-300">
+          <g transform="translate(0, -10)">
+            <path
+              d="M 100 30 L 90 45 L 80 35 L 70 50 L 60 40 L 50 60 L 45 80 L 40 100 L 45 120 L 50 140 L 60 155 L 80 165 L 100 170 L 120 165 L 140 155 L 150 140 L 155 120 L 160 100 L 155 80 L 150 60 L 140 40 L 130 50 L 120 35 L 110 45 Z"
+              fill="#6F4E37" />
+            <path d="M 100 60 C 60 70, 50 110, 50 160 C 60 175, 140 175, 150 160 C 150 110, 140 70, 100 60 Z"
+              fill="#DCC1AA" />
+            <g transform="translate(10, 10)">
+              <path d="M 45 45 C 40 35, 55 30, 60 40 C 65 50, 50 55, 45 45 Z" fill="#6F4E37" />
+              <path d="M 48 43 C 45 38, 52 35, 55 40 C 57 45, 50 48, 48 43 Z" fill="#DCC1AA" />
+            </g>
+            <g transform="translate(140, 10) scale(-1, 1)">
+              <path d="M 45 45 C 40 35, 55 30, 60 40 C 65 50, 50 55, 45 45 Z" fill="#6F4E37" />
+              <path d="M 48 43 C 45 38, 52 35, 55 40 C 57 45, 50 48, 48 43 Z" fill="#DCC1AA" />
+            </g>
+            <circle cx="75" cy="130" r="10" fill="#483832" />
+            <circle cx="73" cy="127" r="3.5" fill="#FFFFFF" />
+            <circle cx="125" cy="130" r="10" fill="#483832" />
+            <circle cx="127" cy="127" r="3.5" fill="#FFFFFF" />
+            <path d="M 97 150 C 97 153, 103 153, 103 150" fill="none" stroke="#483832" stroke-width="1.5"
+              stroke-linecap="round" />
+            <circle cx="100" cy="142" r="8" fill="#483832" />
+            <circle cx="98" cy="139" r="2.5" fill="#FFFFFF" />
+            <path d="M 75 165 C 70 178, 85 180, 88 175 C 91 170, 80 165, 75 165 Z" fill="#6F4E37" />
+            <path d="M 125 165 C 130 178, 115 180, 112 175 C 109 170, 120 165, 125 165 Z" fill="#6F4E37" />
+            <path d="M 135 145 C 130 155, 140 160, 145 155 C 150 150, 140 145, 135 145 Z" fill="#6F4E37" />
+            <path d="M 65 145 C 70 155, 60 160, 55 155 C 50 150, 60 145, 65 145 Z" fill="#6F4E37" />
+          </g>
+        </svg>
+        <span class="font-poppins font-extrabold text-3xl tracking-tight text-c-espresso nav-text">Zestro</span>
+      </div>
+      <div class="flex items-center justify-end space-x-6 z-10 w-1/3">
+        <a href="/index.html" class="text-c-espresso hover:text-c-coffee font-bold text-base transition nav-text">Sign
+          In</a>
+        <a href="/index.html"
+          class="bg-[#6F4E37] hover:bg-c-espresso text-c-white px-7 py-2.5 rounded-full font-bold text-base transition shadow-md">Sign
+          Up</a>
+      </div>
+    </div>
+  </nav>
+
+  <!-- Hero Section (Theme Cream) -->
+  <section class="color-section relative min-h-screen flex items-center pt-32 pb-10 overflow-hidden"
+    data-color="#FFFDF7">
+
+    <!-- Floating Elements (Left Side) -->
+    <div class="absolute hidden xl:block left-[2%] top-[15%] parallax-el" data-speed="-0.3">
+      <div class="float-anim-1">
+        <div class="float-item w-16 h-16 text-[#DCC1AA] opacity-80">
+          <!-- Coffee Bean SVG -->
+          <svg viewBox="0 0 64 64" class="w-full h-full drop-shadow-sm">
+            <path d="M42 8C55 18 60 38 52 52C42 66 22 66 12 52C2 38 6 18 20 8C30 0 35 2 42 8Z" fill="currentColor" />
+            <path d="M20 15C25 30 40 25 45 45" stroke="#FFFDF7" stroke-width="4" stroke-linecap="round" fill="none" />
+          </svg>
+        </div>
+      </div>
+    </div>
+
+    <div class="absolute hidden lg:block left-[4%] top-[40%] parallax-el" data-speed="0.15">
+      <div class="float-anim-3">
+        <div class="float-item w-20 h-20 text-[#DCC1AA] opacity-90">
+          <!-- Bubble Tea SVG -->
+          <svg viewBox="0 0 100 100" class="w-full h-full drop-shadow-sm">
+            <path d="M 25 25 L 35 85 C 35 90 40 95 50 95 C 60 95 65 90 65 85 L 75 25 Z" fill="currentColor" />
+            <path d="M 20 25 L 80 25 C 85 25 85 15 80 15 L 20 15 C 15 15 15 25 20 25 Z" fill="#6F4E37" opacity="0.6" />
+            <path d="M 50 15 L 65 -5 L 70 -2 L 55 15 Z" fill="#6F4E37" />
+            <circle cx="45" cy="85" r="4.5" fill="#483832" />
+            <circle cx="55" cy="80" r="4.5" fill="#483832" />
+            <circle cx="40" cy="75" r="4.5" fill="#483832" />
+            <circle cx="60" cy="88" r="4.5" fill="#483832" />
+            <circle cx="50" cy="70" r="4.5" fill="#483832" />
+          </svg>
+        </div>
+      </div>
+    </div>
+
+    <div class="absolute hidden lg:block left-[1%] bottom-[35%] parallax-el" data-speed="-0.1">
+      <div class="float-anim-4">
+        <div class="float-item w-24 h-24 text-[#6F4E37] opacity-80">
+          <!-- Coffee Cup SVG -->
+          <svg viewBox="0 0 100 100" class="w-full h-full drop-shadow-md">
+            <path d="M 20 30 L 80 30 C 80 70 70 90 50 90 C 30 90 20 70 20 30 Z" fill="currentColor" />
+            <path d="M 80 40 C 95 40 95 60 80 60" stroke="currentColor" stroke-width="8" stroke-linecap="round"
+              fill="none" />
+            <path d="M 35 20 C 30 10 40 5 35 -5" stroke="#DCC1AA" stroke-width="3" stroke-linecap="round" fill="none"
+              class="animate-pulse" />
+            <path d="M 50 22 C 45 12 55 7 50 -3" stroke="#DCC1AA" stroke-width="3" stroke-linecap="round" fill="none"
+              class="animate-pulse" style="animation-delay: 0.3s" />
+            <path d="M 65 20 C 60 10 70 5 65 -5" stroke="#DCC1AA" stroke-width="3" stroke-linecap="round" fill="none"
+              class="animate-pulse" style="animation-delay: 0.6s" />
+          </svg>
+        </div>
+      </div>
+    </div>
+
+    <div class="absolute hidden xl:block left-[5%] bottom-[10%] parallax-el" data-speed="0.2">
+      <div class="float-anim-2">
+        <div class="float-item w-20 h-20 text-[#6F4E37] opacity-70">
+          <!-- Cake Slice SVG -->
+          <svg viewBox="0 0 100 100" class="w-full h-full drop-shadow-sm">
+            <path d="M15 75 L85 75 L75 30 C75 25 70 20 65 25 L15 65 Z" fill="currentColor" />
+            <path d="M15 65 L65 25 C60 20 50 15 45 20 L15 50 Z" fill="#DCC1AA" opacity="0.9" />
+            <circle cx="55" cy="15" r="8" fill="#483832" />
+          </svg>
+        </div>
+      </div>
+    </div>
+
+    <!-- Floating Elements (Right Side) -->
+    <div class="absolute hidden lg:block right-[3%] top-[18%] parallax-el" data-speed="-0.2">
+      <div class="float-anim-1">
+        <div class="float-item w-20 h-20 text-[#6F4E37] opacity-70">
+          <!-- Cake Slice SVG -->
+          <svg viewBox="0 0 100 100" class="w-full h-full drop-shadow-sm">
+            <path d="M15 75 L85 75 L75 30 C75 25 70 20 65 25 L15 65 Z" fill="currentColor" />
+            <path d="M15 65 L65 25 C60 20 50 15 45 20 L15 50 Z" fill="#DCC1AA" opacity="0.9" />
+            <circle cx="55" cy="15" r="8" fill="#483832" />
+          </svg>
+        </div>
+      </div>
+    </div>
+
+    <div class="absolute hidden xl:block right-[1%] top-[45%] parallax-el" data-speed="-0.1">
+      <div class="float-anim-3">
+        <div class="float-item w-16 h-16 text-[#6F4E37] opacity-80">
+          <!-- Coffee Bean SVG -->
+          <svg viewBox="0 0 64 64" class="w-full h-full drop-shadow-sm">
+            <path d="M42 8C55 18 60 38 52 52C42 66 22 66 12 52C2 38 6 18 20 8C30 0 35 2 42 8Z" fill="currentColor" />
+            <path d="M20 15C25 30 40 25 45 45" stroke="#FFFDF7" stroke-width="4" stroke-linecap="round" fill="none" />
+          </svg>
+        </div>
+      </div>
+    </div>
+
+    <div class="absolute hidden lg:block right-[4%] bottom-[35%] parallax-el" data-speed="0.25">
+      <div class="float-anim-2">
+        <div class="float-item w-24 h-24 text-[#DCC1AA] opacity-90">
+          <!-- Bubble Tea SVG -->
+          <svg viewBox="0 0 100 100" class="w-full h-full drop-shadow-sm">
+            <path d="M 25 25 L 35 85 C 35 90 40 95 50 95 C 60 95 65 90 65 85 L 75 25 Z" fill="currentColor" />
+            <path d="M 20 25 L 80 25 C 85 25 85 15 80 15 L 20 15 C 15 15 15 25 20 25 Z" fill="#6F4E37" opacity="0.6" />
+            <path d="M 50 15 L 65 -5 L 70 -2 L 55 15 Z" fill="#6F4E37" />
+            <circle cx="45" cy="85" r="4.5" fill="#483832" />
+            <circle cx="55" cy="80" r="4.5" fill="#483832" />
+            <circle cx="40" cy="75" r="4.5" fill="#483832" />
+            <circle cx="60" cy="88" r="4.5" fill="#483832" />
+            <circle cx="50" cy="70" r="4.5" fill="#483832" />
+          </svg>
+        </div>
+      </div>
+    </div>
+
+    <div class="absolute hidden xl:block right-[2%] bottom-[15%] parallax-el" data-speed="0.1">
+      <div class="float-anim-4">
+        <div class="float-item w-20 h-20 text-[#DCC1AA] opacity-80">
+          <!-- Coffee Cup SVG -->
+          <svg viewBox="0 0 100 100" class="w-full h-full drop-shadow-md">
+            <path d="M 20 30 L 80 30 C 80 70 70 90 50 90 C 30 90 20 70 20 30 Z" fill="currentColor" />
+            <path d="M 80 40 C 95 40 95 60 80 60" stroke="currentColor" stroke-width="8" stroke-linecap="round"
+              fill="none" />
+            <path d="M 35 20 C 30 10 40 5 35 -5" stroke="#6F4E37" stroke-width="3" stroke-linecap="round" fill="none"
+              class="animate-pulse" />
+            <path d="M 50 22 C 45 12 55 7 50 -3" stroke="#6F4E37" stroke-width="3" stroke-linecap="round" fill="none"
+              class="animate-pulse" style="animation-delay: 0.3s" />
+            <path d="M 65 20 C 60 10 70 5 65 -5" stroke="#6F4E37" stroke-width="3" stroke-linecap="round" fill="none"
+              class="animate-pulse" style="animation-delay: 0.6s" />
+          </svg>
+        </div>
+      </div>
+    </div>
+
+    <div class="relative z-10 max-w-7xl mx-auto px-6 w-full flex flex-col items-center text-center">
+
+      <!-- Center Content -->
+      <div class="w-full max-w-4xl parallax-el" data-speed="0.1">
+        <div class="reveal-text relative z-10">
+          <h1 class="text-5xl md:text-[6rem] font-extrabold mb-6 leading-[1.05] text-[#483832]">
+            <div class="relative inline-block">
+              <!-- Glow Background -->
+              <div
+                class="absolute inset-y-1 -left-16 -right-16 bg-gradient-to-r from-transparent via-[#fdf6f0]/70 to-transparent -z-10">
+              </div>
+              Small Spikes
+            </div>
+            <br>
+            <div class="relative inline-block mt-2 md:mt-4">
+              <!-- Glow Background -->
+              <div
+                class="absolute inset-y-1 -left-16 -right-16 bg-gradient-to-r from-transparent via-[#fdf6f0]/70 to-transparent -z-10">
+              </div>
+              Big Flavors.
+            </div>
+          </h1>
+          <p class="text-base md:text-lg text-[#5D4037] mb-10 max-w-lg mx-auto font-medium leading-relaxed">
+            From bold coffee to bubbly tea and soft cakes <br> your cozy cravings delivered to your doorstep.
+          </p>
+        </div>
+
+        <!-- Location Selector -->
+        <div class="reveal-text flex justify-center w-full" style="transition-delay: 0.2s;">
+          <div class="bg-white p-1.5 rounded-full flex items-center shadow-lg max-w-[500px] w-full">
+            <div class="pl-4 pr-3 text-[#5D4037]/70">
+              <svg xmlns="http://www.w3.org/2000/svg" class="h-5 w-5" fill="none" viewBox="0 0 24 24"
+                stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                  d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+              </svg>
+            </div>
+            <input type="text" id="location-input" placeholder="Enter your delivery address..."
+              class="flex-1 py-3 px-1 text-c-espresso focus:outline-none font-semibold text-sm placeholder-c-espresso/50 bg-transparent">
+            <button
+              class="bg-[#6F4E37] hover:bg-[#483832] text-white font-bold text-sm py-3 px-6 rounded-full transition-all shadow-md ml-2">
+              Order Now
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <!-- Mascot Content -->
+      <div class="w-full flex justify-center mt-6 md:mt-12 parallax-el reveal-text" data-speed="0.05"
+        style="transition-delay: 0.4s;">
+        <div class="hedgehog-container relative">
+          <svg viewBox="0 0 200 200">
+            <ellipse class="shadow-el" cx="100" cy="185" rx="70" ry="8" fill="#DCC1AA" />
+            <g class="jump-group">
+              <g class="standing-group">
+                <path
+                  d="M 100 30 L 90 45 L 80 35 L 70 50 L 60 40 L 50 60 L 45 80 L 40 100 L 45 120 L 50 140 L 60 155 L 80 165 L 100 170 L 120 165 L 140 155 L 150 140 L 155 120 L 160 100 L 155 80 L 150 60 L 140 40 L 130 50 L 120 35 L 110 45 Z"
+                  fill="#6F4E37" />
+                <path
+                  d="M 100 45 L 92 55 L 85 48 L 78 60 L 70 52 L 65 70 L 70 100 L 75 130 L 90 150 L 110 150 L 125 130 L 130 100 L 135 70 L 128 52 L 120 60 L 115 48 L 108 55 Z"
+                  fill="#483832" opacity="0.5" />
+                <g>
+                  <rect x="82" y="118" width="36" height="6" rx="3" fill="#ffffff" opacity="0.95" />
+                  <circle cx="90" cy="112" r="5" fill="#ffffff" />
+                  <circle cx="100" cy="110" r="6" fill="#ffffff" />
+                  <circle cx="110" cy="112" r="5" fill="#ffffff" />
+                </g>
+                <path d="M 100 60 C 60 70, 50 110, 50 160 C 60 175, 140 175, 150 160 C 150 110, 140 70, 100 60 Z"
+                  fill="#DCC1AA" />
+                <ellipse cx="75" cy="140" rx="15" ry="10" fill="#F5E0CA" opacity="0.6" />
+                <ellipse cx="125" cy="140" rx="15" ry="10" fill="#F5E0CA" opacity="0.6" />
+                <g transform="translate(10, 10)">
+                  <path d="M 45 45 C 40 35, 55 30, 60 40 C 65 50, 50 55, 45 45 Z" fill="#6F4E37" />
+                  <path d="M 48 43 C 45 38, 52 35, 55 40 C 57 45, 50 48, 48 43 Z" fill="#DCC1AA" />
+                </g>
+                <g transform="translate(140, 10) scale(-1, 1)">
+                  <path d="M 45 45 C 40 35, 55 30, 60 40 C 65 50, 50 55, 45 45 Z" fill="#6F4E37" />
+                  <path d="M 48 43 C 45 38, 52 35, 55 40 C 57 45, 50 48, 48 43 Z" fill="#DCC1AA" />
+                </g>
+                <g class="eye">
+                  <circle cx="75" cy="130" r="10" fill="#483832" />
+                  <circle cx="73" cy="127" r="3.5" fill="#FFFFFF" />
+                </g>
+                <g class="eye">
+                  <circle cx="125" cy="130" r="10" fill="#483832" />
+                  <circle cx="127" cy="127" r="3.5" fill="#FFFFFF" />
+                </g>
+                <path d="M 97 150 C 97 153, 103 153, 103 150" fill="none" stroke="#483832" stroke-width="1.5"
+                  stroke-linecap="round" />
+                <g class="nose">
+                  <circle cx="100" cy="142" r="8" fill="#483832" />
+                  <circle cx="98" cy="139" r="2.5" fill="#FFFFFF" />
+                </g>
+                <path d="M 75 165 C 70 178, 85 180, 88 175 C 91 170, 80 165, 75 165 Z" fill="#6F4E37" />
+                <path d="M 125 165 C 130 178, 115 180, 112 175 C 109 170, 120 165, 125 165 Z" fill="#6F4E37" />
+                <g class="eating-arm">
+                  <path d="M 135 145 C 130 155, 140 160, 145 155 C 150 150, 140 145, 135 145 Z" fill="#6F4E37" />
+                  <g class="food-wrapper">
+                    <g class="food-burger">
+                      <ellipse cx="145" cy="155" rx="6" ry="3" fill="#DCC1AA" />
+                      <rect x="139" y="155" width="12" height="2" fill="#483832" />
+                      <rect x="139" y="157" width="12" height="2" fill="#6F4E37" />
+                      <ellipse cx="145" cy="160" rx="6" ry="3" fill="#DCC1AA" />
+                    </g>
+                    <g class="food-apple">
+                      <circle cx="145" cy="157" r="5" fill="#6F4E37" />
+                      <path d="M 145 152 Q 147 150 149 152" fill="none" stroke="#483832" stroke-width="1.5" />
+                    </g>
+                    <g class="food-cookie">
+                      <circle cx="145" cy="157" r="5.5" fill="#DCC1AA" />
+                      <circle cx="143" cy="155" r="1" fill="#483832" />
+                      <circle cx="147" cy="156" r="1" fill="#483832" />
+                      <circle cx="144" cy="159" r="1" fill="#483832" />
+                      <circle cx="146" cy="160" r="1" fill="#483832" />
+                    </g>
+                  </g>
+                </g>
+                <g class="hi-arm">
+                  <path d="M 65 145 C 70 155, 60 160, 55 155 C 50 150, 60 145, 65 145 Z" fill="#6F4E37" />
+                </g>
+              </g>
+            </g>
+          </svg>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Menu Section (Theme White) -->
+  <section class="color-section py-32 relative" data-color="#FFFDF7" id="menu-section">
+    <!-- Background Decor -->
+    <div class="absolute right-10 top-10 text-c-cream/50 parallax-el" data-speed="-0.2">
+      <svg width="100" height="100" viewBox="0 0 100 100" fill="currentColor">
+        <circle cx="50" cy="50" r="50" />
+      </svg>
+    </div>
+    <div class="absolute left-20 bottom-10 text-c-beige/30 parallax-el" data-speed="0.1">
+      <svg width="150" height="150" viewBox="0 0 100 100" fill="currentColor">
+        <rect width="100" height="100" rx="20" transform="rotate(45 50 50)" />
+      </svg>
+    </div>
+
+    <div class="max-w-7xl mx-auto px-6 text-center relative z-10">
+      <h2 class="text-5xl font-extrabold mb-4 text-c-espresso reveal-text" style="transition-delay: 0.1s;">Order your favourite here</h2>
+      <p class="text-xl text-c-coffee mb-16 max-w-2xl mx-auto reveal-text" style="transition-delay: 0.2s;">
+        Freshly prepared items from our top-rated local chefs. Menu and pricing dynamically synced.
+      </p>
+
+      <!-- Dynamic Product Grid -->
+      <div id="product-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8 text-left">
+        <!-- Loader -->
+        <div class="col-span-full py-20 text-center text-c-beige font-bold text-xl animate-pulse">
+            Loading delicious meals...
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA Section (Theme Beige) -->
+  <section class="color-section h-[650px] flex items-center justify-center relative overflow-hidden"
+    data-color="#DCC1AA">
+
+    <!-- Heavy Parallax Typographic Background -->
+    <div class="absolute whitespace-nowrap text-[15rem] font-poppins font-bold text-c-white/30 parallax-el select-none"
+      data-speed="-0.4" style="top: 10%; left: -10%;">FRESH</div>
+    <div class="absolute whitespace-nowrap text-[15rem] font-poppins font-bold text-c-coffee/10 parallax-el select-none"
+      data-speed="0.3" style="top: 40%; right: -10%;">TASTY</div>
+
+    <div class="relative z-10 text-center px-6 max-w-4xl reveal-text">
+      <div class="mb-6 inline-block parallax-el" data-speed="-0.1">
+        <svg class="w-16 h-16 text-c-espresso mx-auto" fill="currentColor" viewBox="0 0 20 20">
+          <path
+            d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 00.95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 00-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 00-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 00-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 00.951-.69l1.07-3.292z">
+          </path>
+        </svg>
+      </div>
+      <h2 class="text-6xl md:text-[5rem] font-extrabold mb-8 tracking-tight text-c-espresso leading-tight parallax-el"
+        data-speed="0.1">Fresh Ingredients.<br>Exceptional Taste.</h2>
+      <p class="text-2xl font-light mb-12 text-c-coffee parallax-el" data-speed="-0.05">We exclusively partner with
+        top-tier restaurants that care as much about quality as you do.</p>
+      <button
+        class="bg-c-espresso text-c-white font-poppins font-extrabold text-xl py-5 px-12 rounded-full hover:bg-c-coffee transition-all duration-300 shadow-[0_10px_30px_rgba(72,56,50,0.3)] transform hover:scale-105 parallax-el"
+        data-speed="0.15">
+        Explore Top Restaurants
+      </button>
+    </div>
+  </section>
+
+  <!-- Footer (Theme Espresso) -->
+  <footer class="color-section bg-c-espresso text-c-white py-20" data-color="#483832">
+    <div class="max-w-7xl mx-auto px-6 grid grid-cols-1 md:grid-cols-4 gap-16 reveal-text">
+      <div class="md:col-span-1">
+        <div class="flex items-center gap-3 mb-6 cursor-pointer hover:opacity-80 transition">
+          <svg viewBox="0 0 200 200" class="w-10 h-10 drop-shadow-sm">
+            <g transform="translate(0, -10)">
+              <path
+                d="M 100 30 L 90 45 L 80 35 L 70 50 L 60 40 L 50 60 L 45 80 L 40 100 L 45 120 L 50 140 L 60 155 L 80 165 L 100 170 L 120 165 L 140 155 L 150 140 L 155 120 L 160 100 L 155 80 L 150 60 L 140 40 L 130 50 L 120 35 L 110 45 Z"
+                fill="#F5E0CA" />
+              <path d="M 100 60 C 60 70, 50 110, 50 160 C 60 175, 140 175, 150 160 C 150 110, 140 70, 100 60 Z"
+                fill="#FFFDF7" />
+              <g transform="translate(10, 10)">
+                <path d="M 45 45 C 40 35, 55 30, 60 40 C 65 50, 50 55, 45 45 Z" fill="#F5E0CA" />
+                <path d="M 48 43 C 45 38, 52 35, 55 40 C 57 45, 50 48, 48 43 Z" fill="#FFFDF7" />
+              </g>
+              <g transform="translate(140, 10) scale(-1, 1)">
+                <path d="M 45 45 C 40 35, 55 30, 60 40 C 65 50, 50 55, 45 45 Z" fill="#F5E0CA" />
+                <path d="M 48 43 C 45 38, 52 35, 55 40 C 57 45, 50 48, 48 43 Z" fill="#FFFDF7" />
+              </g>
+              <circle cx="75" cy="130" r="10" fill="#483832" />
+              <circle cx="73" cy="127" r="3.5" fill="#FFFFFF" />
+              <circle cx="125" cy="130" r="10" fill="#483832" />
+              <circle cx="127" cy="127" r="3.5" fill="#FFFFFF" />
+              <path d="M 97 150 C 97 153, 103 153, 103 150" fill="none" stroke="#483832" stroke-width="1.5"
+                stroke-linecap="round" />
+              <circle cx="100" cy="142" r="8" fill="#483832" />
+              <circle cx="98" cy="139" r="2.5" fill="#FFFFFF" />
+              <path d="M 75 165 C 70 178, 85 180, 88 175 C 91 170, 80 165, 75 165 Z" fill="#F5E0CA" />
+              <path d="M 125 165 C 130 178, 115 180, 112 175 C 109 170, 120 165, 125 165 Z" fill="#F5E0CA" />
+              <path d="M 135 145 C 130 155, 140 160, 145 155 C 150 150, 140 145, 135 145 Z" fill="#F5E0CA" />
+              <path d="M 65 145 C 70 155, 60 160, 55 155 C 50 150, 60 145, 65 145 Z" fill="#F5E0CA" />
+            </g>
+          </svg>
+          <span class="font-poppins font-extrabold text-2xl tracking-tight text-c-white">Zestro</span>
+        </div>
+        <p class="text-c-beige text-base leading-relaxed mb-6">Delivering happiness to your door, one exceptional meal
+          at a time.</p>
+        <div class="flex space-x-4">
+          <div
+            class="w-10 h-10 rounded-full bg-c-coffee flex items-center justify-center hover:bg-c-cream hover:text-c-espresso transition cursor-pointer">
+            <svg class="w-5 h-5" fill="currentColor" viewBox="0 0 24 24">
+              <path
+                d="M24 4.557c-.883.392-1.832.656-2.828.775 1.017-.609 1.798-1.574 2.165-2.724-.951.564-2.005.974-3.127 1.195-.897-.957-2.178-1.555-3.594-1.555-3.179 0-5.515 2.966-4.797 6.045-4.091-.205-7.719-2.165-10.148-5.144-1.29 2.213-.669 5.108 1.523 6.574-.806-.026-1.566-.247-2.229-.616-.054 2.281 1.581 4.415 3.949 4.89-.693.188-1.452.232-2.224.084.626 1.956 2.444 3.379 4.6 3.419-2.07 1.623-4.678 2.348-7.29 2.04 2.179 1.397 4.768 2.212 7.548 2.212 9.142 0 14.307-7.721 13.995-14.646.962-.695 1.797-1.562 2.457-2.549z" />
+            </svg>
+          </div>
+        </div>
+      </div>
+      <div>
+        <h4 class="font-poppins font-bold mb-6 text-xl text-c-white">Company</h4>
+        <ul class="space-y-4 text-c-beige text-base">
+          <li><a href="#" class="hover:text-c-white transition">About Us</a></li>
+          <li><a href="#" class="hover:text-c-white transition">Careers</a></li>
+          <li><a href="#" class="hover:text-c-white transition">Blog</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 class="font-poppins font-bold mb-6 text-xl text-c-white">Support</h4>
+        <ul class="space-y-4 text-c-beige text-base">
+          <li><a href="#" class="hover:text-c-white transition">Help Center</a></li>
+          <li><a href="#" class="hover:text-c-white transition">Terms of Service</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4 class="font-poppins font-bold mb-6 text-xl text-c-white">Get the App</h4>
+        <div class="flex flex-col gap-4">
+          <button
+            class="bg-c-coffee hover:bg-c-beige hover:text-c-espresso px-5 py-3 rounded-xl flex items-center gap-4 transition border border-c-coffee/50">
+            <svg class="w-8 h-8" fill="currentColor" viewBox="0 0 24 24">
+              <path
+                d="M17.5 14c0-2.5 2-3.8 2.1-3.8-1.2-1.7-3-1.9-3.7-1.9-1.6-.2-3.1.9-3.9.9s-2-.9-3.4-.9c-1.8 0-3.4 1-4.3 2.6-1.9 3.3-.5 8.1 1.3 10.7 1 1.4 2.1 2.9 3.6 2.8 1.4-.1 1.9-1 3.6-1 1.7 0 2.3 1 3.7 1 1.5.1 2.4-1.3 3.4-2.7 1.1-1.6 1.6-3.1 1.6-3.2-.1-.1-2.5-1-2.5-4zM12 5.5c.8-1 2-1.7 3.2-1.8.1 1.3-.4 2.6-1.2 3.6-.9 1-2.2 1.8-3.4 1.6-.1-1.3.4-2.5 1.4-3.4z" />
+            </svg>
+            <div class="text-left">
+              <div class="text-xs opacity-80 leading-none mb-1">Download on the</div>
+              <div class="font-poppins font-bold text-lg leading-none">App Store</div>
+            </div>
+          </button>
+        </div>
+      </div>
+    </div>
+    <div
+      class="max-w-7xl mx-auto px-6 mt-16 pt-8 border-t border-c-coffee text-center text-c-beige text-sm reveal-text">
+      &copy; 2026 Zestro Delivery. All rights reserved.
+    </div>
+  </footer>
+
+  <script>
+    const body = document.body;
+    const navbar = document.getElementById('navbar');
+    const colorSections = document.querySelectorAll('.color-section');
+    const revealTexts = document.querySelectorAll('.reveal-text');
+    const parallaxEls = document.querySelectorAll('.parallax-el');
+    const navTexts = document.querySelectorAll('.nav-text');
+
+    window.addEventListener('scroll', () => {
+      let scrollY = window.scrollY;
+
+      // Navbar Scroll Effect
+      if (scrollY > 50) {
+        navbar.classList.add('nav-scrolled', 'py-4');
+        navbar.classList.remove('py-6');
+      } else {
+        navbar.classList.remove('nav-scrolled', 'py-4');
+        navbar.classList.add('py-6');
+      }
+
+      // Smooth Parallax Translation
+      parallaxEls.forEach(el => {
+        let speed = parseFloat(el.getAttribute('data-speed'));
+        el.style.transform = `translateY(${scrollY * speed}px)`;
+      });
+
+      // Reveal Text on Scroll
+      revealTexts.forEach(el => {
+        const rect = el.getBoundingClientRect();
+        if (rect.top < window.innerHeight * 0.85) {
+          el.classList.add('active');
+        }
+      });
+
+      // Section Color Change on Scroll
+      colorSections.forEach(section => {
+        const rect = section.getBoundingClientRect();
+        // If section is roughly in the middle of the screen
+        if (rect.top <= window.innerHeight / 2 && rect.bottom >= window.innerHeight / 2) {
+          const newColor = section.getAttribute('data-color');
+          if (body.style.backgroundColor !== newColor) {
+            body.style.backgroundColor = newColor;
+          }
+        }
+      });
+    });
+
+    // Trigger initial scroll to run animations for elements already in view
+    window.dispatchEvent(new Event('scroll'));
+
+    // JS for Location Input interaction with Mascot
+    const locationInput = document.getElementById("location-input");
+    locationInput.addEventListener("focus", () => {
+      body.classList.add("location-active");
+    });
+    locationInput.addEventListener("blur", () => {
+      body.classList.remove("location-active");
+    });
+
+    // Fetch and render menu items
+    async function fetchMenu() {
+      const grid = document.getElementById('product-grid');
+      try {
+        const response = await fetch('/api/menu');
+        const items = await response.json();
+        
+        if (!items || items.length === 0) {
+          grid.innerHTML = '<div class="col-span-full text-xl text-c-coffee py-10 text-center font-semibold">No items currently available.</div>';
+          return;
+        }
+
+        grid.innerHTML = items.map((item, index) => {
+          const delay = (index % 3) * 0.1 + 0.1;
+          return `
+            <div class="reveal-text" style="transition-delay: ${delay}s;">
+              <div class="group h-full flex flex-col p-6 rounded-[2.5rem] bg-white hover:bg-[#fffcf5] border border-c-beige/30 shadow-[0_15px_40px_rgba(72,56,50,0.04)] hover:shadow-[0_25px_50px_rgba(72,56,50,0.12)] transition-all duration-500 transform hover:-translate-y-2 parallax-el" data-speed="0.05">
+                
+                <div class="w-full h-48 bg-[#F5E0CA] rounded-[1.5rem] mb-6 flex items-center justify-center group-hover:scale-105 transition-transform duration-500 overflow-hidden relative cursor-pointer">
+                   <div class="absolute inset-0 bg-gradient-to-tr from-[#6F4E37]/10 to-transparent mix-blend-multiply z-10 pointer-events-none"></div>
+                   ${item.imageUrl 
+                     ? `<img src="${item.imageUrl}" class="w-full h-full object-cover relative z-0" alt="${item.name}">` 
+                     : `<svg class="w-20 h-20 text-[#6F4E37]/40 group-hover:text-[#6F4E37]/70 transition-colors duration-500 relative z-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                          <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.5" d="M12 6.253v13m0-13C10.832 5.477 9.246 5 7.5 5S4.168 5.477 3 6.253v13C4.168 18.477 5.754 18 7.5 18s3.332.477 4.5 1.253m0-13C13.168 5.477 14.754 5 16.5 5c1.747 0 3.332.477 4.5 1.253v13C19.832 18.477 18.247 18 16.5 18c-1.746 0-3.332.477-4.5 1.253"></path>
+                        </svg>`
+                   }
+                </div>
+                
+                <div class="flex flex-col flex-grow">
+                  <div class="flex justify-between items-start mb-2 gap-4">
+                    <h3 class="text-2xl font-bold text-[#483832] font-poppins">${item.name}</h3>
+                    <span class="text-xl font-extrabold text-[#6F4E37] bg-[#F5E0CA] px-3 py-1 rounded-lg shrink-0">$${parseFloat(item.price).toFixed(2)}</span>
+                  </div>
+                  <p class="text-[#483832]/70 text-sm leading-relaxed mb-6 flex-grow">${item.description || 'Enjoy our delicious recipe.'}</p>
+                  
+                  <button class="w-full mt-auto py-3.5 rounded-xl bg-transparent border-2 border-[#6F4E37] text-[#6F4E37] font-bold hover:bg-[#6F4E37] hover:text-white transition-all duration-300 flex items-center justify-center gap-2">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 3h2l.4 2M7 13h10l4-8H5.4M7 13L5.4 5M7 13l-2.293 2.293c-.63.63-.184 1.707.707 1.707H17m0 0a2 2 0 100 4 2 2 0 000-4zm-8 2a2 2 0 11-4 0 2 2 0 014 0z"></path></svg>
+                    Add to Cart
+                  </button>
+                </div>
+              </div>
+            </div>
+          `;
+        }).join('');
+
+        // Re-trigger reveal animations for newly injected DOM nodes
+        setTimeout(() => {
+          const newReveals = document.querySelectorAll('#product-grid .reveal-text');
+          newReveals.forEach(el => {
+            const rect = el.getBoundingClientRect();
+            if(rect.top < window.innerHeight - 50) {
+              el.classList.add('active');
+            }
+          });
+        }, 100);
+
+      } catch (err) {
+        console.error("Failed to load menu", err);
+        grid.innerHTML = '<div class="col-span-full text-[#483832] font-semibold py-10 text-center">Failed to load menu items. Please try again later.</div>';
+      }
+    }
+
+    // Initialize fetching when the page loads
+    window.addEventListener('DOMContentLoaded', fetchMenu);
+  </script>
+    <script src="/modern-animations.js"></script>
+</body>
+
+</html>

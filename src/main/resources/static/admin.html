@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Login - Zestro</title>
+    <link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; -webkit-font-smoothing: antialiased; }
+        html, body { width: 100%; height: 100%; overflow: hidden; font-family: 'Inter', sans-serif; background: #003F29; display: flex; align-items: center; justify-content: center; }
+
+        .bg-full {
+            position: fixed; inset: 0;
+            background:
+                radial-gradient(ellipse 80% 50% at 50% 105%, #b8e04a 0%, #4db84a 18%, transparent 55%),
+                radial-gradient(ellipse at 50% 80%, #1a6645 0%, #003F29 50%, #001d14 100%);
+            z-index: 0;
+        }
+
+        .glass-panel {
+            position: relative; z-index: 10;
+            background: rgba(0,30,18,.60);
+            border: 1px solid rgba(255,255,255,.10);
+            border-radius: 20px;
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+            padding: 48px; width: 100%; max-width: 400px;
+            text-align: center;
+        }
+
+        .logo { width: 48px; margin-bottom: 24px; }
+        
+        h1 {
+            font-family: 'Anton', sans-serif; font-size: 32px; color: #fff;
+            letter-spacing: 1px; text-transform: uppercase; margin-bottom: 8px;
+        }
+        p { color: rgba(255,255,255,.5); font-size: 14px; margin-bottom: 32px; }
+
+        .form-group { margin-bottom: 16px; text-align: left; }
+        .form-group input {
+            width: 100%; background: rgba(255,255,255,.07); border: 1.5px solid rgba(255,255,255,.14);
+            border-radius: 12px; padding: 14px 16px; color: #fff; font-family: 'Inter', sans-serif;
+            font-size: 15px; outline: none; transition: all .2s;
+        }
+        .form-group input:focus { border-color: #b8e04a; background: rgba(255,255,255,.10); }
+
+        .btn-primary {
+            width: 100%; background: #fff; color: #003F29; font-family: 'Anton', sans-serif;
+            font-size: 16px; letter-spacing: 1px; text-transform: uppercase;
+            border: none; padding: 16px; border-radius: 100px; cursor: pointer;
+            transition: transform .2s, box-shadow .2s; box-shadow: 0 4px 16px rgba(0,0,0,.2);
+            margin-top: 8px;
+        }
+        .btn-primary:hover { transform: scale(1.02); box-shadow: 0 8px 24px rgba(0,0,0,.3); }
+
+    </style>
+</head>
+<body>
+    <div class="bg-full"></div>
+
+    <div class="glass-panel">
+        <img src="/img/zestro-logo-white.png" alt="Logo" class="logo">
+        <h1>Admin Portal</h1>
+        <p>Enter your credentials to manage Zestro</p>
+
+        <form action="/admin-dashboard.html" method="GET">
+            <div class="form-group">
+                <input type="email" placeholder="Email Address" required value="admin@zestro.com">
+            </div>
+            <div class="form-group">
+                <input type="password" placeholder="Password" required value="password123">
+            </div>
+            <button type="submit" class="btn-primary">Sign In</button>
+        </form>
+    </div>
+</body>
+</html>
