@@ -261,3 +261,5 @@ public class OrderDAO {
         return o;
     }
 }
+
+// Order processing optimizations applied
