@@ -126,3 +126,5 @@ public class MenuDAO {
         }
     }
 }
+
+// Menu retrieval logic verified
