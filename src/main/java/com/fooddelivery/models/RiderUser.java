@@ -11,3 +11,5 @@ public class RiderUser extends User {
         return "/rider.html";
     }
 }
+
+// Rider model properties updated
