@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Customer Register - Zestro</title>
+    <link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; -webkit-font-smoothing: antialiased; }
+        html, body { width: 100%; height: 100%; overflow-x: hidden; font-family: 'Inter', sans-serif; background: #003F29; display: flex; align-items: center; justify-content: center; min-height: 100vh; padding: 40px 20px; }
+
+        .bg-full {
+            position: fixed; inset: 0;
+            background:
+                radial-gradient(ellipse 80% 50% at 50% 105%, #b8e04a 0%, #4db84a 18%, transparent 55%),
+                radial-gradient(ellipse at 50% 80%, #1a6645 0%, #003F29 50%, #001d14 100%);
+            z-index: 0;
+        }
+
+        .glass-panel {
+            position: relative; z-index: 10;
+            background: rgba(0,30,18,.60);
+            border: 1px solid rgba(255,255,255,.10);
+            border-radius: 20px;
+            backdrop-filter: blur(18px);
+            -webkit-backdrop-filter: blur(18px);
+            padding: 48px; width: 100%; max-width: 450px;
+            text-align: center;
+        }
+
+        .logo { width: 48px; margin-bottom: 24px; }
+        
+        h1 {
+            font-family: 'Anton', sans-serif; font-size: 32px; color: #fff;
+            letter-spacing: 1px; text-transform: uppercase; margin-bottom: 8px;
+        }
+        p { color: rgba(255,255,255,.5); font-size: 14px; margin-bottom: 32px; }
+
+        .form-group { margin-bottom: 16px; text-align: left; }
+        .form-group input {
+            width: 100%; background: rgba(255,255,255,.07); border: 1.5px solid rgba(255,255,255,.14);
+            border-radius: 12px; padding: 14px 16px; color: #fff; font-family: 'Inter', sans-serif;
+            font-size: 15px; outline: none; transition: all .2s;
+        }
+        .form-group input:focus { border-color: #b8e04a; background: rgba(255,255,255,.10); }
+
+        .btn-primary {
+            width: 100%; background: #fff; color: #003F29; font-family: 'Anton', sans-serif;
+            font-size: 16px; letter-spacing: 1px; text-transform: uppercase;
+            border: none; padding: 16px; border-radius: 100px; cursor: pointer;
+            transition: transform .2s, box-shadow .2s; box-shadow: 0 4px 16px rgba(0,0,0,.2);
+            margin-top: 8px;
+        }
+        .btn-primary:hover { transform: scale(1.02); box-shadow: 0 8px 24px rgba(0,0,0,.3); }
+
+        #message-box {
+            padding: 12px; border-radius: 12px; font-size: 13px; font-weight: 500; margin-bottom: 20px; display: none;
+        }
+        .msg-error { background: rgba(255, 0, 0, 0.1); color: #ff6b6b; border: 1px solid rgba(255, 0, 0, 0.2); }
+        .msg-success { background: rgba(77, 184, 74, 0.1); color: #b8e04a; border: 1px solid rgba(77, 184, 74, 0.2); }
+    </style>
+</head>
+<body>
+    <div class="bg-full"></div>
+
+    <div class="glass-panel">
+        <img src="/img/zestro-logo-white.png" alt="Logo" class="logo">
+        <h1>Create Account</h1>
+        <p>Join Zestro to track orders and save your details</p>
+
+        <div id="message-box"></div>
+
+        <form onsubmit="event.preventDefault(); register();">
+            <div class="form-group" style="display: flex; gap: 12px;">
+                <input type="text" id="reg-first-name" placeholder="First Name" required>
+                <input type="text" id="reg-last-name" placeholder="Last Name" required>
+            </div>
+            <div class="form-group">
+                <input type="email" id="reg-email" placeholder="Email Address" required>
+            </div>
+            <div class="form-group">
+                <input type="tel" id="reg-mobile" placeholder="Mobile Number" required>
+            </div>
+            <div class="form-group">
+                <input type="text" id="reg-address" placeholder="Home Address (Optional)">
+            </div>
+            <div class="form-group">
+                <input type="password" id="reg-password" placeholder="Password" required>
+            </div>
+            <button type="submit" class="btn-primary" id="reg-btn">Sign Up</button>
+            
+            <div style="margin-top: 24px;">
+                <p style="margin-bottom: 8px; color: rgba(255,255,255,.5); font-size: 13px;">Already have an account? <a href="/customer-login.html" style="color: #b8e04a; font-weight: 600; text-decoration: none;">Login Here</a></p>
+            </div>
+        </form>
+    </div>
+
+    <script>
+        function showMessage(msg, type) {
+            const box = document.getElementById('message-box');
+            if (!msg) {
+                box.style.display = 'none';
+                return;
+            }
+            box.style.display = 'block';
+            box.className = '';
+            if (type === 'error') box.classList.add('msg-error');
+            else if (type === 'success') box.classList.add('msg-success');
+            
+            box.innerText = msg;
+        }
+
+        async function register() {
+            const firstName = document.getElementById('reg-first-name').value.trim();
+            const lastName = document.getElementById('reg-last-name').value.trim();
+            const name = firstName + " " + lastName;
+            const email = document.getElementById('reg-email').value;
+            const mobile = document.getElementById('reg-mobile').value;
+            const address = document.getElementById('reg-address').value;
+            const password = document.getElementById('reg-password').value;
+            const btn = document.getElementById('reg-btn');
+
+            if(!firstName || !lastName || !email || !mobile || !password) return showMessage('Please fill all required fields', 'error');
+
+            btn.innerText = "Processing...";
+            try {
+                const res = await fetch('/api/auth/register/customer', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                        fullName: name,
+                        username: email,
+                        password: password,
+                        mobile: mobile,
+                        address: address
+                    })
+                });
+                const data = await res.json();
+
+                if (res.ok && data.success) {
+                    showMessage('Account created! Redirecting to login...', 'success');
+                    setTimeout(() => {
+                        window.location.href = '/customer-login.html';
+                    }, 1500);
+                } else {
+                    showMessage(data.message || 'Registration failed', 'error');
+                }
+            } catch (e) {
+                showMessage('Network error', 'error');
+            }
+            btn.innerText = "Sign Up";
+        }
+    </script>
+</body>
+</html>

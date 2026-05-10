@@ -11,7 +11,7 @@ public abstract class User {
         this.role = role;
     }
 
-    // Encapsulation: private attributes, public getters/setters
+    // encapsulation: private attributes, public getters/setters
     public int getId() {
         return id;
     }
@@ -36,6 +36,6 @@ public abstract class User {
         this.role = role;
     }
 
-    // Abstraction and Polymorphism
+    // abstraction and polymorphism
     public abstract String getRoleAccess();
 }

@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Rider Application - FoodDelivery</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        body { font-family: 'Inter', sans-serif; background: #f3f4f6; }
+        .bg-dark { background-color: #003F29; }
+        .font-anton { font-family: 'Anton', sans-serif; letter-spacing: 1px; text-transform: uppercase; }
+        .pattern-bg {
+            background-color: #003F29;
+            background-image: url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cpath d='M54.627 0l.83.83v58.34h-58.34l-.83-.83L54.627 0zM29.17 0l29.17 29.17V0H29.17zM0 29.17l29.17 29.17H0V29.17z' fill='%23004d33' fill-opacity='0.6' fill-rule='evenodd'/%3E%3C/svg%3E");
+        }
+        /* Custom scrollbar for form */
+        .form-scroll::-webkit-scrollbar { width: 5px; }
+        .form-scroll::-webkit-scrollbar-track { background: transparent; }
+        .form-scroll::-webkit-scrollbar-thumb { background: #e5e7eb; border-radius: 10px; }
+        .form-scroll::-webkit-scrollbar-thumb:hover { background: #d1d5db; }
+    </style>
+</head>
+<body class="antialiased min-h-screen flex items-center justify-center sm:p-4 bg-gray-100">
+
+    <!-- phone-style container for desktop, full screen on mobile -->
+    <div class="w-full h-[100dvh] sm:h-[800px] max-w-[380px] bg-white sm:rounded-[40px] shadow-2xl overflow-hidden relative flex flex-col">
+        
+        <!-- top dark section -->
+        <div class="h-[22%] relative bg-dark flex-shrink-0 flex flex-col justify-center px-6 overflow-hidden pt-4">
+            <div class="absolute inset-0 pattern-bg"></div>
+            <!-- header content -->
+            <div class="relative z-10 w-full flex items-center justify-center">
+                <a href="/rider-login.html" class="absolute left-0 text-white hover:text-gray-300 transition">
+                    <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10 19l-7-7m0 0l7-7m-7 7h18"/></svg>
+                </a>
+                <h1 class="text-3xl font-anton text-white m-0 tracking-wide">Sign Up</h1>
+            </div>
+        </div>
+
+        <!-- bottom white section -->
+        <div class="flex-1 bg-white relative -mt-6 rounded-tl-[50px] pt-8 pb-6 flex flex-col shadow-[0_-10px_20px_rgba(0,0,0,0.1)] z-20 overflow-hidden">
+            
+            <!-- error/message box -->
+            <div id="message-box" class="hidden mb-4 mx-8 p-3 rounded-xl text-sm font-medium text-center shrink-0"></div>
+
+            <!-- form container (scrollable) -->
+            <div id="register-form" class="flex-1 overflow-y-auto form-scroll px-8 pb-4">
+                <div class="space-y-4">
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-500 mb-1 ml-2">Username</label>
+                        <input type="text" id="reg-username" class="w-full px-5 py-3.5 rounded-2xl bg-[#f8f9fa] border-none focus:outline-none focus:ring-2 focus:ring-[#003F29] transition text-gray-800 font-medium text-[14px]" placeholder="johndoe">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-500 mb-1 ml-2">Full Name</label>
+                        <input type="text" id="reg-fullname" class="w-full px-5 py-3.5 rounded-2xl bg-[#f8f9fa] border-none focus:outline-none focus:ring-2 focus:ring-[#003F29] transition text-gray-800 font-medium text-[14px]" placeholder="John Doe">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-500 mb-1 ml-2">Mobile Number</label>
+                        <input type="text" id="reg-mobile" class="w-full px-5 py-3.5 rounded-2xl bg-[#f8f9fa] border-none focus:outline-none focus:ring-2 focus:ring-[#003F29] transition text-gray-800 font-medium text-[14px]" placeholder="+1 555 1234">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-500 mb-1 ml-2">NIC Number</label>
+                        <input type="text" id="reg-nic" class="w-full px-5 py-3.5 rounded-2xl bg-[#f8f9fa] border-none focus:outline-none focus:ring-2 focus:ring-[#003F29] transition text-gray-800 font-medium text-[14px]" placeholder="National ID">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-500 mb-1 ml-2">NIC Image Front (Required)</label>
+                        <input type="file" id="reg-nicimage" class="w-full px-5 py-3 rounded-2xl bg-[#f8f9fa] border-none focus:outline-none focus:ring-2 focus:ring-[#003F29] transition text-gray-600 font-medium text-[13px]" accept="image/*">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-500 mb-1 ml-2">Address</label>
+                        <input type="text" id="reg-address" class="w-full px-5 py-3.5 rounded-2xl bg-[#f8f9fa] border-none focus:outline-none focus:ring-2 focus:ring-[#003F29] transition text-gray-800 font-medium text-[14px]" placeholder="Residential Address">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-500 mb-1 ml-2">Profile Picture</label>
+                        <input type="file" id="reg-profilepic" class="w-full px-5 py-3 rounded-2xl bg-[#f8f9fa] border-none focus:outline-none focus:ring-2 focus:ring-[#003F29] transition text-gray-600 font-medium text-[13px]" accept="image/*">
+                    </div>
+                    <div>
+                        <label class="block text-xs font-semibold text-gray-500 mb-1 ml-2">Password</label>
+                        <input type="password" id="reg-password" class="w-full px-5 py-3.5 rounded-2xl bg-[#f8f9fa] border-none focus:outline-none focus:ring-2 focus:ring-[#003F29] transition text-gray-800 font-bold tracking-widest text-lg" placeholder="••••••••">
+                    </div>
+                </div>
+            </div>
+
+            <!-- fixed bottom actions -->
+            <div id="register-actions" class="px-8 pt-4 shrink-0 bg-white shadow-[0_-10px_15px_-3px_rgba(255,255,255,1)]">
+                <button onclick="register()" id="submit-btn" class="w-full text-center bg-[#0b4d26] text-white font-bold py-4 rounded-full text-[17px] hover:bg-[#063017] transition shadow-lg mt-2">
+                    Sign Up
+                </button>
+                <div class="text-center mt-6 mb-2">
+                    <p class="text-[13px] text-gray-500 font-medium">Already have any account? <a href="/rider-login.html" class="text-gray-900 font-bold hover:underline">Sign In</a></p>
+                </div>
+            </div>
+
+            <!-- pending screen (hidden initially) -->
+            <div id="pending-screen" class="hidden flex-col items-center justify-center flex-1 px-8 text-center bg-white absolute inset-0 z-30 rounded-tl-[50px]">
+                <div class="w-20 h-20 bg-yellow-100 rounded-full flex items-center justify-center mb-6">
+                    <svg class="w-10 h-10 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                </div>
+                <h2 class="text-3xl font-anton text-gray-900 mb-4 tracking-wide">Submitted!</h2>
+                <p class="text-[15px] text-gray-600 mb-8 leading-relaxed font-medium">Your application is currently <span class="font-bold text-yellow-600">Pending Review</span> by an administrator.<br><br>Please check back later.</p>
+                <a href="/rider.html" class="block w-full text-center bg-[#0b4d26] text-white font-bold py-4 rounded-full text-[17px] hover:bg-[#063017] transition shadow-lg mt-2">Return Home</a>
+            </div>
+
+        </div>
+    </div>
+
+    <script>
+        function showMessage(msg, type) {
+            const box = document.getElementById('message-box');
+            if (!msg) {
+                box.classList.add('hidden');
+                return;
+            }
+            box.classList.remove('hidden', 'bg-red-50', 'text-red-600', 'bg-green-50', 'text-green-600', 'bg-yellow-50', 'text-yellow-700');
+            
+            if (type === 'error') box.classList.add('bg-red-50', 'text-red-600');
+            else if (type === 'success') box.classList.add('bg-green-50', 'text-green-600');
+            else if (type === 'warning') box.classList.add('bg-yellow-50', 'text-yellow-700');
+            
+            box.innerText = msg;
+        }
+
+        async function register() {
+            const u = document.getElementById('reg-username').value;
+            const p = document.getElementById('reg-password').value;
+            const fn = document.getElementById('reg-fullname').value;
+            const mob = document.getElementById('reg-mobile').value;
+            const nic = document.getElementById('reg-nic').value;
+            const addr = document.getElementById('reg-address').value;
+            const picInput = document.getElementById('reg-profilepic');
+            const nicImageInput = document.getElementById('reg-nicimage');
+
+            if(!u || !p || !fn || !mob || !nic || !addr || nicImageInput.files.length === 0) return showMessage('Please fill all fields and upload NIC image', 'error');
+
+            const btn = document.getElementById('submit-btn');
+            btn.disabled = true;
+            btn.innerText = 'Submitting...';
+
+            const formData = new FormData();
+            formData.append('username', u);
+            formData.append('password', p);
+            formData.append('role', 'RIDER');
+            formData.append('fullName', fn);
+            formData.append('mobile', mob);
+            formData.append('nic', nic);
+            formData.append('address', addr);
+            if (picInput.files.length > 0) {
+                formData.append('profilePic', picInput.files[0]);
+            }
+            if (nicImageInput.files.length > 0) {
+                formData.append('nicImage', nicImageInput.files[0]);
+            }
+
+            try {
+                const res = await fetch('/api/auth/register', {
+                    method: 'POST',
+                    body: formData
+                });
+                const data = await res.json();
+
+                if (res.ok && data.success) {
+                    // show pending screen
+                    document.getElementById('register-form').classList.add('hidden');
+                    document.getElementById('register-actions').classList.add('hidden');
+                    document.getElementById('message-box').classList.add('hidden');
+                    document.getElementById('pending-screen').classList.replace('hidden', 'flex');
+                } else {
+                    showMessage(data.message || 'Registration failed', 'error');
+                    btn.disabled = false;
+                    btn.innerText = 'Sign Up';
+                }
+            } catch (e) {
+                showMessage('Network error', 'error');
+                btn.disabled = false;
+                btn.innerText = 'Sign Up';
+            }
+        }
+    </script>
+<script src="/auth.js"></script>
+</body>
+</html>
+
