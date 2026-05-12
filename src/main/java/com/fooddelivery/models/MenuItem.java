@@ -1,5 +1,10 @@
 package com.fooddelivery.models;
 
+/**
+ * Represents a product/item in the menu catalog.
+ * This is the primary data model (blueprint) used by the Item Management module
+ * to map database records to Java objects.
+ */
 public class MenuItem {
     private int id;
     private String name;
@@ -7,7 +12,8 @@ public class MenuItem {
     private double price;
     private String imageUrl;
 
-    public MenuItem() {}
+    public MenuItem() {
+    }
 
     public MenuItem(int id, String name, String description, double price, String imageUrl) {
         this.id = id;
