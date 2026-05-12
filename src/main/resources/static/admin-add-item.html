@@ -48,7 +48,7 @@
 </head>
 <body class="flex h-screen overflow-hidden">
 
-    <!-- Sidebar (Same as Dashboard) -->
+    <!-- sidebar (same as dashboard) -->
     <aside class="w-64 bg-white border-r border-gray-100 flex flex-col hidden md:flex z-20">
         <div class="h-20 flex items-center px-8">
             <div class="flex items-center gap-3">
@@ -56,7 +56,7 @@
                 <span class="text-xl font-bold text-gray-800">Zestro</span>
             </div>
         </div>
-
+        <!-- navigation -->
         <div class="flex-1 overflow-y-auto px-4 py-4 scrollbar-hide">
             <div class="mb-6">
                 <p class="px-4 text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">Menu</p>
@@ -65,22 +65,27 @@
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/></svg>
                         Dashboard
                     </a>
-                    <a href="/admin-dashboard.html#orders-list" class="sidebar-item flex items-center gap-3 px-4 py-2.5 rounded-xl font-medium">
+                    <a href="/admin-orders.html" class="sidebar-item flex items-center gap-3 px-4 py-2.5 rounded-xl font-medium">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"/></svg>
-                        Live Orders
+                        Order History
+                    </a>
+                    <a href="/admin-customers.html" class="sidebar-item flex items-center gap-3 px-4 py-2.5 rounded-xl font-medium">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+                        Customers
+                    </a>
+                    <a href="/admin-riders.html" class="sidebar-item flex items-center gap-3 px-4 py-2.5 rounded-xl font-medium">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+                        Rider Management
                     </a>
                     <a href="/admin-add-item.html" class="sidebar-item active flex items-center justify-between px-4 py-2.5 rounded-xl font-medium">
                         <div class="flex items-center gap-3">
                             <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/></svg>
                             Menu Config
                         </div>
-                        <span class="bg-white/20 text-white text-xs font-bold px-2 py-0.5 rounded-full" id="menu-count">0</span>
+                        <span class="bg-green-100 text-donezo-light text-xs font-bold px-2 py-0.5 rounded-full" id="menu-count">0</span>
                     </a>
-                    <a href="#" onclick="alert('Calendar feature coming soon!')" class="sidebar-item flex items-center gap-3 px-4 py-2.5 rounded-xl font-medium">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
-                        Calendar
-                    </a>
-                    <a href="#" onclick="alert('Analytics feature coming soon!')" class="sidebar-item flex items-center gap-3 px-4 py-2.5 rounded-xl font-medium">
+                    
+                    <a href="/admin-analytics.html" class="sidebar-item flex items-center gap-3 px-4 py-2.5 rounded-xl font-medium">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
                         Analytics
                     </a>
@@ -90,7 +95,7 @@
             <div class="mb-6">
                 <p class="px-4 text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">General</p>
                 <nav class="space-y-1">
-                    <a href="#" onclick="alert('Settings feature coming soon!')" class="sidebar-item flex items-center gap-3 px-4 py-2.5 rounded-xl font-medium">
+                    <a href="#" onclick="openAdminSettings()" class="sidebar-item flex items-center gap-3 px-4 py-2.5 rounded-xl font-medium">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
                         Settings
                     </a>
@@ -103,11 +108,11 @@
         </div>
     </aside>
 
-    <!-- Main Content -->
+    <!-- main content -->
     <main class="flex-1 flex flex-col h-screen overflow-hidden relative">
-        <!-- Top Bar -->
+        <!-- top bar -->
         <header class="h-20 flex items-center justify-between px-8 bg-transparent z-10 shrink-0">
-            <div class="relative w-96 opacity-0 pointer-events-none"></div> <!-- Spacer to match layout -->
+            <div class="relative w-96 opacity-0 pointer-events-none"></div> <!-- spacer to match layout -->
             <div class="flex items-center gap-4">
                 <div class="flex items-center gap-3 border-l border-gray-200 pl-4">
                     <div class="w-10 h-10 rounded-full bg-donezo-light flex items-center justify-center text-white font-bold text-lg custom-shadow border-2 border-white">Z</div>
@@ -119,7 +124,7 @@
             </div>
         </header>
 
-        <!-- Main Scrollable Area -->
+        <!-- main scrollable area -->
         <div class="flex-1 overflow-y-auto px-8 pb-8 pt-2 scrollbar-hide">
             
             <div class="flex justify-between items-end mb-8">
@@ -130,7 +135,7 @@
             </div>
 
             <div class="grid grid-cols-1 xl:grid-cols-3 gap-6">
-                <!-- Left: Form (1 Column) -->
+                <!-- left: form (1 column) -->
                 <div class="xl:col-span-1">
                     <div class="bg-white rounded-2xl p-6 custom-shadow">
                         <h3 class="font-bold text-gray-800 mb-4" id="form-title">Add New Product</h3>
@@ -168,7 +173,7 @@
                     </div>
                 </div>
 
-                <!-- Right: Table (2 Columns) -->
+                <!-- right: table (2 columns) -->
                 <div class="xl:col-span-2">
                     <div class="bg-white rounded-2xl p-6 custom-shadow overflow-hidden">
                         <div class="flex justify-between items-center mb-4">
@@ -186,7 +191,7 @@
                                     </tr>
                                 </thead>
                                 <tbody id="menu-tbody" class="divide-y divide-gray-100">
-                                    <!-- Injected via JS -->
+                                    <!-- injected via js -->
                                     <tr><td colspan="5" class="p-8 text-center text-gray-400">Loading menu...</td></tr>
                                 </tbody>
                             </table>
@@ -327,8 +332,40 @@
             }
         }
 
-        // Init
+        // init
         fetchMenu();
     </script>
+<script src="/auth.js"></script>
+
+    <!-- admin settings modal -->
+    <div id="admin-settings-modal" class="fixed inset-0 bg-black/60 z-[100] hidden flex items-center justify-center backdrop-blur-sm">
+        <div class="bg-white rounded-3xl w-full max-w-md p-8 custom-shadow relative">
+            <button onclick="closeAdminSettings()" class="absolute top-6 right-6 text-gray-400 hover:text-gray-900 transition">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+            </button>
+            <h2 class="text-2xl font-bold text-gray-900 mb-6 font-sans">Admin Settings</h2>
+            
+            <form onsubmit="saveAdminSettings(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1.5">Profile Picture</label>
+                    <input type="file" id="admin-setting-pic" accept="image/*" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 text-sm file:mr-4 file:py-1 file:px-3 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-donezo-light file:text-white hover:file:bg-donezo-dark transition cursor-pointer">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1.5">Full Name</label>
+                    <input type="text" id="admin-setting-name" required class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-donezo-light transition">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1.5">Password</label>
+                    <input type="password" id="admin-setting-password" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-donezo-light transition">
+                </div>
+                
+                <button type="submit" id="admin-setting-save-btn" class="w-full bg-donezo-light hover:bg-donezo-dark text-white rounded-xl py-3 font-medium transition shadow-lg shadow-green-900/20 mt-4">Save Changes</button>
+            </form>
+        </div>
+    </div>
+
+<script src="/admin-auth.js"></script>
 </body>
 </html>
+
+

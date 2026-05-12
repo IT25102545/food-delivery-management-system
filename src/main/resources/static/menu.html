@@ -471,14 +471,17 @@
         }
     </style>
     <link rel="stylesheet" href="/modern-animations.css">
+    <link rel="stylesheet" href="/spa-transitions.css">
 </head>
 
 <body>
+    <div id="page-container">
 
-    <!-- Background -->
+
+    <!-- background -->
     <div class="bg-full"></div>
 
-    <!-- Floating Beans -->
+    <!-- floating beans -->
     <img src="/img/bean.png?v=4" class="bean b1" alt="">
     <img src="/img/bean.png?v=4" class="bean b2" alt="">
     <img src="/img/bean.png?v=4" class="bean b3" alt="">
@@ -488,7 +491,7 @@
     <img src="/img/bean.png?v=4" class="bean b7" alt="">
     <img src="/img/bean.png?v=4" class="bean b8" alt="">
 
-    <!-- Navbar -->
+    <!-- navbar -->
     <nav>
         <a href="/index.html">
             <img src="/img/zestro-logo-white.png" class="logo" alt="Zestro Logo">
@@ -518,7 +521,7 @@
         </div>
     </nav>
 
-    <!-- Arrow buttons -->
+    <!-- arrow buttons -->
     <button class="arrow-btn" id="prev-btn" aria-label="Previous drink">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5"
             stroke-linecap="round" stroke-linejoin="round">
@@ -532,17 +535,17 @@
         </svg>
     </button>
 
-    <!-- Background drink name (large outlined text behind carousel) -->
+    <!-- background drink name (large outlined text behind carousel) -->
     <div id="bg-drink-name"></div>
 
-    <!-- Carousel -->
+    <!-- carousel -->
     <div id="carousel-area">
         <div id="drink-stage">
-            <!-- Cards injected by JS -->
+            <!-- cards injected by js -->
         </div>
     </div>
 
-    <!-- Info Panel -->
+    <!-- info panel -->
     <div id="info-panel">
         <div id="drink-name-display"></div>
         <div id="drink-desc-display"></div>
@@ -596,12 +599,12 @@
                     return;
                 }
 
-                // Map DB format to UI format
+                // map db format to ui format
                 drinks = data.map(item => ({
                     name: item.name,
                     image: item.imageUrl || '/img/drink-1.png',
                     desc: item.description,
-                    // Dynamically map single DB price to sizes
+                    // dynamically map single db price to sizes
                     price: {
                         Small: Math.max(1, item.price - 1.00),
                         Medium: item.price,
@@ -619,7 +622,7 @@
                     el.appendChild(img);
                     stage.appendChild(el);
 
-                    // Side cards are clickable to navigate
+                    // side cards are clickable to navigate
                     el.addEventListener('click', () => {
                         const pos = getRelPos(parseInt(el.dataset.idx));
                         if (pos === -1) navigate(-1);
@@ -640,7 +643,7 @@
         function getRelPos(idx) {
             let rel = (idx - current + drinks.length) % drinks.length;
             if (rel > drinks.length / 2) rel -= drinks.length;
-            return rel; // -2, -1, 0, 1, 2 ...
+            return rel; // -2, -1, 0, 1, 2 
         }
 
         function posClass(rel) {
@@ -668,7 +671,7 @@
             const size = currentSize;
 
             if (animate) {
-                // Fade out info + bg name
+                // fade out info + bg name
                 nameEl.classList.add('info-fade-out');
                 descEl.classList.add('info-fade-out');
                 priceEl.classList.add('info-fade-out');
@@ -690,7 +693,7 @@
                 priceEl.textContent = `$${d.price[size].toFixed(2)}`;
                 bgNameEl.textContent = d.name;
                 
-                // Re-trigger the modern text reveal animation now that text is loaded
+                // re-trigger the modern text reveal animation now that text is loaded
                 requestAnimationFrame(() => {
                     [nameEl, descEl, priceEl, bgNameEl].forEach(el => {
                         el.style.transition = 'none';
@@ -716,7 +719,7 @@
             renderPositions();
             updateInfo(true);
 
-            // Reset add-to-cart btn
+            // reset add-to-cart btn
             const btn = document.getElementById('add-to-cart-btn');
             btn.textContent = 'ADD TO CART';
             btn.classList.remove('added');
@@ -730,11 +733,11 @@
             if (btn.dataset.animating === 'true') return;
             btn.dataset.animating = 'true';
 
-            // Ripple on button
+            // ripple on button
             btn.style.animation = 'ripple 0.5s ease';
             setTimeout(() => { btn.style.animation = ''; }, 500);
 
-            // Flying drink clone
+            // flying drink clone
             const centerCard = document.querySelector('.drink-card.pos-center img');
             const cartIcon = document.getElementById('cart-btn');
             const drinkRect = centerCard.getBoundingClientRect();
@@ -757,7 +760,7 @@
             });
             document.body.appendChild(fly);
 
-            // Animate to cart
+            // animate to cart
             requestAnimationFrame(() => requestAnimationFrame(() => {
                 Object.assign(fly.style, {
                     left:    `${cartRect.left + cartRect.width / 2 - endSize / 2}px`,
@@ -768,11 +771,11 @@
                 });
             }));
 
-            // Cleanup + badge
+            // cleanup + badge
             setTimeout(() => {
                 fly.remove();
 
-                // ── Persist to localStorage ──
+                // ── persist to localstorage ──
                 const d = drinks[current];
                 const stored = JSON.parse(localStorage.getItem('coffeeCart') || '[]');
                 const existing = stored.findIndex(i => i.name === d.name && i.size === currentSize);
@@ -794,7 +797,7 @@
                     cartIcon.style.animation = '';
                 }, 450);
 
-                // Button feedback
+                // button feedback
                 btn.textContent = '✓ Added!';
                 btn.classList.add('added');
                 setTimeout(() => {
@@ -837,7 +840,7 @@
             });
         });
 
-        // Close when clicking outside
+        // close when clicking outside
         document.addEventListener('click', () => closeDropdown());
         sizeList.addEventListener('click', e => e.stopPropagation());
 
@@ -858,13 +861,13 @@
             if (Math.abs(dx) > 50) navigate(dx < 0 ? 1 : -1);
         });
 
-        // Cart btn navigates to cart page
+        // cart btn navigates to cart page
         document.getElementById('cart-btn').addEventListener('click', () => {
             window.location.href = '/cart.html';
         });
 
         /* INIT */
-        // Restore badge from localStorage
+        // restore badge from localstorage
         const _stored = JSON.parse(localStorage.getItem('coffeeCart') || '[]');
         cartCount = _stored.reduce((s, i) => s + i.qty, 0);
         if (cartCount > 0) {
@@ -875,6 +878,10 @@
         initMenu();
     </script>
 
+    </div>
     <script src="/modern-animations.js"></script>
+<script src="/auth.js"></script>
+    <script src="/spa-router.js"></script>
 </body>
 </html>
+
