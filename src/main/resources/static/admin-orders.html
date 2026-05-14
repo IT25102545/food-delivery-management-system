@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Order History - Zestro Admin</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Outfit', 'sans-serif'] },
+                    colors: {
+                        donezo: {
+                            dark: '#0f4d30',
+                            light: '#146b42',
+                            bg: '#f4f7f6',
+                            card: '#ffffff'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { background-color: #f4f7f6; color: #1f2937; }
+        .sidebar-item.active { background-color: #146b42; color: white; }
+        .sidebar-item { color: #6b7280; transition: all 0.2s; }
+        .sidebar-item:hover:not(.active) { color: #146b42; background-color: #e6f0eb; }
+        .custom-shadow { box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03); }
+        
+        /* Table styles */
+        table { border-collapse: separate; border-spacing: 0; width: 100%; }
+        th { background-color: #f8fafc; text-transform: uppercase; font-size: 0.75rem; font-weight: 700; color: #64748b; padding: 1rem; border-bottom: 1px solid #e2e8f0; text-align: left; }
+        td { padding: 1rem; border-bottom: 1px solid #f1f5f9; vertical-align: middle; }
+        tr:last-child td { border-bottom: none; }
+        tr:hover td { background-color: #f8fafc; }
+    </style>
+</head>
+<body class="flex h-screen overflow-hidden">
+
+    <!-- sidebar -->
+    <aside class="w-64 bg-white border-r border-gray-100 flex flex-col hidden md:flex z-20">
+        <!-- logo -->
+        <div class="h-20 flex items-center px-8">
+            <div class="flex items-center gap-3">
+                <img src="/img/zestro-logo-green.png" alt="Zestro Logo" class="w-10 h-10 object-contain">
+                <span class="text-xl font-bold text-gray-800">Zestro</span>
+            </div>
+        </div>
+        <!-- navigation -->
+        <div class="flex-1 overflow-y-auto px-4 py-4 scrollbar-hide">
+            <div class="mb-6">
+                <p class="px-4 text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">Menu</p>
+                <nav class="space-y-1">
+                    <a href="/admin-dashboard.html" class="sidebar-item flex items-center gap-3 px-4 py-2.5 rounded-xl font-medium">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/></svg>
+                        Dashboard
+                    </a>
+                    <a href="/admin-orders.html" class="sidebar-item active flex items-center gap-3 px-4 py-2.5 rounded-xl font-medium">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"/></svg>
+                        Order History
+                    </a>
+                    <a href="/admin-customers.html" class="sidebar-item flex items-center gap-3 px-4 py-2.5 rounded-xl font-medium">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+                        Customers
+                    </a>
+                    <a href="/admin-riders.html" class="sidebar-item flex items-center gap-3 px-4 py-2.5 rounded-xl font-medium">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+                        Rider Management
+                    </a>
+                    <a href="/admin-add-item.html" class="sidebar-item flex items-center justify-between px-4 py-2.5 rounded-xl font-medium">
+                        <div class="flex items-center gap-3">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/></svg>
+                            Menu Config
+                        </div>
+                        <span class="bg-green-100 text-donezo-light text-xs font-bold px-2 py-0.5 rounded-full" id="menu-count">0</span>
+                    </a>
+                    
+                    <a href="/admin-analytics.html" class="sidebar-item flex items-center gap-3 px-4 py-2.5 rounded-xl font-medium">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+                        Analytics
+                    </a>
+                </nav>
+            </div>
+
+            <div class="mb-6">
+                <p class="px-4 text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">General</p>
+                <nav class="space-y-1">
+                    <a href="#" onclick="openAdminSettings()" class="sidebar-item flex items-center gap-3 px-4 py-2.5 rounded-xl font-medium">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                        Settings
+                    </a>
+                    <a href="/admin.html" class="sidebar-item flex items-center gap-3 px-4 py-2.5 rounded-xl font-medium text-red-500 hover:text-red-600 hover:bg-red-50">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
+                        Logout
+                    </a>
+                </nav>
+            </div>
+        </div>
+    </aside>
+
+    <!-- main content -->
+    <main class="flex-1 flex flex-col h-screen overflow-hidden relative">
+        <!-- mobile header -->
+        <header class="md:hidden h-16 bg-white border-b border-gray-100 flex items-center justify-between px-4 z-20">
+            <div class="flex items-center gap-2">
+                <img src="/img/zestro-logo-green.png" alt="Zestro Logo" class="w-8 h-8 object-contain">
+                <span class="text-lg font-bold text-gray-800">Zestro Admin</span>
+            </div>
+        </header>
+
+        <!-- top banner decoration -->
+        <div class="h-40 bg-[#146b42] w-full absolute top-0 left-0 z-0"></div>
+
+        <div class="flex-1 overflow-y-auto z-10 p-4 md:p-8 relative">
+            
+            <div class="flex justify-between items-end mb-8 text-white">
+                <div>
+                    <h1 class="text-3xl font-bold tracking-tight">Order History</h1>
+                    <p class="opacity-80 mt-1">View all live and past orders across the platform.</p>
+                </div>
+                <button onclick="loadOrders()" class="bg-white/20 hover:bg-white/30 text-white px-4 py-2 rounded-xl transition flex items-center gap-2 text-sm font-semibold backdrop-blur-sm">
+                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15"/></svg>
+                    Refresh
+                </button>
+            </div>
+
+            <!-- orders table card -->
+            <div class="bg-white rounded-3xl p-6 custom-shadow w-full">
+                <div class="flex justify-between items-center mb-6">
+                    <h2 class="text-xl font-bold text-gray-800">All Orders</h2>
+                    <div class="flex gap-2">
+                        <select id="status-filter" onchange="loadOrders()" class="border border-gray-200 text-gray-600 rounded-lg px-3 py-1.5 text-sm font-medium focus:outline-none focus:ring-2 focus:ring-donezo-light">
+                            <option value="ALL">All Statuses</option>
+                            <option value="PENDING">Pending</option>
+                            <option value="PREPARING">Preparing</option>
+                            <option value="READY">Ready</option>
+                            <option value="OUT_FOR_DELIVERY">Out for Delivery</option>
+                            <option value="PICKED_UP">Picked Up</option>
+                            <option value="CASH_COLLECTED">Cash Collected</option>
+                            <option value="DELIVERED">Delivered</option>
+                            <option value="CANCELLED">Cancelled</option>
+                        </select>
+                    </div>
+                </div>
+
+                <div class="overflow-x-auto">
+                    <table class="w-full text-sm">
+                        <thead>
+                            <tr>
+                                <th>Order ID</th>
+                                <th>Date / Time</th>
+                                <th>Customer Info</th>
+                                <th>Order Details</th>
+                                <th>Total</th>
+                                <th>Payment</th>
+                                <th>Status</th>
+                                <th class="text-right">Action</th>
+                            </tr>
+                        </thead>
+                        <tbody id="orders-tbody">
+                            <tr>
+                                <td colspan="7" class="text-center py-8 text-gray-400">Loading orders...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            
+        </div>
+    </main>
+
+    <!-- order details modal -->
+    <div id="order-modal" class="fixed inset-0 bg-black/50 z-50 hidden flex items-center justify-center p-4 backdrop-blur-sm">
+        <div class="bg-white rounded-2xl max-w-2xl w-full max-h-[90vh] overflow-y-auto shadow-2xl transform transition-all">
+            <div class="p-6 border-b border-gray-100 flex justify-between items-center sticky top-0 bg-white z-10">
+                <div>
+                    <h3 class="text-xl font-bold text-gray-900" id="modal-order-id">Order Details</h3>
+                    <p class="text-sm text-gray-500 mt-1" id="modal-order-date"></p>
+                </div>
+                <button onclick="closeModal()" class="w-8 h-8 flex items-center justify-center rounded-full bg-gray-100 text-gray-500 hover:bg-gray-200 transition">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                </button>
+            </div>
+            <div class="p-6" id="modal-content">
+                <!-- populated dynamically -->
+            </div>
+            <div class="p-6 bg-gray-50 border-t border-gray-100 flex justify-end gap-3 rounded-b-2xl">
+                <button onclick="closeModal()" class="px-4 py-2 font-bold text-gray-600 bg-white border border-gray-200 rounded-xl hover:bg-gray-50 transition">Close</button>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const statusMap = {
+            'PENDING':          { color: 'bg-yellow-100 text-yellow-700' },
+            'PREPARING':        { color: 'bg-blue-100 text-blue-700' },
+            'READY':            { color: 'bg-green-100 text-green-700' },
+            'OUT_FOR_DELIVERY': { color: 'bg-purple-100 text-purple-700' },
+            'PICKED_UP':        { color: 'bg-orange-100 text-orange-700' },
+            'CASH_COLLECTED':   { color: 'bg-amber-100 text-amber-700' },
+            'DELIVERED':        { color: 'bg-gray-100 text-gray-500' },
+            'CANCELLED':        { color: 'bg-red-100 text-red-600' }
+        };
+
+        let allOrders = [];
+
+        async function loadOrders() {
+            try {
+                const res = await fetch('/api/orders');
+                allOrders = await res.json();
+                
+                // sort descending by id or createdat
+                allOrders.sort((a, b) => b.id - a.id);
+                renderTable();
+            } catch (e) {
+                console.error(e);
+                document.getElementById('orders-tbody').innerHTML = `<tr><td colspan="7" class="text-center py-8 text-red-500">Failed to load orders.</td></tr>`;
+            }
+        }
+
+        function renderTable() {
+            const tbody = document.getElementById('orders-tbody');
+            const filter = document.getElementById('status-filter').value;
+            
+            const filteredOrders = allOrders.filter(o => filter === 'ALL' || o.status === filter);
+            
+            if (filteredOrders.length === 0) {
+                tbody.innerHTML = `<tr><td colspan="7" class="text-center py-8 text-gray-400">No orders found.</td></tr>`;
+                return;
+            }
+
+            tbody.innerHTML = '';
+            filteredOrders.forEach(o => {
+                const s = statusMap[o.status] || statusMap['DELIVERED'];
+                const itemsTxt = (o.items || []).map(i => `${i.quantity}x ${i.productName}`).join(', ') || 'No items';
+                const dateStr = o.createdAt ? new Date(o.createdAt).toLocaleString(undefined, {month: 'short', day: 'numeric', hour: '2-digit', minute:'2-digit'}) : 'N/A';
+
+                // payment badge
+                const pm = o.paymentMethod || o.payment_method || 'CARD';
+                let pmBadge = '';
+                if (pm === 'CREDITS') {
+                    pmBadge = `<span class="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-md bg-indigo-100 text-indigo-700">&#128176; Credits</span>`;
+                } else if (pm === 'COD') {
+                    if (o.status === 'CASH_COLLECTED' || o.cashStatus === 'COLLECTED' || o.cash_status === 'COLLECTED') {
+                        pmBadge = `<span class="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-md bg-amber-100 text-amber-700">&#128181; Cash &bull; Rider #${o.riderId || '?'}</span>`;
+                    } else if (o.status === 'DELIVERED') {
+                        pmBadge = `<span class="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-md bg-green-100 text-green-700">&#10003; Paid Cash</span>`;
+                    } else {
+                        pmBadge = `<span class="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-md bg-orange-100 text-orange-700">&#128181; COD</span>`;
+                    }
+                } else {
+                    pmBadge = `<span class="inline-flex items-center gap-1 text-[10px] font-bold px-2 py-0.5 rounded-md bg-blue-100 text-blue-700">&#128179; Card</span>`;
+                }
+                
+                tbody.innerHTML += `
+                    <tr>
+                        <td class="font-bold text-gray-900">#${o.id}</td>
+                        <td class="text-gray-500">${dateStr}</td>
+                        <td>
+                            <p class="font-bold text-gray-800">${o.firstName || ''} ${o.lastName || ''}</p>
+                            <p class="text-[10px] text-gray-500 mt-0.5 truncate max-w-[150px]">${o.deliveryAddress || 'No address'}</p>
+                        </td>
+                        <td>
+                            <p class="text-gray-600 truncate max-w-[200px] text-xs" title="${itemsTxt}">${itemsTxt}</p>
+                        </td>
+                        <td class="font-bold text-donezo-light">$${(o.totalAmount || 0).toFixed(2)}</td>
+                        <td>${pmBadge}</td>
+                        <td>
+                            <span class="text-[10px] font-bold px-2 py-1 rounded-md uppercase ${s.color}">${o.status}</span>
+                        </td>
+                        <td class="text-right">
+                            <button onclick='viewOrderDetails(${JSON.stringify(o).replace(/'/g, "&#39;")})' class="text-donezo-light font-bold hover:underline">View Details</button>
+                        </td>
+                    </tr>
+                `;
+            });
+        }
+
+        function viewOrderDetails(order) {
+            document.getElementById('modal-order-id').innerText = `Order #${order.id}`;
+            document.getElementById('modal-order-date').innerText = order.createdAt ? new Date(order.createdAt).toLocaleString() : 'Date N/A';
+            
+            const s = statusMap[order.status] || statusMap['DELIVERED'];
+            const itemsList = (order.items || []).map(i => `
+                <div class="flex justify-between items-center py-2 border-b border-gray-50">
+                    <div class="flex gap-3 items-center">
+                        <span class="font-bold text-gray-800">${i.quantity}x</span>
+                        <span class="text-gray-600">${i.productName} ${i.size ? '('+i.size+')' : ''}</span>
+                    </div>
+                    <span class="font-semibold text-gray-800">$${((i.unitPrice||0) * i.quantity).toFixed(2)}</span>
+                </div>
+            `).join('');
+
+            document.getElementById('modal-content').innerHTML = `
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
+                    <div class="bg-gray-50 rounded-xl p-4 border border-gray-100">
+                        <h4 class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-3">Customer Info</h4>
+                        <p class="font-bold text-gray-900">${order.firstName || ''} ${order.lastName || ''}</p>
+                        <p class="text-sm text-gray-600 mt-1 flex items-center gap-2"><svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg> ${order.email || 'N/A'}</p>
+                        <p class="text-sm text-gray-600 mt-1 flex items-center gap-2"><svg class="w-4 h-4 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 5a2 2 0 012-2h3.28a1 1 0 01.948.684l1.498 4.493a1 1 0 01-.502 1.21l-2.257 1.13a11.042 11.042 0 005.516 5.516l1.13-2.257a1 1 0 011.21-.502l4.493 1.498a1 1 0 01.684.949V19a2 2 0 01-2 2h-1C9.716 21 3 14.284 3 6V5z"/></svg> ${order.phone || 'N/A'}</p>
+                        <p class="text-sm text-gray-600 mt-1 flex items-start gap-2"><svg class="w-4 h-4 text-gray-400 mt-0.5 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"/></svg> <span class="block">${order.deliveryAddress || 'N/A'}</span></p>
+                    </div>
+                    
+                    <div class="bg-gray-50 rounded-xl p-4 border border-gray-100 flex flex-col justify-between">
+                        <div>
+                            <h4 class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-3">Order Status</h4>
+                            <div class="flex items-center gap-2">
+                                <span class="text-xs font-bold px-3 py-1.5 rounded-lg uppercase inline-block ${s.color}">${order.status}</span>
+                                ${(order.status === 'PENDING' || order.status === 'PREPARING') ? `<button onclick="cancelOrder(${order.id})" class="text-xs font-bold px-3 py-1.5 rounded-lg uppercase inline-block bg-red-50 text-red-600 hover:bg-red-100 border border-red-100 transition shadow-sm">Cancel Order</button>` : ''}
+                            </div>
+                            ${order.notes ? `<div class="mt-4"><p class="text-xs font-bold text-gray-500 mb-1">Order Notes:</p><p class="text-sm text-gray-800 italic bg-white p-2 rounded border border-gray-100">${order.notes}</p></div>` : ''}
+                        </div>
+                        ${order.riderPayout ? `<div class="mt-4"><p class="text-xs text-gray-500">Rider Payout: <span class="font-bold text-gray-800">$${order.riderPayout.toFixed(2)}</span></p></div>` : ''}
+                        ${order.riderId ? `<div class="mt-1"><p class="text-xs text-gray-500">Delivered By: <span class="font-bold text-gray-800">Rider ID #${order.riderId}</span></p></div>` : ''}
+                        ${order.completedAt ? `<div class="mt-1"><p class="text-xs text-gray-500">Delivered At: <span class="font-bold text-gray-800">${new Date(order.completedAt).toLocaleString()}</span></p></div>` : ''}
+                    </div>
+                </div>
+
+                <h4 class="font-bold text-gray-900 mb-3 border-b border-gray-100 pb-2">Order Items</h4>
+                <div class="mb-6">
+                    ${itemsList}
+                </div>
+
+                <div class="bg-gray-50 rounded-xl p-4 border border-gray-100 text-sm">
+                    <div class="flex justify-between mb-1"><span class="text-gray-500">Subtotal</span><span class="font-semibold">$${(order.subtotal || 0).toFixed(2)}</span></div>
+                    <div class="flex justify-between mb-3"><span class="text-gray-500">Delivery Fee</span><span class="font-semibold">$${(order.deliveryFee || 0).toFixed(2)}</span></div>
+                    <div class="flex justify-between text-lg"><span class="font-bold text-gray-900">Total</span><span class="font-black text-donezo-light">$${(order.totalAmount || 0).toFixed(2)}</span></div>
+                </div>
+            `;
+
+            document.getElementById('order-modal').classList.remove('hidden');
+        }
+
+        function closeModal() {
+            document.getElementById('order-modal').classList.add('hidden');
+        }
+
+        async function cancelOrder(id) {
+            if(!confirm("Are you sure you want to cancel this order?")) return;
+            try {
+                const res = await fetch(`/api/orders/${id}/status`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ status: 'CANCELLED' })
+                });
+                if(res.ok) {
+                    alert('Order cancelled successfully.');
+                    closeModal();
+                    loadOrders();
+                } else {
+                    alert('Failed to cancel order.');
+                }
+            } catch(e) {
+                console.error(e);
+            }
+        }
+
+        // init
+        loadOrders();
+    </script>
+<script src="/auth.js"></script>
+
+    <!-- admin settings modal -->
+    <div id="admin-settings-modal" class="fixed inset-0 bg-black/60 z-[100] hidden flex items-center justify-center backdrop-blur-sm">
+        <div class="bg-white rounded-3xl w-full max-w-md p-8 custom-shadow relative">
+            <button onclick="closeAdminSettings()" class="absolute top-6 right-6 text-gray-400 hover:text-gray-900 transition">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+            </button>
+            <h2 class="text-2xl font-bold text-gray-900 mb-6 font-sans">Admin Settings</h2>
+            
+            <form onsubmit="saveAdminSettings(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1.5">Profile Picture</label>
+                    <input type="file" id="admin-setting-pic" accept="image/*" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 text-sm file:mr-4 file:py-1 file:px-3 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-donezo-light file:text-white hover:file:bg-donezo-dark transition cursor-pointer">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1.5">Full Name</label>
+                    <input type="text" id="admin-setting-name" required class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-donezo-light transition">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1.5">Password</label>
+                    <input type="password" id="admin-setting-password" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-donezo-light transition">
+                </div>
+                
+                <button type="submit" id="admin-setting-save-btn" class="w-full bg-donezo-light hover:bg-donezo-dark text-white rounded-xl py-3 font-medium transition shadow-lg shadow-green-900/20 mt-4">Save Changes</button>
+            </form>
+        </div>
+    </div>
+
+<script src="/admin-auth.js"></script>
+</body>
+</html>
+
+

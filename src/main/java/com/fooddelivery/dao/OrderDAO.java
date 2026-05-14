@@ -13,7 +13,7 @@ public class OrderDAO {
     private static final List<Order> fallbackOrders = new ArrayList<>();
     private static int fallbackIdCounter = 1;
 
-    // TABLE INIT
+    // table init
     public void initializeTable() {
         String ordersTable = "CREATE TABLE IF NOT EXISTS orders (" +
             "id              INT AUTO_INCREMENT PRIMARY KEY, " +
@@ -46,18 +46,30 @@ public class OrderDAO {
             try (Statement stmt = conn.createStatement()) {
                 stmt.execute(ordersTable);
                 stmt.execute(itemsTable);
+                
+                String[] alters = {
+                    "ALTER TABLE orders ADD COLUMN rider_id INT",
+                    "ALTER TABLE orders ADD COLUMN rider_payout DECIMAL(10,2)",
+                    "ALTER TABLE orders ADD COLUMN completed_at DATETIME",
+                    "ALTER TABLE orders ADD COLUMN cancellation_reason VARCHAR(255)",
+                    "ALTER TABLE orders ADD COLUMN payment_method VARCHAR(20) DEFAULT 'CARD'",
+                    "ALTER TABLE orders ADD COLUMN cash_status VARCHAR(20) DEFAULT NULL"
+                };
+                for (String alt : alters) {
+                    try { stmt.execute(alt); } catch (SQLException ignored) {}
+                }
             }
         } catch (SQLException e) {
             e.printStackTrace();
         }
     }
 
-    // CREATE ORDER
+    // create order
     public int placeOrder(Order order) throws SQLException {
         String insertOrder =
             "INSERT INTO orders (first_name, last_name, email, phone, delivery_address, notes, " +
-            "subtotal, delivery_fee, total_amount, status, created_at) " +
-            "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'PENDING', NOW())";
+            "subtotal, delivery_fee, total_amount, status, payment_method, cash_status, created_at) " +
+            "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, 'PENDING', ?, ?, NOW())";
 
         String insertItem =
             "INSERT INTO order_items (order_id, product_name, size, quantity, unit_price) " +
@@ -75,7 +87,7 @@ public class OrderDAO {
 
             conn.setAutoCommit(false);
             try {
-                // Insert order header
+                // insert order header
                 int generatedId;
                 try (PreparedStatement ps = conn.prepareStatement(insertOrder, Statement.RETURN_GENERATED_KEYS)) {
                     ps.setString(1, order.getFirstName());
@@ -87,6 +99,9 @@ public class OrderDAO {
                     ps.setDouble(7, order.getSubtotal());
                     ps.setDouble(8, order.getDeliveryFee());
                     ps.setDouble(9, order.getTotalAmount());
+                    String pm = order.getPaymentMethod() != null ? order.getPaymentMethod() : "CARD";
+                    ps.setString(10, pm);
+                    ps.setString(11, "COD".equalsIgnoreCase(pm) ? "PENDING" : null);
                     ps.executeUpdate();
 
                     ResultSet rs = ps.getGeneratedKeys();
@@ -94,7 +109,7 @@ public class OrderDAO {
                     generatedId = rs.getInt(1);
                 }
 
-                // Insert line items
+                // insert line items
                 if (order.getItems() != null) {
                     try (PreparedStatement ps = conn.prepareStatement(insertItem)) {
                         for (OrderItem item : order.getItems()) {
@@ -124,7 +139,7 @@ public class OrderDAO {
         }
     }
 
-    // READ ALL ORDERS (with items)
+    // read all orders (with items)
     public List<Order> getAllOrders() {
         List<Order> orders = new ArrayList<>();
         String sql = "SELECT o.*, " +
@@ -150,7 +165,7 @@ public class OrderDAO {
                         orders.add(current);
                     }
 
-                    // Add item if exists
+                    // add item if exists
                     if (rs.getObject("item_id") != null) {
                         current.getItems().add(new OrderItem(
                             rs.getString("product_name"),
@@ -167,7 +182,47 @@ public class OrderDAO {
         return orders;
     }
 
-    // UPDATE STATUS
+    public Order getOrderById(int id) {
+        String sql = "SELECT o.*, " +
+            "oi.id as item_id, oi.product_name, oi.size, oi.quantity, oi.unit_price " +
+            "FROM orders o " +
+            "LEFT JOIN order_items oi ON o.id = oi.order_id " +
+            "WHERE o.id = ?";
+
+        try {
+            Connection conn = DatabaseConnection.getInstance().getConnection();
+            if (conn == null) {
+                return fallbackOrders.stream().filter(o -> o.getId() == id).findFirst().orElse(null);
+            }
+            
+            try (PreparedStatement ps = conn.prepareStatement(sql)) {
+                ps.setInt(1, id);
+                try (ResultSet rs = ps.executeQuery()) {
+                    Order current = null;
+                    while (rs.next()) {
+                        if (current == null) {
+                            current = mapOrderRow(rs);
+                            current.setItems(new ArrayList<>());
+                        }
+                        if (rs.getInt("item_id") > 0) {
+                            current.getItems().add(new OrderItem(
+                                rs.getString("product_name"),
+                                rs.getString("size"),
+                                rs.getInt("quantity"),
+                                rs.getDouble("unit_price")
+                            ));
+                        }
+                    }
+                    return current;
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    // update status
     public boolean updateOrderStatus(int id, String status) {
         String sql = "UPDATE orders SET status = ? WHERE id = ?";
         try {
@@ -192,7 +247,113 @@ public class OrderDAO {
         }
     }
 
-    // STATS (for admin/rider dashboards)
+    public boolean completeOrder(int orderId, int riderId, double payout) {
+        String sql = "UPDATE orders SET status = 'DELIVERED', rider_id = ?, rider_payout = ?, completed_at = NOW() WHERE id = ?";
+        try {
+            Connection conn = DatabaseConnection.getInstance().getConnection();
+            if (conn == null) return false;
+            try (PreparedStatement ps = conn.prepareStatement(sql)) {
+                ps.setInt(1, riderId);
+                ps.setDouble(2, payout);
+                ps.setInt(3, orderId);
+                return ps.executeUpdate() > 0;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+    
+    public boolean confirmCashCollected(int orderId) {
+        String sql = "UPDATE orders SET status = 'CASH_COLLECTED', cash_status = 'COLLECTED' WHERE id = ?";
+        try {
+            Connection conn = DatabaseConnection.getInstance().getConnection();
+            if (conn == null) return false;
+            try (PreparedStatement ps = conn.prepareStatement(sql)) {
+                ps.setInt(1, orderId);
+                return ps.executeUpdate() > 0;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public boolean confirmCashSettled(int orderId) {
+        String sql = "UPDATE orders SET cash_status = 'SETTLED' WHERE id = ?";
+        try {
+            Connection conn = DatabaseConnection.getInstance().getConnection();
+            if (conn == null) return false;
+            try (PreparedStatement ps = conn.prepareStatement(sql)) {
+                ps.setInt(1, orderId);
+                return ps.executeUpdate() > 0;
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            return false;
+        }
+    }
+
+    public List<Order> getOrdersByRider(int riderId) {
+        List<Order> orders = new ArrayList<>();
+        String sql = "SELECT * FROM orders WHERE rider_id = ? ORDER BY completed_at DESC";
+        try {
+            Connection conn = DatabaseConnection.getInstance().getConnection();
+            if (conn == null) return orders;
+            try (PreparedStatement ps = conn.prepareStatement(sql)) {
+                ps.setInt(1, riderId);
+                ResultSet rs = ps.executeQuery();
+                while (rs.next()) orders.add(mapOrderRow(rs));
+            }
+        } catch (SQLException e) { e.printStackTrace(); }
+        return orders;
+    }
+
+    public List<Order> getOrdersByEmail(String email) {
+        List<Order> orders = new ArrayList<>();
+        String sql = "SELECT o.*, " +
+            "oi.id as item_id, oi.product_name, oi.size, oi.quantity, oi.unit_price " +
+            "FROM orders o " +
+            "LEFT JOIN order_items oi ON o.id = oi.order_id " +
+            "WHERE o.email = ? " +
+            "ORDER BY o.created_at DESC, oi.id ASC";
+
+        try {
+            Connection conn = DatabaseConnection.getInstance().getConnection();
+            if (conn == null) {
+                for (Order o : fallbackOrders) {
+                    if (email.equalsIgnoreCase(o.getEmail())) orders.add(o);
+                }
+                return orders;
+            }
+            try (PreparedStatement ps = conn.prepareStatement(sql)) {
+                ps.setString(1, email);
+                ResultSet rs = ps.executeQuery();
+                Order current = null;
+                while (rs.next()) {
+                    int orderId = rs.getInt("id");
+
+                    if (current == null || current.getId() != orderId) {
+                        current = mapOrderRow(rs);
+                        current.setItems(new ArrayList<>());
+                        orders.add(current);
+                    }
+
+                    if (rs.getObject("item_id") != null) {
+                        current.getItems().add(new OrderItem(
+                            rs.getString("product_name"),
+                            rs.getString("size"),
+                            rs.getInt("quantity"),
+                            rs.getDouble("unit_price")
+                        ));
+                    }
+                }
+            }
+        } catch (SQLException e) { e.printStackTrace(); }
+        return orders;
+    }
+
+    // stats (for admin/rider dashboards)
     public double getTotalRevenue() {
         String sql = "SELECT COALESCE(SUM(total_amount), 0) FROM orders WHERE status = 'DELIVERED'";
         try {
@@ -242,7 +403,7 @@ public class OrderDAO {
         return orders;
     }
 
-    // Private mapper
+    // private mapper
     private Order mapOrderRow(ResultSet rs) throws SQLException {
         Order o = new Order();
         o.setId(rs.getInt("id"));
@@ -258,8 +419,20 @@ public class OrderDAO {
         o.setStatus(rs.getString("status"));
         Timestamp ts = rs.getTimestamp("created_at");
         if (ts != null) o.setCreatedAt(ts.toLocalDateTime());
+        
+        o.setRiderId(rs.getObject("rider_id") != null ? rs.getInt("rider_id") : null);
+        o.setRiderPayout(rs.getObject("rider_payout") != null ? rs.getDouble("rider_payout") : null);
+        
+        Timestamp comp = rs.getTimestamp("completed_at");
+        if (comp != null) o.setCompletedAt(comp.toLocalDateTime());
+        
+        o.setCancellationReason(rs.getString("cancellation_reason"));
+        
+        try { o.setPaymentMethod(rs.getString("payment_method")); } catch (SQLException ignored) {}
+        try { o.setCashStatus(rs.getString("cash_status")); } catch (SQLException ignored) {}
+        
         return o;
     }
 }
 
-// Order processing optimizations applied
+// order processing optimizations applied

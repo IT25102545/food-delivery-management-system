@@ -6,31 +6,42 @@ import java.util.List;
 public class Order {
     private int id;
 
-    // Customer contact info (from checkout.html)
+    // customer contact info (from checkout.html)
+    private Integer customerId;
     private String firstName;
     private String lastName;
     private String email;
     private String phone;
 
-    // Delivery address (from order.html)
+    // delivery address (from order.html)
     private String deliveryAddress;
 
-    // Special instructions (from checkout.html)
+    // special instructions (from checkout.html)
     private String notes;
 
-    // Financials
+    // financials
     private double subtotal;
     private double deliveryFee;
     private double totalAmount;
 
-    // Order lifecycle
-    private String status;           // PENDING, CONFIRMED, OUT_FOR_DELIVERY, DELIVERED, CANCELLED
+    // order lifecycle
+    private String status;           // pending, confirmed, out_for_delivery, delivered, cancelled
     private LocalDateTime createdAt;
+    
+    // rider specifics
+    private Integer riderId;
+    private Double riderPayout;
+    private LocalDateTime completedAt;
+    private String cancellationReason;
 
-    // Items snapshot
+    // payment
+    private String paymentMethod;  // card, cod
+    private String cashStatus;     // null, pending, collected
+
+    // items snapshot
     private List<OrderItem> items;
 
-    // Nested item class
+    // nested item class
     public static class OrderItem {
         private String productName;
         private String size;
@@ -57,13 +68,13 @@ public class Order {
         public double getLineTotal() { return unitPrice * quantity; }
     }
 
-    // Constructors
+    // constructors
     public Order() {}
 
-    // Legacy minimal constructor (used by existing getAllOrders mapping)
+    // legacy minimal constructor (used by existing getallorders mapping)
     public Order(int id, String customerName, double totalAmount, String status) {
         this.id = id;
-        // Split customerName into first/last for backwards compat
+        // split customername into first/last for backwards compat
         String[] parts = customerName.split(" ", 2);
         this.firstName = parts[0];
         this.lastName  = parts.length > 1 ? parts[1] : "";
@@ -71,9 +82,12 @@ public class Order {
         this.status = status;
     }
 
-    // Getters & Setters
+    // getters & setters
     public int getId() { return id; }
     public void setId(int id) { this.id = id; }
+
+    public Integer getCustomerId() { return customerId; }
+    public void setCustomerId(Integer customerId) { this.customerId = customerId; }
 
     public String getFirstName() { return firstName; }
     public void setFirstName(String firstName) { this.firstName = firstName; }
@@ -81,7 +95,7 @@ public class Order {
     public String getLastName() { return lastName; }
     public void setLastName(String lastName) { this.lastName = lastName; }
 
-    // Convenience for existing code expecting customerName
+    // convenience for existing code expecting customername
     public String getCustomerName() {
         return (firstName != null ? firstName : "") + " " + (lastName != null ? lastName : "");
     }
@@ -117,6 +131,24 @@ public class Order {
 
     public LocalDateTime getCreatedAt() { return createdAt; }
     public void setCreatedAt(LocalDateTime createdAt) { this.createdAt = createdAt; }
+    
+    public Integer getRiderId() { return riderId; }
+    public void setRiderId(Integer riderId) { this.riderId = riderId; }
+    
+    public Double getRiderPayout() { return riderPayout; }
+    public void setRiderPayout(Double riderPayout) { this.riderPayout = riderPayout; }
+    
+    public LocalDateTime getCompletedAt() { return completedAt; }
+    public void setCompletedAt(LocalDateTime completedAt) { this.completedAt = completedAt; }
+    
+    public String getCancellationReason() { return cancellationReason; }
+    public void setCancellationReason(String cancellationReason) { this.cancellationReason = cancellationReason; }
+
+    public String getPaymentMethod() { return paymentMethod; }
+    public void setPaymentMethod(String paymentMethod) { this.paymentMethod = paymentMethod; }
+
+    public String getCashStatus() { return cashStatus; }
+    public void setCashStatus(String cashStatus) { this.cashStatus = cashStatus; }
 
     public List<OrderItem> getItems() { return items; }
     public void setItems(List<OrderItem> items) { this.items = items; }

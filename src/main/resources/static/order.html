@@ -10,7 +10,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Anton&family=Inter:wght@300;400;500;600&display=swap"
         rel="stylesheet">
 
-    <!-- Spline Viewer Web Component -->
+    <!-- spline viewer web component -->
     <script type="module" src="https://unpkg.com/@splinetool/viewer@1.9.82/build/spline-viewer.js"></script>
 
     <style>
@@ -470,16 +470,84 @@
         .parallax-layer {
             transition: margin 0.08s linear;
         }
+
+        /* CUSTOM CHECKBOX */
+        .custom-checkbox-wrapper {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            cursor: pointer;
+            color: #fff;
+            font-weight: 500;
+            font-size: 15px;
+            font-family: 'Inter', sans-serif;
+            user-select: none;
+            pointer-events: all;
+            /* Fix unclickable issue */
+            transition: opacity 0.2s;
+        }
+
+        .custom-checkbox-wrapper:hover {
+            opacity: 0.9;
+        }
+
+        .custom-checkbox-wrapper input {
+            display: none;
+        }
+
+        .checkmark {
+            width: 22px;
+            height: 22px;
+            border: 2px solid rgba(255, 255, 255, 0.5);
+            border-radius: 6px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.25s cubic-bezier(0.34, 1.15, 0.64, 1);
+            background: rgba(255, 255, 255, 0.05);
+        }
+
+        .custom-checkbox-wrapper:hover .checkmark {
+            border-color: rgba(255, 255, 255, 0.8);
+            background: rgba(255, 255, 255, 0.15);
+        }
+
+        .custom-checkbox-wrapper input:checked+.checkmark {
+            background: #b8e04a;
+            border-color: #b8e04a;
+            box-shadow: 0 0 12px rgba(184, 224, 74, 0.4);
+        }
+
+        .checkmark svg {
+            width: 14px;
+            height: 14px;
+            stroke: #003F29;
+            stroke-width: 3;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+            fill: none;
+            opacity: 0;
+            transform: scale(0.5);
+            transition: all 0.25s cubic-bezier(0.34, 1.15, 0.64, 1);
+        }
+
+        .custom-checkbox-wrapper input:checked+.checkmark svg {
+            opacity: 1;
+            transform: scale(1);
+        }
     </style>
     <link rel="stylesheet" href="/modern-animations.css">
+    <link rel="stylesheet" href="/spa-transitions.css">
 </head>
 
 <body>
+    <div id="page-container">
 
-    <!-- Full background -->
+
+    <!-- full background -->
     <div class="bg-full"></div>
 
-    <!-- Floating Beans -->
+    <!-- floating beans -->
     <img src="/img/bean.png?v=4" class="bean b1 parallax-layer" alt="">
     <img src="/img/bean.png?v=4" class="bean b2 parallax-layer" alt="">
     <img src="/img/bean.png?v=4" class="bean b3 parallax-layer" alt="">
@@ -489,12 +557,12 @@
     <img src="/img/bean.png?v=4" class="bean b7 parallax-layer" alt="">
     <img src="/img/bean.png?v=4" class="bean b8 parallax-layer" alt="">
 
-    <!-- Floating Drink Cups (background decoration) -->
+    <!-- floating drink cups (background decoration) -->
     <img src="/img/drink-1.png?v=4" class="drink d1 parallax-layer" alt="">
     <img src="/img/drink-2.png?v=4" class="drink d2 parallax-layer" alt="">
     <img src="/img/drink-3.png?v=4" class="drink d3 parallax-layer" alt="">
 
-    <!-- Navbar -->
+    <!-- navbar -->
     <nav>
         <a href="/index.html">
             <img src="/img/zestro-logo-white.png" class="logo" alt="Zestro Logo">
@@ -505,7 +573,7 @@
             <a href="#">Contact</a>
         </div>
         <div class="nav-icons">
-            <button aria-label="Account">
+            <button id="account-btn" aria-label="Account">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"
                     stroke-linecap="round" stroke-linejoin="round">
                     <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
@@ -523,7 +591,7 @@
         </div>
     </nav>
 
-    <!-- Hero Content -->
+    <!-- hero content -->
     <section id="hero">
         <h1>Enter Your Address</h1>
 
@@ -544,10 +612,21 @@
             </button>
         </div>
 
-        <p>Lorem ipsum dolor sit amet, consectetur<br>adipiscing elit. Duis vel posuere ipsum.</p>
+        <div id="friend-option" style="display: none; margin-top: 24px; animation: fadeInUp 0.9s ease both 0.45s;">
+            <label class="custom-checkbox-wrapper">
+                <input type="checkbox" id="friend-checkbox" onchange="toggleAddressInput()">
+                <div class="checkmark">
+                    <svg viewBox="0 0 24 24">
+                        <polyline points="20 6 9 17 4 12"></polyline>
+                    </svg>
+                </div>
+                For friend or Family member
+            </label>
+        </div>
+        <p id="hero-desc">Fuel your day without leaving the house.</p>
     </section>
 
-    <!-- Spline Delivery Bunny -->
+    <!-- spline delivery bunny -->
     <div id="spline-wrap">
         <spline-viewer url="https://prod.spline.design/EbTN4XO7qP8AExZL/scene.splinecode"
             loading-anim-type="spinner-big-dark">
@@ -583,13 +662,54 @@
             window.location.href = `/menu.html?address=${encodeURIComponent(addr)}`;
         }
 
+        /* Dynamic Address Selection */
+        window.addEventListener('load', () => {
+            const userStr = localStorage.getItem('customerUser');
+            if (userStr) {
+                const user = JSON.parse(userStr);
+                if (user.address) {
+                    const input = document.getElementById('address-input');
+                    input.value = user.address;
+                    input.readOnly = true;
+                    input.style.opacity = '0.7';
+
+                    const friendOption = document.getElementById('friend-option');
+                    if (friendOption) {
+                        friendOption.style.display = 'block';
+                    }
+                }
+            }
+        });
+
+        function toggleAddressInput() {
+            const isFriend = document.getElementById('friend-checkbox').checked;
+            const input = document.getElementById('address-input');
+            if (isFriend) {
+                input.value = '';
+                input.readOnly = false;
+                input.style.opacity = '1';
+                input.focus();
+            } else {
+                const userStr = localStorage.getItem('customerUser');
+                if (userStr) {
+                    const user = JSON.parse(userStr);
+                    input.value = user.address || '';
+                    input.readOnly = true;
+                    input.style.opacity = '0.7';
+                }
+            }
+        }
+
         /* Allow Enter key to submit */
         document.getElementById('address-input').addEventListener('keydown', e => {
             if (e.key === 'Enter') confirmOrder();
         });
     </script>
 
+    </div>
     <script src="/modern-animations.js"></script>
+    <script src="/auth.js"></script>
+    <script src="/spa-router.js"></script>
 </body>
 
 </html>

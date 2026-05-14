@@ -283,11 +283,63 @@
             box-shadow: 0 6px 24px rgba(0,0,0,.25);
         }
         .success-btn:hover { transform:scale(1.04); }
+
+        /* CUSTOM CHECKBOX */
+        .custom-checkbox-wrapper {
+            display: flex; align-items: center; gap: 10px; cursor: pointer;
+            color: #fff; font-weight: 500; font-size: 15px; font-family: 'Inter', sans-serif;
+            user-select: none; pointer-events: all; transition: opacity 0.2s;
+        }
+        .custom-checkbox-wrapper:hover { opacity: 0.9; }
+        .custom-checkbox-wrapper input { display: none; }
+        .checkmark {
+            width: 22px; height: 22px; border: 2px solid rgba(255, 255, 255, 0.5);
+            border-radius: 6px; display: flex; align-items: center; justify-content: center;
+            transition: all 0.25s cubic-bezier(0.34, 1.15, 0.64, 1);
+            background: rgba(255, 255, 255, 0.05);
+        }
+        .custom-checkbox-wrapper:hover .checkmark {
+            border-color: rgba(255, 255, 255, 0.8); background: rgba(255, 255, 255, 0.15);
+        }
+        .custom-checkbox-wrapper input:checked + .checkmark {
+            background: #b8e04a; border-color: #b8e04a;
+            box-shadow: 0 0 12px rgba(184, 224, 74, 0.4);
+        }
+        .checkmark svg {
+            width: 14px; height: 14px; stroke: #003F29; stroke-width: 3;
+            stroke-linecap: round; stroke-linejoin: round; fill: none;
+            opacity: 0; transform: scale(0.5);
+            transition: all 0.25s cubic-bezier(0.34, 1.15, 0.64, 1);
+        }
+        .custom-checkbox-wrapper input:checked + .checkmark svg {
+            opacity: 1; transform: scale(1);
+        }
+        /* Payment Method Cards */
+        .payment-methods { display: flex; gap: 12px; margin-top: 8px; }
+        .pm-card {
+            flex: 1; border: 1.5px solid rgba(255,255,255,.15); border-radius: 14px;
+            padding: 14px 16px; cursor: pointer; transition: all .25s;
+            background: rgba(255,255,255,.06); display: flex; align-items: center; gap: 10px;
+        }
+        .pm-card:hover { border-color: rgba(255,255,255,.4); background: rgba(255,255,255,.1); }
+        .pm-card.selected { border-color: #b8e04a; background: rgba(184,224,74,.12); box-shadow: 0 0 16px rgba(184,224,74,.2); }
+        .pm-card .pm-icon { font-size: 22px; }
+        .pm-card .pm-text { flex: 1; }
+        .pm-card .pm-title { font-size: 14px; font-weight: 700; color: #fff; }
+        .pm-card .pm-sub { font-size: 11px; color: rgba(255,255,255,.45); margin-top: 2px; }
+        .pm-card .pm-check { width: 18px; height: 18px; border-radius: 50%; border: 2px solid rgba(255,255,255,.3); display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+        .pm-card.selected .pm-check { background: #b8e04a; border-color: #b8e04a; }
+        .pm-badge { display: inline-flex; align-items: center; gap: 5px; font-size: 12px; font-weight: 700; padding: 4px 10px; border-radius: 20px; margin-top: 12px; }
+        .pm-badge.card-badge { background: rgba(99,179,237,.15); color: #90cdf4; border: 1px solid rgba(99,179,237,.25); }
+        .pm-badge.cod-badge  { background: rgba(246,173,85,.15); color: #f6ad55; border: 1px solid rgba(246,173,85,.25); }
     </style>
     <link rel="stylesheet" href="/modern-animations.css">
+    <link rel="stylesheet" href="/spa-transitions.css">
 </head>
 
 <body>
+    <div id="page-container">
+
 
     <div class="bg-full"></div>
 
@@ -301,7 +353,7 @@
     <img src="/img/bean.png?v=4" class="bean b5" alt="">
     <img src="/img/bean.png?v=4" class="bean b6" alt="">
 
-    <!-- Navbar -->
+    <!-- navbar -->
     <nav>
         <a href="/index.html"><img src="/img/zestro-logo-white.png" class="logo" alt="Logo"></a>
         <div class="nav-links">
@@ -310,7 +362,7 @@
             <a href="#">Contact</a>
         </div>
         <div class="nav-icons">
-            <button aria-label="Account">
+            <button id="account-btn" aria-label="Account">
                 <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round">
                     <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2"/><circle cx="12" cy="7" r="4"/>
                 </svg>
@@ -324,7 +376,7 @@
         </div>
     </nav>
 
-    <!-- Page -->
+    <!-- page -->
     <div id="page">
         <div class="breadcrumb">
             <a href="/menu.html">Menu</a>
@@ -338,13 +390,24 @@
 
         <div id="layout">
 
-            <!-- LEFT: Customer Details Form -->
+            <!-- left: customer details form -->
             <div id="form-panel" class="glass">
 
-                <!-- Contact Info -->
+                <!-- contact info -->
                 <div class="section-title">
                     <span class="num">1</span> Contact Information
                 </div>
+                
+                <div id="friend-option" style="display: none; margin-bottom: 20px;">
+                    <label class="custom-checkbox-wrapper">
+                        <input type="checkbox" id="friend-checkbox" onchange="toggleSavedData()">
+                        <div class="checkmark">
+                            <svg viewBox="0 0 24 24"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                        </div>
+                        For friend or Family member
+                    </label>
+                </div>
+
                 <div class="form-grid">
                     <div class="form-group">
                         <label>First Name</label>
@@ -366,7 +429,7 @@
 
                 <hr class="form-divider">
 
-                <!-- Additional Notes -->
+                <!-- additional notes -->
                 <div class="section-title">
                     <span class="num">2</span> Additional Notes
                 </div>
@@ -377,7 +440,39 @@
                     </div>
                 </div>
 
-                <!-- Place Order -->
+                <!-- payment method -->
+                <hr class="form-divider">
+                <div class="section-title">
+                    <span class="num">3</span> Payment Method
+                </div>
+                <div class="payment-methods">
+                    <div class="pm-card" id="pm-credits" onclick="selectPayment('CREDITS')">
+                        <div class="pm-icon">💸</div>
+                        <div class="pm-text">
+                            <div class="pm-title">Zestro Credits</div>
+                            <div class="pm-sub" id="pm-credits-sub">Balance: $0.00</div>
+                        </div>
+                        <div class="pm-check"><svg width="10" height="10" viewBox="0 0 12 12" fill="none"><polyline points="1,6 4,9 11,2" stroke="#003F29" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+                    </div>
+                    <div class="pm-card selected" id="pm-card" onclick="selectPayment('CARD')">
+                        <div class="pm-icon">💳</div>
+                        <div class="pm-text">
+                            <div class="pm-title">Card</div>
+                            <div class="pm-sub" id="pm-card-sub">Credit / Debit</div>
+                        </div>
+                        <div class="pm-check"><svg width="10" height="10" viewBox="0 0 12 12" fill="none"><polyline points="1,6 4,9 11,2" stroke="#003F29" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+                    </div>
+                    <div class="pm-card" id="pm-cod" onclick="selectPayment('COD')">
+                        <div class="pm-icon">💵</div>
+                        <div class="pm-text">
+                            <div class="pm-title">Cash on Delivery</div>
+                            <div class="pm-sub">Pay when delivered</div>
+                        </div>
+                        <div class="pm-check"><svg width="10" height="10" viewBox="0 0 12 12" fill="none"><polyline points="1,6 4,9 11,2" stroke="#003F29" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+                    </div>
+                </div>
+
+                <!-- place order -->
                 <button id="place-order-btn" onclick="placeOrder()">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
                         <path d="M5 12h14"/><path d="m12 5 7 7-7 7"/>
@@ -386,7 +481,7 @@
                 </button>
             </div>
 
-            <!-- RIGHT: Order Summary -->
+            <!-- right: order summary -->
             <div id="summary-panel" class="glass">
                 <div class="summary-title">Order Summary</div>
                 <div id="summary-items"></div>
@@ -397,12 +492,13 @@
                     <span class="lbl">Total</span>
                     <span class="amt" id="s-total">$0.00</span>
                 </div>
+                <div id="pm-summary-badge"></div>
                 <a class="back-btn" href="/cart.html">← Back to Cart</a>
             </div>
         </div>
     </div>
 
-    <!-- Success Overlay -->
+    <!-- success overlay -->
     <div id="success-overlay">
         <div id="success-card">
             <div class="success-icon">
@@ -422,6 +518,93 @@
         const DELIVERY = 2.00;
         const cart = JSON.parse(localStorage.getItem('coffeeCart') || '[]');
 
+        /* Autofill Logic */
+        let selectedPayment = 'CARD';
+
+        window.addEventListener('load', () => {
+            const userStr = localStorage.getItem('customerUser');
+            if(userStr) {
+                const user = JSON.parse(userStr);
+                const friendOption = document.getElementById('friend-option');
+                if(friendOption) friendOption.style.display = 'block';
+                toggleSavedData();
+                
+                const pmSub = document.getElementById('pm-card-sub');
+                let cards = [];
+                try { cards = JSON.parse(user.saved_cards || '[]'); } catch(e){}
+                if (pmSub && cards.length > 0) pmSub.textContent = 'Saved Card •••• ' + cards[0].last4;
+                
+                const creditsSub = document.getElementById('pm-credits-sub');
+                if (creditsSub) creditsSub.textContent = `Balance: $${(user.zestro_credits || 0).toFixed(2)}`;
+            } else {
+                const creditsOpt = document.getElementById('pm-credits');
+                if (creditsOpt) {
+                    creditsOpt.style.opacity = '0.5';
+                    creditsOpt.style.pointerEvents = 'none';
+                    document.getElementById('pm-credits-sub').textContent = 'Login required';
+                }
+            }
+            updatePaymentBadge();
+        });
+
+        function selectPayment(method) {
+            if (method === 'CREDITS') {
+                const user = JSON.parse(localStorage.getItem('customerUser') || '{}');
+                const sub = cart.reduce((s, i) => s + i.price * i.qty, 0);
+                const total = sub + (cart.length ? DELIVERY : 0);
+                if ((user.zestro_credits || 0) < total) {
+                    alert('Insufficient Zestro Credits.');
+                    return;
+                }
+            }
+            selectedPayment = method;
+            document.getElementById('pm-credits').classList.toggle('selected', method === 'CREDITS');
+            document.getElementById('pm-card').classList.toggle('selected', method === 'CARD');
+            document.getElementById('pm-cod').classList.toggle('selected', method === 'COD');
+            updatePaymentBadge();
+        }
+
+        function updatePaymentBadge() {
+            const badge = document.getElementById('pm-summary-badge');
+            if (!badge) return;
+            if (selectedPayment === 'CREDITS') {
+                badge.innerHTML = '<span class="pm-badge" style="background:rgba(99,102,241,0.1);color:#4f46e5;">💸 Zestro Credits</span>';
+            } else if (selectedPayment === 'COD') {
+                badge.innerHTML = '<span class="pm-badge cod-badge">💵 Cash on Delivery</span>';
+            } else {
+                badge.innerHTML = '<span class="pm-badge card-badge">💳 Card Payment</span>';
+            }
+        }
+
+        function toggleSavedData() {
+            const isFriend = document.getElementById('friend-checkbox').checked;
+            const fFirst = document.getElementById('f-first');
+            const fLast = document.getElementById('f-last');
+            const fEmail = document.getElementById('f-email');
+            const fPhone = document.getElementById('f-phone');
+
+            if(!isFriend) {
+                const user = JSON.parse(localStorage.getItem('customerUser') || '{}');
+                const names = (user.full_name || '').split(' ');
+                fFirst.value = names[0] || '';
+                fLast.value = names.slice(1).join(' ') || '';
+                fEmail.value = user.username || '';
+                fPhone.value = user.mobile || '';
+
+                [fFirst, fLast, fEmail, fPhone].forEach(el => {
+                    el.readOnly = true;
+                    el.style.opacity = '0.6';
+                    el.classList.remove('err');
+                });
+            } else {
+                [fFirst, fLast, fEmail, fPhone].forEach(el => {
+                    el.readOnly = false;
+                    el.style.opacity = '1';
+                });
+                fFirst.value = ''; fLast.value = ''; fPhone.value = '';
+                fFirst.focus();
+            }
+        }
 
         /* Render order summary */
         function renderSummary() {
@@ -486,8 +669,12 @@
             btn.classList.add('loading');
             btn.innerHTML = `<svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round" style="animation:spin 1s linear infinite"><path d="M21 12a9 9 0 1 1-6.219-8.56"/></svg> Processing…`;
 
-            // Build payload
+            const userStr = localStorage.getItem('customerUser');
+            let customerId = -1;
+            if (userStr) customerId = JSON.parse(userStr).id;
+
             const payload = {
+                customerId:      customerId,
                 firstName:       document.getElementById('f-first').value.trim(),
                 lastName:        document.getElementById('f-last').value.trim(),
                 email:           document.getElementById('f-email').value.trim(),
@@ -497,6 +684,7 @@
                 subtotal:        cart.reduce((s, i) => s + i.price * i.qty, 0),
                 deliveryFee:     DELIVERY,
                 totalAmount:     cart.reduce((s, i) => s + i.price * i.qty, 0) + DELIVERY,
+                paymentMethod:   selectedPayment,
                 items: cart.map(i => ({
                     productName: i.name,
                     size:        i.size,
@@ -514,6 +702,14 @@
                 const data = await res.json();
 
                 if (res.ok && data.success) {
+                    if (selectedPayment === 'CREDITS') {
+                        // deduct locally and then force refresh localstorage from server on next dashboard load
+                        if (userStr) {
+                            const u = JSON.parse(userStr);
+                            u.zestro_credits -= payload.totalAmount;
+                            localStorage.setItem('customerUser', JSON.stringify(u));
+                        }
+                    }
                     localStorage.removeItem('coffeeCart');
                     document.getElementById('order-num').textContent = '#' + String(data.orderId).padStart(5, '0');
                     document.getElementById('success-overlay').classList.add('show');
@@ -543,6 +739,9 @@
         renderSummary();
     </script>
 
+    </div>
     <script src="/modern-animations.js"></script>
+    <script src="/auth.js"></script>
+    <script src="/spa-router.js"></script>
 </body>
 </html>
