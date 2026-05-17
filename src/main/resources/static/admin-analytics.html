@@ -1,0 +1,580 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Analytics - Zestro</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Outfit', 'sans-serif'] },
+                    colors: {
+                        donezo: {
+                            dark: '#0f4d30',
+                            light: '#146b42',
+                            bg: '#f4f7f6',
+                            card: '#ffffff'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { background-color: #f4f7f6; color: #1f2937; }
+        .sidebar-item.active { background-color: #146b42; color: white; }
+        .sidebar-item { color: #6b7280; transition: all 0.2s; }
+        .sidebar-item:hover:not(.active) { color: #146b42; background-color: #e6f0eb; }
+        
+        .stat-card.active { background-color: #146b42; color: white; }
+        .stat-card.active .trend-icon { background-color: rgba(255,255,255,0.2); }
+        
+        .custom-shadow { box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03); }
+        
+        /* Bar Chart Mock */
+        .bar-wrap { display: flex; align-items: flex-end; gap: 12px; height: 120px; padding: 20px 0; }
+        .bar { width: 30px; background-color: #146b42; border-radius: 10px; transition: height 0.3s; position: relative; }
+        .bar.light { background: repeating-linear-gradient(45deg, transparent, transparent 5px, rgba(20, 107, 66, 0.2) 5px, rgba(20, 107, 66, 0.2) 10px); }
+        .bar.hover { background-color: #0f4d30; }
+        
+        /* Donut Chart Mock */
+        .donut-wrapper {
+            position: relative; width: 140px; height: 140px; border-radius: 50%;
+            background: conic-gradient(#146b42 0% 41%, #e5e7eb 41% 100%);
+            display: flex; align-items: center; justify-content: center;
+        }
+        .donut-inner {
+            width: 100px; height: 100px; background-color: white; border-radius: 50%;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+        }
+    </style>
+</head>
+<body class="flex h-screen overflow-hidden">
+
+    <!-- sidebar -->
+    <aside class="w-64 bg-white border-r border-gray-100 flex flex-col hidden md:flex z-20">
+        <!-- logo -->
+        <div class="h-20 flex items-center px-8">
+            <div class="flex items-center gap-3">
+                <img src="/img/zestro-logo-green.png" alt="Zestro Logo" class="w-10 h-10 object-contain">
+                <span class="text-xl font-bold text-gray-800">Zestro</span>
+            </div>
+        </div>
+        <!-- navigation -->
+        <div class="flex-1 overflow-y-auto px-4 py-4 scrollbar-hide">
+            <div class="mb-6">
+                <p class="px-4 text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">Menu</p>
+                <nav class="space-y-1">
+                    <a href="/admin-dashboard.html" class="sidebar-item flex items-center gap-3 px-4 py-2.5 rounded-xl font-medium">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/></svg>
+                        Dashboard
+                    </a>
+                    <a href="/admin-orders.html" class="sidebar-item flex items-center gap-3 px-4 py-2.5 rounded-xl font-medium">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"/></svg>
+                        Order History
+                    </a>
+                    <a href="/admin-customers.html" class="sidebar-item flex items-center gap-3 px-4 py-2.5 rounded-xl font-medium">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+                        Customers
+                    </a>
+                    <a href="/admin-riders.html" class="sidebar-item flex items-center gap-3 px-4 py-2.5 rounded-xl font-medium">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+                        Rider Management
+                    </a>
+                    <a href="/admin-add-item.html" class="sidebar-item flex items-center justify-between px-4 py-2.5 rounded-xl font-medium">
+                        <div class="flex items-center gap-3">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/></svg>
+                            Menu Config
+                        </div>
+                        <span class="bg-green-100 text-donezo-light text-xs font-bold px-2 py-0.5 rounded-full" id="menu-count">0</span>
+                    </a>
+                    
+                    <a href="/admin-analytics.html" class="sidebar-item active flex items-center gap-3 px-4 py-2.5 rounded-xl font-medium">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+                        Analytics
+                    </a>
+                </nav>
+            </div>
+
+            <div class="mb-6">
+                <p class="px-4 text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">General</p>
+                <nav class="space-y-1">
+                    <a href="#" onclick="openAdminSettings()" class="sidebar-item flex items-center gap-3 px-4 py-2.5 rounded-xl font-medium">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                        Settings
+                    </a>
+                    <a href="/admin.html" class="sidebar-item flex items-center gap-3 px-4 py-2.5 rounded-xl font-medium text-red-500 hover:text-red-600 hover:bg-red-50">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
+                        Logout
+                    </a>
+                </nav>
+            </div>
+        </div>
+    </aside>
+
+    <!-- main content -->
+    <main class="flex-1 flex flex-col h-screen overflow-hidden relative">
+        <!-- top bar -->
+        <header class="h-20 flex items-center justify-between px-8 bg-transparent z-10">
+            <div class="relative w-96">
+                <svg class="w-5 h-5 absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
+                <input type="text" placeholder="Search orders..." class="w-full bg-white rounded-full py-2.5 pl-12 pr-12 text-sm focus:outline-none focus:ring-2 focus:ring-donezo-light custom-shadow border-none">
+                <div class="absolute right-4 top-1/2 -translate-y-1/2 bg-gray-100 rounded px-1.5 py-0.5 text-xs text-gray-500 font-medium font-sans">⌘F</div>
+            </div>
+            
+            <div class="flex items-center gap-4">
+                <button class="w-10 h-10 bg-white rounded-full flex items-center justify-center text-gray-500 custom-shadow hover:text-donezo-light transition">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"/></svg>
+                </button>
+                <button class="w-10 h-10 bg-white rounded-full flex items-center justify-center text-gray-500 custom-shadow hover:text-donezo-light transition relative">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 17h5l-1.405-1.405A2.032 2.032 0 0118 14.158V11a6.002 6.002 0 00-4-5.659V5a2 2 0 10-4 0v.341C7.67 6.165 6 8.388 6 11v3.159c0 .538-.214 1.055-.595 1.436L4 17h5m6 0v1a3 3 0 11-6 0v-1m6 0H9"/></svg>
+                    <span class="absolute top-2 right-2 w-2.5 h-2.5 bg-red-500 rounded-full border-2 border-white"></span>
+                </button>
+                <div class="flex items-center gap-3 ml-2 pl-2 border-l border-gray-200">
+                    <div class="w-10 h-10 rounded-full bg-donezo-light flex items-center justify-center text-white font-bold text-lg custom-shadow border-2 border-white">Z</div>
+                    <div class="hidden md:block">
+                        <p class="text-sm font-bold text-gray-800">Admin User</p>
+                        <p class="text-xs text-gray-500">admin@zestro.com</p>
+                    </div>
+                </div>
+            </div>
+        </header>
+
+        <!-- main scrollable area -->
+        <div class="flex-1 overflow-y-auto px-8 pb-8 pt-2 scrollbar-hide">
+            <div class="flex justify-between items-end mb-8">
+                <div>
+                    <h1 class="text-3xl font-bold text-gray-900 mb-1">Analytics Dashboard</h1>
+                    <p class="text-sm text-gray-500">Deep dive into your business performance and customer trends.</p>
+                </div>
+                <div class="flex gap-2">
+                    <select class="bg-white border border-gray-200 rounded-xl px-4 py-2.5 text-sm font-semibold text-gray-700 shadow-sm outline-none focus:border-donezo-light">
+                        <option>Last 7 Days</option>
+                        <option>Last 30 Days</option>
+                        <option>This Year</option>
+                        <option>All Time</option>
+                    </select>
+                </div>
+            </div>
+
+            <!-- top stats row -->
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
+                <div class="bg-white rounded-2xl p-6 custom-shadow relative overflow-hidden group">
+                    <div class="absolute top-0 right-0 w-24 h-24 bg-green-50 rounded-bl-full -mr-4 -mt-4 transition-transform group-hover:scale-110"></div>
+                    <div class="relative z-10">
+                        <div class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Total Revenue</div>
+                        <div class="text-3xl font-black text-gray-900 mb-1" id="an-revenue">$0.00</div>
+                        <div class="text-sm font-semibold text-green-500 flex items-center gap-1">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>
+                            +12.5%
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="bg-white rounded-2xl p-6 custom-shadow relative overflow-hidden group">
+                    <div class="absolute top-0 right-0 w-24 h-24 bg-blue-50 rounded-bl-full -mr-4 -mt-4 transition-transform group-hover:scale-110"></div>
+                    <div class="relative z-10">
+                        <div class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Total Orders</div>
+                        <div class="text-3xl font-black text-gray-900 mb-1" id="an-orders">0</div>
+                        <div class="text-sm font-semibold text-blue-500 flex items-center gap-1">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>
+                            +8.2%
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-2xl p-6 custom-shadow relative overflow-hidden group">
+                    <div class="absolute top-0 right-0 w-24 h-24 bg-orange-50 rounded-bl-full -mr-4 -mt-4 transition-transform group-hover:scale-110"></div>
+                    <div class="relative z-10">
+                        <div class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Avg. Order Value</div>
+                        <div class="text-3xl font-black text-gray-900 mb-1" id="an-aov">$0.00</div>
+                        <div class="text-sm font-semibold text-orange-500 flex items-center gap-1">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 17h8m0 0V9m0 8l-8-8-4 4-6-6"/></svg>
+                            -2.1%
+                        </div>
+                    </div>
+                </div>
+
+                <div class="bg-white rounded-2xl p-6 custom-shadow relative overflow-hidden group">
+                    <div class="absolute top-0 right-0 w-24 h-24 bg-purple-50 rounded-bl-full -mr-4 -mt-4 transition-transform group-hover:scale-110"></div>
+                    <div class="relative z-10">
+                        <div class="text-xs font-bold text-gray-400 uppercase tracking-wider mb-2">Active Customers</div>
+                        <div class="text-3xl font-black text-gray-900 mb-1" id="an-customers">0</div>
+                        <div class="text-sm font-semibold text-purple-500 flex items-center gap-1">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6"/></svg>
+                            +15.3%
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- charts row -->
+            <div class="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
+                <div class="lg:col-span-2 bg-white rounded-2xl p-6 custom-shadow">
+                    <div class="flex justify-between items-center mb-6">
+                        <h3 class="font-bold text-gray-800">Revenue Overview</h3>
+                    </div>
+                    <div class="h-72 w-full">
+                        <canvas id="revenueChart"></canvas>
+                    </div>
+                </div>
+                
+                <div class="bg-white rounded-2xl p-6 custom-shadow">
+                    <div class="flex justify-between items-center mb-6">
+                        <h3 class="font-bold text-gray-800">Top Selling Products</h3>
+                    </div>
+                    <div class="h-64 w-full flex items-center justify-center">
+                        <canvas id="productChart"></canvas>
+                    </div>
+                </div>
+            </div>
+            
+            <script>
+                async function initAnalytics() {
+                    try {
+                        const [ordersRes, customersRes] = await Promise.all([
+                            fetch('/api/orders'),
+                            fetch('/api/admin/customers')
+                        ]);
+                        
+                        const orders = ordersRes.ok ? await ordersRes.json() : [];
+                        const customers = customersRes.ok ? await customersRes.json() : [];
+                        
+                        let totalRev = 0;
+                        orders.forEach(o => totalRev += o.totalAmount);
+                        let aov = orders.length > 0 ? (totalRev / orders.length) : 0;
+                        
+                        document.getElementById('an-revenue').textContent = '$' + totalRev.toFixed(2);
+                        document.getElementById('an-orders').textContent = orders.length;
+                        document.getElementById('an-aov').textContent = '$' + aov.toFixed(2);
+                        document.getElementById('an-customers').textContent = customers.length;
+                        
+                        // prepare real data for revenue chart
+                        const revData = [0,0,0,0,0,0,0]; // mon-sun
+                        orders.forEach(o => {
+                            if (!o.createdAt) return;
+                            let day = new Date(o.createdAt).getDay(); // 0=sun, 1=mon
+                            day = day === 0 ? 6 : day - 1; // map to 0=mon, 6=sun
+                            revData[day] += o.totalAmount || 0;
+                        });
+
+                        const revCtx = document.getElementById('revenueChart').getContext('2d');
+                        new Chart(revCtx, {
+                            type: 'line',
+                            data: {
+                                labels: ['Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat', 'Sun'],
+                                datasets: [{
+                                    label: 'Revenue ($)',
+                                    data: revData,
+                                    borderColor: '#146b42',
+                                    backgroundColor: 'rgba(20, 107, 66, 0.1)',
+                                    borderWidth: 3,
+                                    tension: 0.4,
+                                    fill: true
+                                }]
+                            },
+                            options: {
+                                responsive: true, maintainAspectRatio: false,
+                                plugins: { legend: { display: false } },
+                                scales: { 
+                                    y: { beginAtZero: true, grid: { borderDash: [4, 4], color: '#f3f4f6' }, border: { display: false } },
+                                    x: { grid: { display: false }, border: { display: false } }
+                                }
+                            }
+                        });
+                        
+                        // prepare real data for product chart
+                        const productCounts = {};
+                        orders.forEach(o => {
+                            (o.items || []).forEach(item => {
+                                productCounts[item.productName] = (productCounts[item.productName] || 0) + item.quantity;
+                            });
+                        });
+                        const prodLabels = Object.keys(productCounts);
+                        const prodData = Object.values(productCounts);
+                        const bgColors = ['#146b42', '#34d399', '#fcd34d', '#f87171', '#60a5fa', '#a78bfa', '#fb923c'];
+
+                        const prodCtx = document.getElementById('productChart').getContext('2d');
+                        new Chart(prodCtx, {
+                            type: 'doughnut',
+                            data: {
+                                labels: prodLabels.length ? prodLabels : ['No Data'],
+                                datasets: [{
+                                    data: prodData.length ? prodData : [1],
+                                    backgroundColor: prodData.length ? bgColors.slice(0, prodData.length) : ['#e5e7eb'],
+                                    borderWidth: 0
+                                }]
+                            },
+                            options: {
+                                responsive: true, maintainAspectRatio: false,
+                                cutout: '75%',
+                                plugins: { legend: { position: 'bottom' } }
+                            }
+                        });
+                        
+                    } catch(e) {
+                        console.error(e);
+                    }
+                }
+                
+                // wait a tiny bit for chart.js to load from the dashboard script tags
+                setTimeout(initAnalytics, 500);
+            </script>
+        </div>
+    </main>
+
+    <script>
+        let alertOrderId = null;
+
+        async function loadDashboardData() {
+            try {
+                const [ordersRes, menuRes] = await Promise.all([
+                    fetch('/api/orders'),
+                    fetch('/api/menu')
+                ]);
+                const orders = await ordersRes.json();
+                const menu = await menuRes.json();
+
+                // ── stats ──
+                let revenue = 0, pending = 0, prep = 0, delivered = 0;
+                orders.forEach(o => {
+                    revenue += o.totalAmount || 0;
+                    if (o.status === 'DELIVERED') delivered++;
+                    else if (o.status === 'PENDING') pending++;
+                    else if (o.status === 'PREPARING' || o.status === 'READY') prep++;
+                });
+                document.getElementById('stat-revenue').innerText = '$' + revenue.toFixed(2);
+                document.getElementById('stat-delivered').innerText = delivered;
+                document.getElementById('stat-prep').innerText = prep;
+                document.getElementById('stat-pending').innerText = pending;
+                document.getElementById('menu-count').innerText = menu.length;
+
+                // ── completion rate donut ──
+                const total = orders.length;
+                const pct = total === 0 ? 0 : Math.round((delivered / total) * 100);
+                document.getElementById('completion-pct').innerText = pct + '%';
+                document.querySelector('.donut-wrapper').style.background =
+                    `conic-gradient(#146b42 0% ${pct}%, #e5e7eb ${pct}% 100%)`;
+
+                // ── bar chart (last 7 days) ──
+                const days = ['S','M','T','W','T','F','S'];
+                const counts = [0,0,0,0,0,0,0];
+                const today = new Date().getDay(); // 0=sun
+                orders.forEach(o => {
+                    if (!o.createdAt) return;
+                    const d = new Date(o.createdAt).getDay();
+                    counts[d]++;
+                });
+                const maxCount = Math.max(...counts, 1);
+                const barWrap = document.querySelector('.bar-wrap');
+                barWrap.innerHTML = '';
+                days.forEach((label, i) => {
+                    const isToday = i === today;
+                    const heightPx = Math.max(12, Math.round((counts[i] / maxCount) * 96));
+                    barWrap.innerHTML += `
+                        <div class="flex flex-col items-center gap-2">
+                            <div class="bar ${isToday ? 'hover' : 'light'}" style="height:${heightPx}px"></div>
+                            <span class="text-xs text-gray-400 font-medium">${label}</span>
+                        </div>`;
+                });
+
+                // ── alert card (newest pending order) ──
+                const newestPending = orders.find(o => o.status === 'PENDING');
+                const alertContent = document.getElementById('alert-content');
+                const alertBtn = document.getElementById('alert-btn');
+                if (newestPending) {
+                    const itemsTxt = (newestPending.items || []).map(i => `${i.quantity}x ${i.productName}`).join(', ');
+                    alertContent.innerHTML = `
+                        <h4 class="text-xl font-bold text-gray-800 mb-1">New Order #${newestPending.id}</h4>
+                        <p class="text-sm text-gray-500 mb-1">${newestPending.firstName} ${newestPending.lastName}</p>
+                        <p class="text-sm text-donezo-light font-bold">$${(newestPending.totalAmount||0).toFixed(2)}</p>
+                        <p class="text-xs text-gray-400 mt-1">${itemsTxt}</p>`;
+                    alertBtn.classList.remove('hidden');
+                    alertOrderId = newestPending.id;
+                } else {
+                    alertContent.innerHTML = '<p class="text-sm text-gray-400">No pending orders right now.</p>';
+                    alertBtn.classList.add('hidden');
+                    alertOrderId = null;
+                }
+
+                // ── live menu items in sidebar panel ──
+                const menuList = document.getElementById('menu-items-list');
+                menuList.innerHTML = '';
+                if (menu.length === 0) {
+                    menuList.innerHTML = '<p class="text-xs text-gray-400">No menu items yet.</p>';
+                } else {
+                    menu.slice(0, 5).forEach(item => {
+                        const imgSrc = item.imageUrl || '/img/drink-1.png';
+                        menuList.innerHTML += `
+                            <div class="flex items-center gap-3">
+                                <img src="${imgSrc}" class="w-10 h-10 rounded-lg object-cover border border-gray-100" onerror="this.src='/img/drink-1.png'">
+                                <div class="flex-1 min-w-0">
+                                    <p class="text-sm font-bold text-gray-800 truncate">${item.name}</p>
+                                    <p class="text-xs text-gray-400">$${item.price.toFixed(2)}</p>
+                                </div>
+                            </div>`;
+                    });
+                    if (menu.length > 5) {
+                        menuList.innerHTML += `<p class="text-xs text-gray-400 text-center pt-1">+${menu.length - 5} more items</p>`;
+                    }
+                }
+
+                // ── live orders table ──
+                const list = document.getElementById('orders-list');
+                list.innerHTML = '';
+                if (orders.length === 0) {
+                    list.innerHTML = '<p class="text-sm text-gray-400 py-4 text-center">No orders yet.</p>';
+                } else {
+                    orders.slice(0, 8).forEach(o => {
+                        const statusMap = {
+                            'PENDING':   { color: 'bg-yellow-100 text-yellow-700', btn: 'Start Prep',   next: 'PREPARING', btnCls: 'text-blue-600 bg-blue-50 hover:bg-blue-100' },
+                            'PREPARING': { color: 'bg-blue-100 text-blue-700',   btn: 'Mark Ready',  next: 'READY',     btnCls: 'text-green-600 bg-green-50 hover:bg-green-100' },
+                            'READY':     { color: 'bg-green-100 text-green-700',  btn: 'Send to Rider',  next: 'OUT_FOR_DELIVERY', btnCls: 'text-purple-600 bg-purple-50 hover:bg-purple-100' },
+                            'OUT_FOR_DELIVERY': { color: 'bg-purple-100 text-purple-700', btn: 'Out with Rider', next: '', btnCls: 'text-gray-400 bg-gray-50 cursor-not-allowed' },
+                            'PICKED_UP': { color: 'bg-orange-100 text-orange-700', btn: 'On the Way', next: '', btnCls: 'text-gray-400 bg-gray-50 cursor-not-allowed' },
+                            'DELIVERED': { color: 'bg-gray-100 text-gray-500',   btn: '',            next: '',           btnCls: '' }
+                        };
+                        const s = statusMap[o.status] || statusMap['DELIVERED'];
+                        const itemsTxt = (o.items || []).map(i => `${i.quantity}x ${i.productName}`).join(', ') || 'No items';
+                        const initial = (o.firstName || '?').charAt(0).toUpperCase();
+                        list.innerHTML += `
+                        <div class="flex items-center justify-between p-3 rounded-xl hover:bg-gray-50 border border-transparent hover:border-gray-100 transition">
+                            <div class="flex items-center gap-4">
+                                <div class="w-10 h-10 rounded-full bg-donezo-light/10 flex items-center justify-center text-donezo-light font-bold text-sm">${initial}</div>
+                                <div>
+                                    <div class="flex items-center gap-2 mb-0.5">
+                                        <h4 class="text-sm font-bold text-gray-800">${o.firstName || ''} ${o.lastName || ''}</h4>
+                                        <span class="text-[10px] font-bold px-2 py-0.5 rounded-full ${s.color}">${o.status}</span>
+                                    </div>
+                                    <p class="text-xs text-gray-500">Order #${o.id} • ${itemsTxt} • <strong>$${(o.totalAmount||0).toFixed(2)}</strong></p>
+                                </div>
+                            </div>
+                            ${ s.next
+                                ? `<button onclick="updateStatus(${o.id},'${s.next}')" class="text-xs font-bold px-3 py-1.5 rounded-lg transition ${s.btnCls}">${s.btn}</button>`
+                                : (o.status === 'DELIVERED'
+                                    ? `<span class="text-xs font-bold text-gray-400">Completed</span>`
+                                    : `<span class="text-xs font-bold text-gray-400">${s.btn}</span>`)
+                            }
+                        </div>`;
+                    });
+                }
+
+                // ── live order activity & toasts ──
+                const activityList = document.getElementById('activity-list');
+                activityList.innerHTML = '';
+                if (orders.length === 0) {
+                    activityList.innerHTML = '<p class="text-xs text-gray-400">No activity yet.</p>';
+                } else {
+                    orders.slice(0, 5).forEach(o => {
+                        activityList.innerHTML += `
+                            <div class="flex items-center gap-3 p-2 border-b border-gray-50 last:border-0">
+                                <div class="w-8 h-8 rounded-full bg-donezo-light/10 text-donezo-light flex items-center justify-center">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                                </div>
+                                <div>
+                                    <p class="text-xs font-bold text-gray-800">Order #${o.id}</p>
+                                    <p class="text-[10px] text-gray-500">Status changed to: <span class="font-semibold uppercase text-donezo-light">${o.status}</span></p>
+                                </div>
+                            </div>
+                        `;
+                        
+                        // check for status changes to trigger toast
+                        if (previousOrderStatuses[o.id] && previousOrderStatuses[o.id] !== o.status) {
+                            showAdminToast(`Order #${o.id} is now ${o.status.replace(/_/g, ' ')}`);
+                        }
+                        previousOrderStatuses[o.id] = o.status;
+                    });
+                }
+
+            } catch (e) {
+                console.error('Dashboard error:', e);
+            }
+        }
+
+
+
+        async function updateStatus(id, status) {
+            try {
+                await fetch(`/api/orders/${id}/status`, {
+                    method: 'PUT',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ status })
+                });
+                loadDashboardData();
+            } catch(e) { console.error(e); }
+        }
+
+        // alert accept button
+        document.getElementById('alert-btn').addEventListener('click', () => {
+            if (alertOrderId) updateStatus(alertOrderId, 'PREPARING');
+        });
+
+        // refresh data button
+        document.querySelector('button.bg-white.hover\\:bg-gray-50').addEventListener('click', loadDashboardData);
+
+        // toast logic
+        function showAdminToast(message) {
+            const toast = document.getElementById('admin-toast');
+            document.getElementById('admin-toast-msg').innerText = message;
+            toast.classList.remove('translate-x-[150%]', 'opacity-0');
+            setTimeout(() => {
+                toast.classList.add('translate-x-[150%]', 'opacity-0');
+            }, 5000);
+        }
+
+        let previousOrderStatuses = {};
+        
+        loadDashboardData();
+        setInterval(loadDashboardData, 5000); // polling every 5 seconds for live tracking
+    </script>
+    
+    <!-- admin toast notification -->
+    <div id="admin-toast" class="fixed bottom-6 right-6 z-[100] transform transition-all duration-500 translate-x-[150%] opacity-0 pointer-events-auto">
+        <div class="bg-white border-l-4 border-donezo-light shadow-[0_10px_40px_rgba(0,0,0,0.15)] rounded-r-xl p-5 w-80 flex items-start gap-4">
+            <div class="text-donezo-light text-2xl mt-0.5">🚀</div>
+            <div class="flex-1">
+                <h4 class="text-sm font-bold text-gray-900">Order Update</h4>
+                <p id="admin-toast-msg" class="text-xs text-gray-500 mt-1 uppercase font-semibold">Order #12 is now PICKED UP</p>
+            </div>
+        </div>
+    </div>
+<script src="/auth.js"></script>
+
+    <!-- admin settings modal -->
+    <div id="admin-settings-modal" class="fixed inset-0 bg-black/60 z-[100] hidden flex items-center justify-center backdrop-blur-sm">
+        <div class="bg-white rounded-3xl w-full max-w-md p-8 custom-shadow relative">
+            <button onclick="closeAdminSettings()" class="absolute top-6 right-6 text-gray-400 hover:text-gray-900 transition">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+            </button>
+            <h2 class="text-2xl font-bold text-gray-900 mb-6 font-sans">Admin Settings</h2>
+            
+            <form onsubmit="saveAdminSettings(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1.5">Profile Picture</label>
+                    <input type="file" id="admin-setting-pic" accept="image/*" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 text-sm file:mr-4 file:py-1 file:px-3 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-donezo-light file:text-white hover:file:bg-donezo-dark transition cursor-pointer">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1.5">Full Name</label>
+                    <input type="text" id="admin-setting-name" required class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-donezo-light transition">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1.5">Password</label>
+                    <input type="password" id="admin-setting-password" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-donezo-light transition">
+                </div>
+                
+                <button type="submit" id="admin-setting-save-btn" class="w-full bg-donezo-light hover:bg-donezo-dark text-white rounded-xl py-3 font-medium transition shadow-lg shadow-green-900/20 mt-4">Save Changes</button>
+            </form>
+        </div>
+    </div>
+
+<script src="/admin-auth.js"></script>
+</body>
+</html>
+
+<!-- dashboard layout end -->
+
+

@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Customer Management</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    fontFamily: { sans: ['Outfit', 'sans-serif'] },
+                    colors: {
+                        donezo: {
+                            dark: '#0f4d30',
+                            light: '#146b42',
+                            bg: '#f4f7f6',
+                            card: '#ffffff'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        body { background-color: #f4f7f6; color: #1f2937; }
+        .sidebar-item.active { background-color: #146b42; color: white; }
+        .sidebar-item { color: #6b7280; transition: all 0.2s; }
+        .sidebar-item:hover:not(.active) { color: #146b42; background-color: #e6f0eb; }
+        .custom-shadow { box-shadow: 0 4px 20px rgba(0, 0, 0, 0.03); }
+    </style>
+</head>
+<body class="flex h-screen overflow-hidden">
+
+    <!-- sidebar -->
+    <aside class="w-64 bg-white border-r border-gray-100 flex flex-col hidden md:flex z-20">
+        <!-- logo -->
+        <div class="h-20 flex items-center px-8">
+            <div class="flex items-center gap-3">
+                <img src="/img/zestro-logo-green.png" alt="Zestro Logo" class="w-10 h-10 object-contain">
+                <span class="text-xl font-bold text-gray-800">Zestro</span>
+            </div>
+        </div>
+        <!-- navigation -->
+        <div class="flex-1 overflow-y-auto px-4 py-4 scrollbar-hide">
+            <div class="mb-6">
+                <p class="px-4 text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">Menu</p>
+                <nav class="space-y-1">
+                    <a href="/admin-dashboard.html" class="sidebar-item flex items-center gap-3 px-4 py-2.5 rounded-xl font-medium">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/></svg>
+                        Dashboard
+                    </a>
+                    <a href="/admin-orders.html" class="sidebar-item flex items-center gap-3 px-4 py-2.5 rounded-xl font-medium">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"/></svg>
+                        Order History
+                    </a>
+                    <a href="/admin-customers.html" class="sidebar-item active flex items-center gap-3 px-4 py-2.5 rounded-xl font-medium">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+                        Customers
+                    </a>
+                    <a href="/admin-riders.html" class="sidebar-item flex items-center gap-3 px-4 py-2.5 rounded-xl font-medium">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+                        Rider Management
+                    </a>
+                    <a href="/admin-add-item.html" class="sidebar-item flex items-center justify-between px-4 py-2.5 rounded-xl font-medium">
+                        <div class="flex items-center gap-3">
+                            <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 6v6m0 0v6m0-6h6m-6 0H6"/></svg>
+                            Menu Config
+                        </div>
+                        <span class="bg-green-100 text-donezo-light text-xs font-bold px-2 py-0.5 rounded-full" id="menu-count">0</span>
+                    </a>
+                    
+                    <a href="/admin-analytics.html" class="sidebar-item flex items-center gap-3 px-4 py-2.5 rounded-xl font-medium">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
+                        Analytics
+                    </a>
+                </nav>
+            </div>
+
+            <div class="mb-6">
+                <p class="px-4 text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">General</p>
+                <nav class="space-y-1">
+                    <a href="#" onclick="openAdminSettings()" class="sidebar-item flex items-center gap-3 px-4 py-2.5 rounded-xl font-medium">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
+                        Settings
+                    </a>
+                    <a href="/admin.html" class="sidebar-item flex items-center gap-3 px-4 py-2.5 rounded-xl font-medium text-red-500 hover:text-red-600 hover:bg-red-50">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"/></svg>
+                        Logout
+                    </a>
+                </nav>
+            </div>
+        </div>
+    </aside>
+
+    <!-- main content -->
+    <main class="flex-1 flex flex-col h-screen overflow-hidden relative">
+        <!-- mobile header -->
+        <header class="md:hidden h-16 bg-white border-b border-gray-100 flex items-center justify-between px-4 z-20">
+            <div class="flex items-center gap-2">
+                <img src="/img/zestro-logo-green.png" alt="Zestro Logo" class="w-8 h-8 object-contain">
+                <span class="text-lg font-bold text-gray-800">Zestro Admin</span>
+            </div>
+        </header>
+
+        <!-- top banner decoration -->
+        <div class="h-40 bg-[#146b42] w-full absolute top-0 left-0 z-0"></div>
+
+        <!-- content area -->
+        <div class="flex-1 overflow-y-auto z-10 p-4 md:p-8 relative">
+            
+            <div class="flex justify-between items-end mb-8 text-white">
+                <div>
+                    <h1 class="text-3xl font-bold tracking-tight">Customer Management</h1>
+                    <p class="opacity-80 mt-1">View registered customers and their order history.</p>
+                </div>
+            </div>
+
+            <div class="bg-white rounded-3xl p-6 custom-shadow w-full">
+                <h2 class="text-xl font-bold text-gray-800 mb-6">All Registered Customers</h2>
+                <div id="customers-section" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                    <!-- dynamic -->
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- customer profile modal -->
+    <div id="customer-profile-modal" class="fixed inset-0 bg-gray-900/50 backdrop-blur-sm hidden z-50 flex justify-end">
+        <div class="w-full max-w-3xl bg-gray-50 h-full overflow-y-auto shadow-2xl flex flex-col transform transition-transform translate-x-0">
+            <!-- modal header -->
+            <div class="bg-white px-8 py-5 flex items-center justify-between border-b border-gray-200 sticky top-0 z-10">
+                <div class="flex items-center gap-4">
+                    <button onclick="closeProfileModal()" class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center text-gray-600 hover:bg-gray-200 transition">
+                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 19l-7-7 7-7"/></svg>
+                    </button>
+                    <h2 class="text-xl font-bold text-gray-800" id="modal-customer-name">Customer Profile</h2>
+                </div>
+                <button id="modal-delete-btn" class="text-sm font-bold text-red-600 bg-red-50 hover:bg-red-100 px-4 py-2 rounded-lg transition">Delete Account</button>
+            </div>
+
+            <div class="p-8 space-y-8 flex-1">
+                <!-- profile card -->
+                <div class="bg-white rounded-2xl p-6 border border-gray-100 shadow-sm flex items-center gap-6">
+                    <div class="w-20 h-20 rounded-full bg-green-100 text-green-700 font-bold text-3xl flex items-center justify-center" id="modal-avatar">
+                        C
+                    </div>
+                    <div>
+                        <h3 class="text-2xl font-bold text-gray-900" id="modal-full-name">John Doe</h3>
+                        <p class="text-gray-500" id="modal-email">john@example.com</p>
+                    </div>
+                </div>
+
+                <!-- info grid -->
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                    <div class="bg-white rounded-2xl p-5 border border-gray-100 shadow-sm">
+                        <p class="text-sm text-gray-500 font-medium">Mobile Number</p>
+                        <h3 class="text-lg font-bold text-gray-900 mt-1" id="modal-mobile">-</h3>
+                    </div>
+                    <div class="bg-white rounded-2xl p-5 border border-gray-100 shadow-sm">
+                        <p class="text-sm text-gray-500 font-medium">Account Age</p>
+                        <h3 class="text-lg font-bold text-gray-900 mt-1" id="modal-age">-</h3>
+                    </div>
+                    <div class="bg-white rounded-2xl p-5 border border-gray-100 shadow-sm md:col-span-2">
+                        <p class="text-sm text-gray-500 font-medium">Home Address</p>
+                        <h3 class="text-lg font-bold text-gray-900 mt-1" id="modal-address">-</h3>
+                    </div>
+                </div>
+
+                <!-- past orders history -->
+                <div class="bg-white rounded-2xl border border-gray-100 shadow-sm overflow-hidden">
+                    <div class="px-6 py-4 border-b border-gray-100 bg-gray-50/50">
+                        <h3 class="text-lg font-bold text-gray-800">Order History</h3>
+                    </div>
+                    <div class="overflow-x-auto">
+                        <table class="w-full text-left border-collapse">
+                            <thead>
+                                <tr class="bg-gray-50 text-gray-500 text-xs uppercase tracking-wider">
+                                    <th class="px-6 py-3 font-semibold">Order ID</th>
+                                    <th class="px-6 py-3 font-semibold">Date & Time</th>
+                                    <th class="px-6 py-3 font-semibold">Total Amount</th>
+                                    <th class="px-6 py-3 font-semibold">Status</th>
+                                </tr>
+                            </thead>
+                            <tbody class="divide-y divide-gray-100 text-sm" id="modal-order-history">
+                                <!-- orders loaded here -->
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', loadData);
+
+        async function loadData() {
+            try {
+                const res = await fetch('/api/admin/customers');
+                const customers = await res.json();
+                renderCustomers(customers);
+            } catch (e) {
+                console.error(e);
+            }
+        }
+
+        function calculateAge(createdAt) {
+            if (!createdAt) return "Unknown";
+            const diffMs = new Date() - new Date(createdAt);
+            const diffDays = Math.floor(diffMs / (1000 * 60 * 60 * 24));
+            if (diffDays === 0) return "Joined Today";
+            if (diffDays === 1) return "Joined Yesterday";
+            return `${diffDays} Days`;
+        }
+
+        function renderCustomers(customers) {
+            const container = document.getElementById('customers-section');
+            container.innerHTML = '';
+            
+            if (customers.length === 0) {
+                container.innerHTML = '<div class="col-span-full bg-gray-50 p-6 rounded-2xl text-center text-gray-500">No customers found.</div>';
+                return;
+            }
+
+            customers.forEach(c => {
+                const initial = (c.full_name || c.username).charAt(0).toUpperCase();
+                const age = calculateAge(c.created_at);
+                
+                container.innerHTML += `
+                    <div class="bg-white rounded-2xl p-6 custom-shadow border border-gray-100 relative overflow-hidden transition-transform hover:-translate-y-1">
+                        <div class="flex flex-col items-center mb-4 mt-2">
+                            <div class="w-16 h-16 rounded-full bg-green-100 text-green-700 font-bold text-2xl flex items-center justify-center mb-3">
+                                ${initial}
+                            </div>
+                            <h3 class="font-bold text-xl text-gray-800">${c.full_name || c.username}</h3>
+                            <p class="text-sm text-gray-500">${c.username}</p>
+                        </div>
+
+                        <div class="border-t border-gray-100 pt-4 mb-4 space-y-2">
+                            <div class="flex justify-between text-sm">
+                                <span class="text-gray-500">Mobile:</span>
+                                <span class="font-medium">${c.mobile || '-'}</span>
+                            </div>
+                            <div class="flex justify-between text-sm">
+                                <span class="text-gray-500">Account Age:</span>
+                                <span class="font-medium text-green-700">${age}</span>
+                            </div>
+                        </div>
+                        
+                        <button onclick='openProfileModal(${JSON.stringify(c).replace(/'/g, "&#39;")})' class="w-full bg-gray-50 hover:bg-gray-100 text-gray-700 font-semibold py-2.5 rounded-xl transition text-sm flex justify-center items-center gap-2">
+                            View Details
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5l7 7-7 7"/></svg>
+                        </button>
+                    </div>
+                `;
+            });
+        }
+
+        async function openProfileModal(customer) {
+            const initial = (customer.full_name || customer.username).charAt(0).toUpperCase();
+            document.getElementById('modal-customer-name').innerText = (customer.full_name || customer.username) + "'s Profile";
+            document.getElementById('modal-avatar').innerText = initial;
+            document.getElementById('modal-full-name').innerText = customer.full_name || '-';
+            document.getElementById('modal-email').innerText = customer.username;
+            document.getElementById('modal-mobile').innerText = customer.mobile || '-';
+            document.getElementById('modal-address').innerText = customer.address || '-';
+            document.getElementById('modal-age').innerText = calculateAge(customer.created_at);
+            
+            document.getElementById('modal-delete-btn').onclick = () => deleteCustomer(customer.id);
+            
+            document.getElementById('customer-profile-modal').classList.remove('hidden');
+            
+            loadOrderHistory(customer.username);
+        }
+
+        async function deleteCustomer(id) {
+            if (!confirm('Are you sure you want to delete this customer account? This action cannot be undone.')) return;
+            
+            try {
+                const res = await fetch(`/api/users/${id}`, { method: 'DELETE' });
+                const data = await res.json();
+                if (data.success) {
+                    alert('Customer deleted successfully');
+                    closeProfileModal();
+                    loadData();
+                } else {
+                    alert(data.message || 'Failed to delete customer');
+                }
+            } catch (e) {
+                console.error(e);
+                alert('An error occurred while deleting the customer.');
+            }
+        }
+
+        function closeProfileModal() {
+            document.getElementById('customer-profile-modal').classList.add('hidden');
+        }
+
+        async function loadOrderHistory(email) {
+            const tbody = document.getElementById('modal-order-history');
+            tbody.innerHTML = '<tr><td colspan="4" class="p-4 text-center text-gray-500">Loading...</td></tr>';
+            try {
+                const res = await fetch(`/api/orders/customer/${encodeURIComponent(email)}`);
+                const orders = await res.json();
+                tbody.innerHTML = '';
+                if (orders.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="4" class="p-4 text-center text-gray-500">No past orders.</td></tr>';
+                    return;
+                }
+                orders.forEach(o => {
+                    const date = new Date(o.createdAt).toLocaleString(undefined, {month: 'short', day: 'numeric', hour: '2-digit', minute:'2-digit'});
+                    const statusClass = ['DELIVERED'].includes(o.status) ? 'text-green-600 bg-green-50' : 
+                                        ['CANCELLED'].includes(o.status) ? 'text-red-600 bg-red-50' : 'text-blue-600 bg-blue-50';
+                    tbody.innerHTML += `
+                        <tr class="hover:bg-gray-50/50">
+                            <td class="px-6 py-4 font-medium text-gray-900">#${o.id}</td>
+                            <td class="px-6 py-4 text-gray-600">${date}</td>
+                            <td class="px-6 py-4 font-medium">$${o.totalAmount.toFixed(2)}</td>
+                            <td class="px-6 py-4"><span class="px-2 py-1 rounded text-xs font-semibold ${statusClass}">${o.status}</span></td>
+                        </tr>
+                    `;
+                });
+            } catch (e) {
+                console.error(e);
+                tbody.innerHTML = '<tr><td colspan="4" class="p-4 text-center text-red-500">Failed to load history.</td></tr>';
+            }
+        }
+    </script>
+<script src="/auth.js"></script>
+
+    <!-- admin settings modal -->
+    <div id="admin-settings-modal" class="fixed inset-0 bg-black/60 z-[100] hidden flex items-center justify-center backdrop-blur-sm">
+        <div class="bg-white rounded-3xl w-full max-w-md p-8 custom-shadow relative">
+            <button onclick="closeAdminSettings()" class="absolute top-6 right-6 text-gray-400 hover:text-gray-900 transition">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+            </button>
+            <h2 class="text-2xl font-bold text-gray-900 mb-6 font-sans">Admin Settings</h2>
+            
+            <form onsubmit="saveAdminSettings(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1.5">Profile Picture</label>
+                    <input type="file" id="admin-setting-pic" accept="image/*" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 text-sm file:mr-4 file:py-1 file:px-3 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-donezo-light file:text-white hover:file:bg-donezo-dark transition cursor-pointer">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1.5">Full Name</label>
+                    <input type="text" id="admin-setting-name" required class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-donezo-light transition">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1.5">Password</label>
+                    <input type="password" id="admin-setting-password" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-donezo-light transition">
+                </div>
+                
+                <button type="submit" id="admin-setting-save-btn" class="w-full bg-donezo-light hover:bg-donezo-dark text-white rounded-xl py-3 font-medium transition shadow-lg shadow-green-900/20 mt-4">Save Changes</button>
+            </form>
+        </div>
+    </div>
+
+<script src="/admin-auth.js"></script>
+</body>
+</html>
