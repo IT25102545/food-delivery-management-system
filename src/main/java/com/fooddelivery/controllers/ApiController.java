@@ -63,6 +63,15 @@ public class ApiController {
             @RequestParam("price") double price,
             @RequestParam(value = "image", required = false) MultipartFile image) {
 
+        // --- Input Validation Added for Security ---
+        if (name == null || name.trim().isEmpty()) {
+            return ResponseEntity.badRequest().body("Error: Product name cannot be empty");
+        }
+        if (price <= 0) {
+            return ResponseEntity.badRequest().body("Error: Product price must be greater than zero");
+        }
+        // -----------------------------------------
+
         String imageUrl = saveImage(image);
         MenuItem item = new MenuItem(0, name, description, price, imageUrl);
 
