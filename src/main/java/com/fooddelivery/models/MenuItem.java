@@ -62,4 +62,17 @@ public class MenuItem {
     public void setImageUrl(String imageUrl) {
         this.imageUrl = imageUrl;
     }
+
+    /**
+     * OOP Business Logic: Calculates the promotional price of the item.
+     * Demonstrates encapsulation by keeping data manipulation within the model.
+     * @param discountPercentage The discount percentage (e.g., 10 for 10% off)
+     * @return The new discounted price
+     */
+    public double getDiscountedPrice(double discountPercentage) {
+        if (discountPercentage <= 0 || discountPercentage >= 100) {
+            return this.price;
+        }
+        return this.price - (this.price * (discountPercentage / 100.0));
+    }
 }
