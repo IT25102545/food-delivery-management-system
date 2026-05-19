@@ -12,4 +12,4 @@ public class RiderUser extends User {
     }
 }
 
-// Rider model properties updated
+// rider model properties updated
