@@ -116,6 +116,38 @@ public class ApiController {
         return ResponseEntity.status(500).body("Failed to delete menu item");
     }
 
+    /**
+     * GET /api/menu/{id}/instructions
+     * Demonstrates OOP Polymorphism by dynamically treating the item as either
+     * a FoodItem or a BeverageItem and calling the overridden method.
+     */
+    @GetMapping("/menu/{id}/instructions")
+    public ResponseEntity<String> getInstructions(@PathVariable int id) {
+        MenuItem item = menuDAO.getAllMenuItems().stream()
+                .filter(m -> m.getId() == id).findFirst().orElse(null);
+        if (item == null) return ResponseEntity.notFound().build();
+
+        MenuItem specificItem;
+        String nameLower = item.getName().toLowerCase();
+
+        // Dynamically instantiate the correct subclass based on item name
+        if (nameLower.contains("coffee") || nameLower.contains("tea")
+                || nameLower.contains("drink") || nameLower.contains("cola")
+                || nameLower.contains("water") || nameLower.contains("juice")) {
+            specificItem = new com.fooddelivery.models.BeverageItem(
+                    item.getId(), item.getName(), item.getDescription(),
+                    item.getPrice(), item.getImageUrl());
+        } else {
+            specificItem = new com.fooddelivery.models.FoodItem(
+                    item.getId(), item.getName(), item.getDescription(),
+                    item.getPrice(), item.getImageUrl());
+        }
+
+        // Polymorphism in action: Java automatically calls the correct overridden method!
+        return ResponseEntity.ok("Instructions for " + specificItem.getName()
+                + ": " + specificItem.getPreparationInstructions());
+    }
+
     @GetMapping("/orders")
     public List<Order> getOrders() {
         return orderDAO.getAllOrders();

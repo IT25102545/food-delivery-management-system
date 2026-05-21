@@ -75,4 +75,13 @@ public class MenuItem {
         }
         return this.price - (this.price * (discountPercentage / 100.0));
     }
+
+    /**
+     * OOP Polymorphism (Base Method): Intended to be overridden by subclasses
+     * (FoodItem and BeverageItem) to provide item-specific preparation behavior.
+     * @return General preparation instructions
+     */
+    public String getPreparationInstructions() {
+        return "Standard preparation in the kitchen.";
+    }
 }
