@@ -13,9 +13,14 @@ public class DatabaseConnection {
     private static final String PASSWORD = "YOUR_AIVEN_PASSWORD_HERE";
 
     private DatabaseConnection() {
+        connect();
+    }
+
+    private void connect() {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
             this.connection = DriverManager.getConnection(URL, USER, PASSWORD);
+            System.out.println("Successfully connected to the database.");
         } catch (Exception e) {
             System.err.println("Database connection failed. Continuing without DB for UI verification: " + e.getMessage());
             this.connection = null;
@@ -25,19 +30,20 @@ public class DatabaseConnection {
     public static synchronized DatabaseConnection getInstance() {
         if (instance == null) {
             instance = new DatabaseConnection();
-        } else {
-            try {
-                if (instance.getConnection() != null && instance.getConnection().isClosed()) {
-                    instance = new DatabaseConnection();
-                }
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
         }
         return instance;
     }
 
-    public Connection getConnection() {
+    public synchronized Connection getConnection() {
+        try {
+            if (connection == null || connection.isClosed() || !connection.isValid(2)) {
+                System.out.println("Connection dropped or invalid. Reconnecting...");
+                connect();
+            }
+        } catch (SQLException e) {
+            System.err.println("Error validating connection: " + e.getMessage());
+            connect();
+        }
         return connection;
     }
 }

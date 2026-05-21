@@ -225,6 +225,39 @@
             filter: drop-shadow(0 30px 70px rgba(0, 0, 0, 0.40));
         }
 
+        /* NEXT DRINK PREVIEW */
+        #next-drink-preview {
+            position: fixed;
+            bottom: -60px;
+            right: -60px;
+            width: 320px;
+            height: 320px;
+            z-index: 12;
+            pointer-events: none;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transform: rotate(-15deg);
+        }
+
+        #next-drink-preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            filter: drop-shadow(0 15px 35px rgba(0, 0, 0, 0.3)) blur(3px);
+            opacity: 0.8;
+        }
+
+        /* FLYING DRINK FOR TRANSITIONS */
+        .flying-drink {
+            position: fixed;
+            z-index: 9999;
+            pointer-events: none;
+            object-fit: contain;
+            filter: drop-shadow(0 30px 70px rgba(0, 0, 0, 0.40));
+            transform-origin: center center;
+        }
+
         /* VERTICAL DRINK NAME Standalone container covering exactly the beige panel. Text is rotated inside so it reads bottom→top. */
         #drink-name-panel {
             /* Cover the beige side exactly */
@@ -533,23 +566,26 @@
         }
     </style>
     <link rel="stylesheet" href="/modern-animations.css">
+    <link rel="stylesheet" href="/spa-transitions.css">
 </head>
 
 <body>
 
-    <!-- Premium Loader -->
+    <!-- premium loader -->
     <div id="loader-wrapper">
         <img src="/img/zestro-logo-white.png" class="loader-logo" alt="Zestro Logo">
         <div class="loader-progress-bar">
             <div class="loader-progress"></div>
         </div>
     </div>
+    
+    <div id="page-container">
 
-    <!-- Backgrounds -->
+    <!-- backgrounds -->
     <div class="bg-green"></div>
     <div class="bg-beige" id="bg-beige"></div>
 
-    <!-- Floating Beans -->
+    <!-- floating beans -->
     <img src="/img/bean.png?v=4" class="bean b1" alt="">
     <img src="/img/bean.png?v=4" class="bean b2" alt="">
     <img src="/img/bean.png?v=4" class="bean b3" alt="">
@@ -559,19 +595,24 @@
     <img src="/img/bean.png?v=4" class="bean b7" alt="">
     <img src="/img/bean.png?v=4" class="bean b8" alt="">
 
-    <!-- Hero Drink -->
+    <!-- hero drink -->
     <div id="hero-drink-wrap">
         <img id="main-drink" src="/img/drink-1.png?v=4" alt="Drink">
     </div>
 
-    <!-- Vertical Product Name — standalone in beige panel -->
+    <!-- next drink preview -->
+    <div id="next-drink-preview">
+        <img id="next-drink-img" src="/img/drink-2.png?v=4" alt="Next Drink">
+    </div>
+
+    <!-- vertical product name — standalone in beige panel -->
     <div id="drink-name-panel">
         <div id="drink-name">Frappuccino!</div>
     </div>
 
-    <!-- Top-Right Icons -->
+    <!-- top-right icons -->
     <div id="top-icons">
-        <button aria-label="Account">
+        <button aria-label="Account" onclick="window.location.href='/customer-login.html'">
             <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.6"
                 stroke-linecap="round" stroke-linejoin="round">
                 <path d="M19 21v-2a4 4 0 0 0-4-4H9a4 4 0 0 0-4 4v2" />
@@ -588,7 +629,7 @@
         </button>
     </div>
 
-    <!-- Left Panel -->
+    <!-- left panel -->
     <div id="left-panel">
         <nav>
             <img src="/img/zestro-logo-white.png" class="logo" alt="Logo">
@@ -619,7 +660,7 @@
         </div>
     </div>
 
-    <!-- Thumbnails -->
+    <!-- thumbnails -->
     <div id="thumbnails">
         <div class="thumb-item active" id="slot-0">
             <div class="circle"></div>
@@ -648,6 +689,8 @@
         const mainDrink = document.getElementById('main-drink');
         const drinkName = document.getElementById('drink-name');
         const bgBeige = document.getElementById('bg-beige');
+        const nextDrinkImg = document.getElementById('next-drink-img');
+        const nextDrinkPreview = document.getElementById('next-drink-preview');
         const slots = [
             document.getElementById('slot-0'),
             document.getElementById('slot-1'),
@@ -659,29 +702,123 @@
             transitioning = true;
             clearInterval(auto);
 
-            // Fade out hero + name
-            heroDrinkWrap.classList.add('fade-out');
-            drinkName.classList.add('fade-out');
+            const prevIdx = current;
+            current = idx;
+            const nextIdx = (current + 1) % drinks.length;
+            
+            const prevDrink = drinks[prevIdx];
+            const targetDrink = drinks[current];
+            const futureDrink = drinks[nextIdx];
 
+            // 1. Instantly update preview image to be the target drink so it flies from there
+            nextDrinkImg.src = targetDrink.image;
+            nextDrinkImg.style.opacity = '1';
+
+            // 2. Temporarily remove transforms to get un-rotated bounding boxes
+            const heroWrapAnim = heroDrinkWrap.style.animation;
+            heroDrinkWrap.style.animation = 'none';
+            heroDrinkWrap.style.transform = 'translateX(-50%) translateY(-50%) rotate(0deg)';
+            
+            const nextPreviewTransform = nextDrinkPreview.style.transform;
+            nextDrinkPreview.style.transform = 'rotate(0deg)';
+
+            const mainRect = mainDrink.getBoundingClientRect();
+            const previewRect = nextDrinkImg.getBoundingClientRect();
+            const thumbRect = slots[prevIdx].querySelector('img').getBoundingClientRect();
+
+            // Restore transforms
+            heroDrinkWrap.style.animation = heroWrapAnim;
+            heroDrinkWrap.style.transform = '';
+            nextDrinkPreview.style.transform = nextPreviewTransform;
+
+            // 3. Hide actual elements for the swap
+            mainDrink.style.opacity = '0';
+            slots[prevIdx].querySelector('img').style.opacity = '0';
+            nextDrinkImg.style.opacity = '0';
+            
             // Move active ring instantly to the new slot
             slots.forEach(s => s.classList.remove('active'));
-            slots[idx].classList.add('active');
+            slots[current].classList.add('active');
 
+            // Text and bg transition
+            drinkName.classList.add('fade-out');
+            bgBeige.style.background = targetDrink.bg;
             setTimeout(() => {
-                current = idx;
-                const d = drinks[current];
-                mainDrink.src = d.image;
-                drinkName.textContent = d.name;
-                bgBeige.style.background = d.bg;
+                drinkName.textContent = targetDrink.name;
+                drinkName.classList.remove('fade-out');
+            }, 300);
 
-                requestAnimationFrame(() => requestAnimationFrame(() => {
-                    heroDrinkWrap.classList.remove('fade-out');
-                    drinkName.classList.remove('fade-out');
-                    setTimeout(() => { transitioning = false; }, 520);
-                }));
-            }, 480);
+            // 4. Create flying elements
+            const flyingOut = document.createElement('img');
+            flyingOut.src = prevDrink.image;
+            flyingOut.className = 'flying-drink';
+            document.body.appendChild(flyingOut);
 
-            startAuto();
+            const flyingIn = document.createElement('img');
+            flyingIn.src = targetDrink.image;
+            flyingIn.className = 'flying-drink';
+            document.body.appendChild(flyingIn);
+
+            const animOptions = { duration: 1100, easing: 'cubic-bezier(0.22, 1, 0.36, 1)' };
+
+            // Animate flyingOut: main -> thumbnail
+            flyingOut.animate([
+                { 
+                    left: `${mainRect.left}px`, 
+                    top: `${mainRect.top}px`, 
+                    width: `${mainRect.width}px`, 
+                    height: `${mainRect.height}px`,
+                    transform: 'rotate(12deg)'
+                },
+                { 
+                    left: `${thumbRect.left}px`, 
+                    top: `${thumbRect.top}px`, 
+                    width: `${thumbRect.width}px`, 
+                    height: `${thumbRect.height}px`,
+                    transform: 'rotate(0deg)'
+                }
+            ], animOptions).onfinish = () => {
+                flyingOut.remove();
+                slots[prevIdx].querySelector('img').style.opacity = '1';
+            };
+
+            // Animate flyingIn: preview -> main
+            flyingIn.animate([
+                { 
+                    left: `${previewRect.left}px`, 
+                    top: `${previewRect.top}px`, 
+                    width: `${previewRect.width}px`, 
+                    height: `${previewRect.height}px`,
+                    transform: 'rotate(-15deg)',
+                    filter: 'drop-shadow(0 15px 35px rgba(0, 0, 0, 0.3)) blur(3px)',
+                    opacity: 0.8
+                },
+                { 
+                    left: `${mainRect.left}px`, 
+                    top: `${mainRect.top}px`, 
+                    width: `${mainRect.width}px`, 
+                    height: `${mainRect.height}px`,
+                    transform: 'rotate(12deg)',
+                    filter: 'drop-shadow(0 30px 70px rgba(0, 0, 0, 0.40)) blur(0px)',
+                    opacity: 1
+                }
+            ], animOptions).onfinish = () => {
+                flyingIn.remove();
+                mainDrink.src = targetDrink.image;
+                mainDrink.style.opacity = '1';
+                
+                // Set next preview
+                nextDrinkImg.src = futureDrink.image;
+                nextDrinkImg.animate([
+                    { opacity: 0, transform: 'scale(0.5)' },
+                    { opacity: 0.8, transform: 'scale(1)' }
+                ], { duration: 500, easing: 'ease-out' }).onfinish = () => {
+                    nextDrinkImg.style.opacity = '0.8';
+                };
+                
+                transitioning = false;
+                startAuto();
+            };
         }
 
         slots.forEach((slot, idx) => slot.addEventListener('click', () => selectDrink(idx)));
@@ -710,16 +847,20 @@
 
         /* Loader */
         window.addEventListener('load', () => {
-            // Ensure minimum display time of 1.5s for premium loading feel
+            // ensure minimum display time of 1.5s for premium loading feel
             setTimeout(() => {
                 document.getElementById('loader-wrapper').classList.add('hidden');
             }, 1500);
         });
     </script>
+    </div>
     <script src="/modern-animations.js"></script>
+<script src="/auth.js"></script>
+    <script src="/spa-router.js"></script>
 </body>
 
 </html>
-<!-- UI Finalized -->
+<!-- ui finalized -->
 
-<!-- Project Finalized for Submission -->
+<!-- project finalized for submission -->
+

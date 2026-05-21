@@ -54,17 +54,16 @@
 </head>
 <body class="flex h-screen overflow-hidden">
 
-    <!-- Sidebar -->
+    <!-- sidebar -->
     <aside class="w-64 bg-white border-r border-gray-100 flex flex-col hidden md:flex z-20">
-        <!-- Logo -->
+        <!-- logo -->
         <div class="h-20 flex items-center px-8">
             <div class="flex items-center gap-3">
                 <img src="/img/zestro-logo-green.png" alt="Zestro Logo" class="w-10 h-10 object-contain">
                 <span class="text-xl font-bold text-gray-800">Zestro</span>
             </div>
         </div>
-
-        <!-- Navigation -->
+        <!-- navigation -->
         <div class="flex-1 overflow-y-auto px-4 py-4 scrollbar-hide">
             <div class="mb-6">
                 <p class="px-4 text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">Menu</p>
@@ -73,9 +72,17 @@
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"/></svg>
                         Dashboard
                     </a>
-                    <a href="/admin-dashboard.html#orders-list" class="sidebar-item flex items-center gap-3 px-4 py-2.5 rounded-xl font-medium">
+                    <a href="/admin-orders.html" class="sidebar-item flex items-center gap-3 px-4 py-2.5 rounded-xl font-medium">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"/></svg>
-                        Live Orders
+                        Order History
+                    </a>
+                    <a href="/admin-customers.html" class="sidebar-item flex items-center gap-3 px-4 py-2.5 rounded-xl font-medium">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"/></svg>
+                        Customers
+                    </a>
+                    <a href="/admin-riders.html" class="sidebar-item flex items-center gap-3 px-4 py-2.5 rounded-xl font-medium">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"/></svg>
+                        Rider Management
                     </a>
                     <a href="/admin-add-item.html" class="sidebar-item flex items-center justify-between px-4 py-2.5 rounded-xl font-medium">
                         <div class="flex items-center gap-3">
@@ -84,13 +91,14 @@
                         </div>
                         <span class="bg-green-100 text-donezo-light text-xs font-bold px-2 py-0.5 rounded-full" id="menu-count">0</span>
                     </a>
-                    <a href="#" onclick="alert('Calendar feature coming soon!')" class="sidebar-item flex items-center gap-3 px-4 py-2.5 rounded-xl font-medium">
-                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v12a2 2 0 002 2z"/></svg>
-                        Calendar
-                    </a>
-                    <a href="#" onclick="alert('Analytics feature coming soon!')" class="sidebar-item flex items-center gap-3 px-4 py-2.5 rounded-xl font-medium">
+                    
+                    <a href="/admin-analytics.html" class="sidebar-item flex items-center gap-3 px-4 py-2.5 rounded-xl font-medium">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 19v-6a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2a2 2 0 002-2zm0 0V9a2 2 0 012-2h2a2 2 0 012 2v10m-6 0a2 2 0 002 2h2a2 2 0 002-2m0 0V5a2 2 0 012-2h2a2 2 0 012 2v14a2 2 0 01-2 2h-2a2 2 0 01-2-2z"/></svg>
                         Analytics
+                    </a>
+                    <a href="#" onclick="openAdminTransactions()" class="sidebar-item flex items-center gap-3 px-4 py-2.5 rounded-xl font-medium">
+                        <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z"/></svg>
+                        Payment History
                     </a>
                 </nav>
             </div>
@@ -98,7 +106,7 @@
             <div class="mb-6">
                 <p class="px-4 text-xs font-semibold text-gray-400 uppercase tracking-wider mb-3">General</p>
                 <nav class="space-y-1">
-                    <a href="#" onclick="alert('Settings feature coming soon!')" class="sidebar-item flex items-center gap-3 px-4 py-2.5 rounded-xl font-medium">
+                    <a href="#" onclick="openAdminSettings()" class="sidebar-item flex items-center gap-3 px-4 py-2.5 rounded-xl font-medium">
                         <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M10.325 4.317c.426-1.756 2.924-1.756 3.35 0a1.724 1.724 0 002.573 1.066c1.543-.94 3.31.826 2.37 2.37a1.724 1.724 0 001.065 2.572c1.756.426 1.756 2.924 0 3.35a1.724 1.724 0 00-1.066 2.573c.94 1.543-.826 3.31-2.37 2.37a1.724 1.724 0 00-2.572 1.065c-.426 1.756-2.924 1.756-3.35 0a1.724 1.724 0 00-2.573-1.066c-1.543.94-3.31-.826-2.37-2.37a1.724 1.724 0 00-1.065-2.572c-1.756-.426-1.756-2.924 0-3.35a1.724 1.724 0 001.066-2.573c-.94-1.543.826-3.31 2.37-2.37.996.608 2.296.07 2.572-1.065z"/><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M15 12a3 3 0 11-6 0 3 3 0 016 0z"/></svg>
                         Settings
                     </a>
@@ -108,14 +116,12 @@
                     </a>
                 </nav>
             </div>
-            
-            <!-- Bottom promo card removed per request -->
         </div>
     </aside>
 
-    <!-- Main Content -->
+    <!-- main content -->
     <main class="flex-1 flex flex-col h-screen overflow-hidden relative">
-        <!-- Top Bar -->
+        <!-- top bar -->
         <header class="h-20 flex items-center justify-between px-8 bg-transparent z-10">
             <div class="relative w-96">
                 <svg class="w-5 h-5 absolute left-4 top-1/2 -translate-y-1/2 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/></svg>
@@ -141,10 +147,10 @@
             </div>
         </header>
 
-        <!-- Main Scrollable Area -->
+        <!-- main scrollable area -->
         <div class="flex-1 overflow-y-auto px-8 pb-8 pt-2 scrollbar-hide">
             
-            <!-- Page Header -->
+            <!-- page header -->
             <div class="flex justify-between items-end mb-8">
                 <div>
                     <h1 class="text-3xl font-bold text-gray-900 mb-1">Dashboard</h1>
@@ -161,9 +167,9 @@
                 </div>
             </div>
 
-            <!-- Stats Row -->
+            <!-- stats row -->
             <div class="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-                <!-- Card 1 -->
+                <!-- card 1 -->
                 <div class="stat-card active rounded-2xl p-6 custom-shadow relative overflow-hidden transition-transform hover:-translate-y-1">
                     <div class="flex justify-between items-start mb-4 relative z-10">
                         <h3 class="font-medium text-white/90">Total Revenue</h3>
@@ -175,11 +181,11 @@
                     <p class="text-xs text-white/80 relative z-10 flex items-center gap-1">
                         <span class="bg-white/20 rounded px-1.5 py-0.5 font-medium">+15%</span> from yesterday
                     </p>
-                    <!-- Background Decor -->
+                    <!-- background decor -->
                     <svg class="absolute right-0 bottom-0 text-white/10 w-24 h-24 -mr-4 -mb-4" fill="currentColor" viewBox="0 0 24 24"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm0 18c-4.41 0-8-3.59-8-8s3.59-8 8-8 8 3.59 8 8-3.59 8-8 8z"/></svg>
                 </div>
                 
-                <!-- Card 2 -->
+                <!-- card 2 -->
                 <div class="bg-white rounded-2xl p-6 custom-shadow transition-transform hover:-translate-y-1">
                     <div class="flex justify-between items-start mb-4">
                         <h3 class="font-medium text-gray-500">Delivered Orders</h3>
@@ -193,7 +199,7 @@
                     </p>
                 </div>
                 
-                <!-- Card 3 -->
+                <!-- card 3 -->
                 <div class="bg-white rounded-2xl p-6 custom-shadow transition-transform hover:-translate-y-1">
                     <div class="flex justify-between items-start mb-4">
                         <h3 class="font-medium text-gray-500">Active Prep</h3>
@@ -207,7 +213,7 @@
                     </p>
                 </div>
                 
-                <!-- Card 4 -->
+                <!-- card 4 -->
                 <div class="bg-white rounded-2xl p-6 custom-shadow transition-transform hover:-translate-y-1">
                     <div class="flex justify-between items-start mb-4">
                         <h3 class="font-medium text-gray-500">Pending Orders</h3>
@@ -222,15 +228,15 @@
                 </div>
             </div>
 
-            <!-- Two Column Layout -->
+            <!-- two column layout -->
             <div class="grid grid-cols-1 xl:grid-cols-3 gap-6">
                 
-                <!-- Left Column (Span 2) -->
+                <!-- left column (span 2) -->
                 <div class="xl:col-span-2 space-y-6">
                     
-                    <!-- Analytics & Status Grid inside Left Col -->
+                    <!-- analytics & status grid inside left col -->
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-                        <!-- Revenue Analytics -->
+                        <!-- revenue analytics -->
                         <div class="bg-white rounded-2xl p-6 custom-shadow">
                             <div class="flex justify-between items-center mb-2">
                                 <h3 class="font-bold text-gray-800">Order Volume</h3>
@@ -247,7 +253,7 @@
                             </div>
                         </div>
 
-                        <!-- Live Alert Card -->
+                        <!-- live alert card -->
                         <div class="bg-white rounded-2xl p-6 custom-shadow flex flex-col justify-between" id="alert-card">
                             <div>
                                 <div class="flex justify-between items-center mb-4">
@@ -265,13 +271,13 @@
                         </div>
                     </div>
 
-                    <!-- Live Orders Table List -->
+                    <!-- live orders table list -->
                     <div class="bg-white rounded-2xl p-6 custom-shadow">
                         <div class="flex justify-between items-center mb-6">
                             <h3 class="font-bold text-gray-800">Live Orders</h3>
                         </div>
                         <div class="space-y-4" id="orders-list">
-                            <!-- Injected by JS -->
+                            <!-- injected by js -->
                             <div class="animate-pulse flex space-x-4">
                                 <div class="flex-1 space-y-4 py-1">
                                     <div class="h-2 bg-slate-200 rounded"></div>
@@ -285,10 +291,20 @@
                     </div>
                 </div>
 
-                <!-- Right Column (Span 1) -->
+                <!-- right column (span 1) -->
                 <div class="space-y-6">
                     
-                    <!-- Live Menu Items -->
+                    <!-- live order activity -->
+                    <div class="bg-white rounded-2xl p-6 custom-shadow">
+                        <div class="flex justify-between items-center mb-4">
+                            <h3 class="font-bold text-gray-800">Live Activity</h3>
+                        </div>
+                        <div class="space-y-3" id="activity-list">
+                            <p class="text-xs text-gray-400">Loading activity...</p>
+                        </div>
+                    </div>
+
+                    <!-- live menu items -->
                     <div class="bg-white rounded-2xl p-6 custom-shadow">
                         <div class="flex justify-between items-center mb-4">
                             <h3 class="font-bold text-gray-800">Menu Items</h3>
@@ -299,7 +315,7 @@
                         </div>
                     </div>
 
-                    <!-- Order Progress Donut -->
+                    <!-- order progress donut -->
                     <div class="bg-white rounded-2xl p-6 custom-shadow">
                         <h3 class="font-bold text-gray-800 mb-6">Completion Rate</h3>
                         <div class="flex justify-center mb-6">
@@ -316,7 +332,7 @@
                         </div>
                     </div>
 
-                    <!-- Dark Decorative Card -->
+                    <!-- dark decorative card -->
                     <div class="bg-donezo-dark rounded-2xl p-6 custom-shadow text-white relative overflow-hidden">
                         <div class="absolute inset-0 opacity-20">
                             <svg width="100%" height="100%" viewBox="0 0 400 200" preserveAspectRatio="none"><path d="M0,100 C150,200 250,0 400,100 L400,200 L0,200 Z" fill="currentColor"/></svg>
@@ -352,7 +368,7 @@
                 const orders = await ordersRes.json();
                 const menu = await menuRes.json();
 
-                // ── Stats ──
+                // ── stats ──
                 let revenue = 0, pending = 0, prep = 0, delivered = 0;
                 orders.forEach(o => {
                     revenue += o.totalAmount || 0;
@@ -366,17 +382,17 @@
                 document.getElementById('stat-pending').innerText = pending;
                 document.getElementById('menu-count').innerText = menu.length;
 
-                // ── Completion Rate Donut ──
+                // ── completion rate donut ──
                 const total = orders.length;
                 const pct = total === 0 ? 0 : Math.round((delivered / total) * 100);
                 document.getElementById('completion-pct').innerText = pct + '%';
                 document.querySelector('.donut-wrapper').style.background =
                     `conic-gradient(#146b42 0% ${pct}%, #e5e7eb ${pct}% 100%)`;
 
-                // ── Bar Chart (last 7 days) ──
+                // ── bar chart (last 7 days) ──
                 const days = ['S','M','T','W','T','F','S'];
                 const counts = [0,0,0,0,0,0,0];
-                const today = new Date().getDay(); // 0=Sun
+                const today = new Date().getDay(); // 0=sun
                 orders.forEach(o => {
                     if (!o.createdAt) return;
                     const d = new Date(o.createdAt).getDay();
@@ -395,7 +411,7 @@
                         </div>`;
                 });
 
-                // ── Alert Card (newest PENDING order) ──
+                // ── alert card (newest pending order) ──
                 const newestPending = orders.find(o => o.status === 'PENDING');
                 const alertContent = document.getElementById('alert-content');
                 const alertBtn = document.getElementById('alert-btn');
@@ -414,7 +430,7 @@
                     alertOrderId = null;
                 }
 
-                // ── Live Menu Items in sidebar panel ──
+                // ── live menu items in sidebar panel ──
                 const menuList = document.getElementById('menu-items-list');
                 menuList.innerHTML = '';
                 if (menu.length === 0) {
@@ -436,7 +452,7 @@
                     }
                 }
 
-                // ── Live Orders Table ──
+                // ── live orders table ──
                 const list = document.getElementById('orders-list');
                 list.innerHTML = '';
                 if (orders.length === 0) {
@@ -446,8 +462,11 @@
                         const statusMap = {
                             'PENDING':   { color: 'bg-yellow-100 text-yellow-700', btn: 'Start Prep',   next: 'PREPARING', btnCls: 'text-blue-600 bg-blue-50 hover:bg-blue-100' },
                             'PREPARING': { color: 'bg-blue-100 text-blue-700',   btn: 'Mark Ready',  next: 'READY',     btnCls: 'text-green-600 bg-green-50 hover:bg-green-100' },
-                            'READY':     { color: 'bg-green-100 text-green-700',  btn: 'Waiting...',  next: '',           btnCls: 'text-gray-400 bg-gray-50 cursor-not-allowed' },
-                            'DELIVERED': { color: 'bg-gray-100 text-gray-500',   btn: '',            next: '',           btnCls: '' }
+                            'READY':     { color: 'bg-green-100 text-green-700',  btn: 'Send to Rider',  next: 'OUT_FOR_DELIVERY', btnCls: 'text-purple-600 bg-purple-50 hover:bg-purple-100' },
+                            'OUT_FOR_DELIVERY': { color: 'bg-purple-100 text-purple-700', btn: 'Out with Rider', next: '', btnCls: 'text-gray-400 bg-gray-50 cursor-not-allowed' },
+                            'PICKED_UP': { color: 'bg-orange-100 text-orange-700', btn: 'On the Way', next: '', btnCls: 'text-gray-400 bg-gray-50 cursor-not-allowed' },
+                            'DELIVERED': { color: 'bg-gray-100 text-gray-500',   btn: '',            next: '',           btnCls: '' },
+                            'CANCELLED': { color: 'bg-red-100 text-red-700',     btn: '',            next: '',           btnCls: '' }
                         };
                         const s = statusMap[o.status] || statusMap['DELIVERED'];
                         const itemsTxt = (o.items || []).map(i => `${i.quantity}x ${i.productName}`).join(', ') || 'No items';
@@ -464,13 +483,43 @@
                                     <p class="text-xs text-gray-500">Order #${o.id} • ${itemsTxt} • <strong>$${(o.totalAmount||0).toFixed(2)}</strong></p>
                                 </div>
                             </div>
-                            ${ s.next
-                                ? `<button onclick="updateStatus(${o.id},'${s.next}')" class="text-xs font-bold px-3 py-1.5 rounded-lg transition ${s.btnCls}">${s.btn}</button>`
-                                : (o.status === 'DELIVERED'
-                                    ? `<span class="text-xs font-bold text-gray-400">Completed</span>`
-                                    : `<span class="text-xs font-bold text-gray-400">${s.btn}</span>`)
-                            }
+                            <div class="flex items-center gap-2">
+                                ${ s.next
+                                    ? `<button onclick="updateStatus(${o.id},'${s.next}')" class="text-xs font-bold px-3 py-1.5 rounded-lg transition ${s.btnCls}">${s.btn}</button>`
+                                    : (o.status === 'DELIVERED'
+                                        ? `<span class="text-xs font-bold text-gray-400">Completed</span>`
+                                        : (o.status === 'CANCELLED' ? `<span class="text-xs font-bold text-red-500">Cancelled</span>` : `<span class="text-xs font-bold text-gray-400">${s.btn}</span>`))
+                                }
+                                ${ (o.status === 'PENDING' || o.status === 'PREPARING') ? `<button onclick="updateStatus(${o.id},'CANCELLED')" class="text-xs font-bold px-3 py-1.5 rounded-lg transition text-red-600 bg-red-50 hover:bg-red-100">Cancel</button>` : '' }
+                            </div>
                         </div>`;
+                    });
+                }
+
+                // ── live order activity & toasts ──
+                const activityList = document.getElementById('activity-list');
+                activityList.innerHTML = '';
+                if (orders.length === 0) {
+                    activityList.innerHTML = '<p class="text-xs text-gray-400">No activity yet.</p>';
+                } else {
+                    orders.slice(0, 5).forEach(o => {
+                        activityList.innerHTML += `
+                            <div class="flex items-center gap-3 p-2 border-b border-gray-50 last:border-0">
+                                <div class="w-8 h-8 rounded-full bg-donezo-light/10 text-donezo-light flex items-center justify-center">
+                                    <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
+                                </div>
+                                <div>
+                                    <p class="text-xs font-bold text-gray-800">Order #${o.id}</p>
+                                    <p class="text-[10px] text-gray-500">Status changed to: <span class="font-semibold uppercase text-donezo-light">${o.status}</span></p>
+                                </div>
+                            </div>
+                        `;
+                        
+                        // check for status changes to trigger toast
+                        if (previousOrderStatuses[o.id] && previousOrderStatuses[o.id] !== o.status) {
+                            showAdminToast(`Order #${o.id} is now ${o.status.replace(/_/g, ' ')}`);
+                        }
+                        previousOrderStatuses[o.id] = o.status;
                     });
                 }
 
@@ -478,6 +527,8 @@
                 console.error('Dashboard error:', e);
             }
         }
+
+
 
         async function updateStatus(id, status) {
             try {
@@ -490,18 +541,147 @@
             } catch(e) { console.error(e); }
         }
 
-        // Alert accept button
+        // alert accept button
         document.getElementById('alert-btn').addEventListener('click', () => {
             if (alertOrderId) updateStatus(alertOrderId, 'PREPARING');
         });
 
-        // Refresh Data button
+        // refresh data button
         document.querySelector('button.bg-white.hover\\:bg-gray-50').addEventListener('click', loadDashboardData);
 
+        // toast logic
+        function showAdminToast(message) {
+            const toast = document.getElementById('admin-toast');
+            document.getElementById('admin-toast-msg').innerText = message;
+            toast.classList.remove('translate-x-[150%]', 'opacity-0');
+            setTimeout(() => {
+                toast.classList.add('translate-x-[150%]', 'opacity-0');
+            }, 5000);
+        }
+
+        let previousOrderStatuses = {};
+        
         loadDashboardData();
-        setInterval(loadDashboardData, 10000);
+        setInterval(loadDashboardData, 5000); // polling every 5 seconds for live tracking
     </script>
+    
+    <!-- admin toast notification -->
+    <div id="admin-toast" class="fixed bottom-6 right-6 z-[100] transform transition-all duration-500 translate-x-[150%] opacity-0 pointer-events-auto">
+        <div class="bg-white border-l-4 border-donezo-light shadow-[0_10px_40px_rgba(0,0,0,0.15)] rounded-r-xl p-5 w-80 flex items-start gap-4">
+            <div class="text-donezo-light text-2xl mt-0.5">🚀</div>
+            <div class="flex-1">
+                <h4 class="text-sm font-bold text-gray-900">Order Update</h4>
+                <p id="admin-toast-msg" class="text-xs text-gray-500 mt-1 uppercase font-semibold">Order #12 is now PICKED UP</p>
+            </div>
+        </div>
+    </div>
+<script src="/auth.js"></script>
+
+    <!-- admin settings modal -->
+    <div id="admin-settings-modal" class="fixed inset-0 bg-black/60 z-[100] hidden flex items-center justify-center backdrop-blur-sm">
+        <div class="bg-white rounded-3xl w-full max-w-md p-8 custom-shadow relative">
+            <button onclick="closeAdminSettings()" class="absolute top-6 right-6 text-gray-400 hover:text-gray-900 transition">
+                <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+            </button>
+            <h2 class="text-2xl font-bold text-gray-900 mb-6 font-sans">Admin Settings</h2>
+            
+            <form onsubmit="saveAdminSettings(event)" class="space-y-4">
+                <div>
+                    <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1.5">Profile Picture</label>
+                    <input type="file" id="admin-setting-pic" accept="image/*" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-2.5 text-sm file:mr-4 file:py-1 file:px-3 file:rounded-full file:border-0 file:text-xs file:font-semibold file:bg-donezo-light file:text-white hover:file:bg-donezo-dark transition cursor-pointer">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1.5">Full Name</label>
+                    <input type="text" id="admin-setting-name" required class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-donezo-light transition">
+                </div>
+                <div>
+                    <label class="block text-xs font-bold text-gray-500 uppercase tracking-wider mb-1.5">Password</label>
+                    <input type="password" id="admin-setting-password" class="w-full bg-gray-50 border border-gray-200 rounded-xl px-4 py-3 text-sm focus:outline-none focus:ring-2 focus:ring-donezo-light transition">
+                </div>
+                
+                <button type="submit" id="admin-setting-save-btn" class="w-full bg-donezo-light hover:bg-donezo-dark text-white rounded-xl py-3 font-medium transition shadow-lg shadow-green-900/20 mt-4">Save Changes</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- admin transactions modal -->
+    <div id="admin-transaction-modal" class="fixed inset-0 bg-black/60 z-[100] hidden flex items-center justify-center backdrop-blur-sm">
+        <div class="bg-white w-full max-w-4xl h-[85vh] rounded-3xl shadow-2xl flex flex-col relative overflow-hidden">
+            <div class="p-8 border-b border-gray-100 flex items-center justify-between bg-white shrink-0">
+                <div>
+                    <h2 class="text-2xl font-bold text-gray-900 mb-1">Global Transactions</h2>
+                    <p class="text-sm text-gray-500">All customer payments and top-ups</p>
+                </div>
+                <button onclick="closeAdminTransactions()" class="w-10 h-10 rounded-full bg-gray-100 flex items-center justify-center text-gray-500 hover:bg-gray-200 transition">
+                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M6 18L18 6M6 6l12 12"/></svg>
+                </button>
+            </div>
+            
+            <div class="flex-1 overflow-y-auto bg-gray-50 p-8">
+                <table class="w-full text-left border-collapse bg-white rounded-2xl shadow-sm overflow-hidden">
+                    <thead>
+                        <tr class="bg-gray-50 text-gray-500 text-xs uppercase tracking-wider font-bold">
+                            <th class="px-6 py-4 border-b border-gray-100">Trans. ID</th>
+                            <th class="px-6 py-4 border-b border-gray-100">User ID</th>
+                            <th class="px-6 py-4 border-b border-gray-100">Type</th>
+                            <th class="px-6 py-4 border-b border-gray-100">Amount</th>
+                            <th class="px-6 py-4 border-b border-gray-100">Order ID</th>
+                            <th class="px-6 py-4 border-b border-gray-100">Date</th>
+                        </tr>
+                    </thead>
+                    <tbody id="admin-transactions-list" class="divide-y divide-gray-50 text-sm">
+                        <tr><td colspan="6" class="px-6 py-4 text-center text-gray-400">Loading...</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+<script>
+    function openAdminTransactions() {
+        document.getElementById('admin-transaction-modal').classList.remove('hidden');
+        loadAdminTransactions();
+    }
+    function closeAdminTransactions() {
+        document.getElementById('admin-transaction-modal').classList.add('hidden');
+    }
+    
+    async function loadAdminTransactions() {
+        const tbody = document.getElementById('admin-transactions-list');
+        tbody.innerHTML = '<tr><td colspan="6" class="px-6 py-4 text-center text-gray-400">Loading...</td></tr>';
+        try {
+            const res = await fetch('/api/transactions');
+            const data = await res.json();
+            tbody.innerHTML = '';
+            if (data.length === 0) {
+                tbody.innerHTML = '<tr><td colspan="6" class="px-6 py-4 text-center text-gray-400">No transactions found.</td></tr>';
+                return;
+            }
+            data.forEach(t => {
+                const date = new Date(t.created_at).toLocaleString(undefined, {month: 'short', day: 'numeric', hour: '2-digit', minute:'2-digit'});
+                const amountClass = t.amount > 0 ? 'text-green-600 font-bold' : 'text-gray-900 font-bold';
+                const typeClass = t.type === 'TOPUP' ? 'bg-blue-100 text-blue-700' : 'bg-gray-100 text-gray-700';
+                tbody.innerHTML += `
+                    <tr class="hover:bg-gray-50 transition group">
+                        <td class="px-6 py-4 text-gray-600 font-medium">#${t.id}</td>
+                        <td class="px-6 py-4 text-gray-900">User ${t.user_id}</td>
+                        <td class="px-6 py-4"><span class="px-2.5 py-1 rounded-md text-xs font-bold uppercase ${typeClass}">${t.type}</span></td>
+                        <td class="px-6 py-4 ${amountClass}">${t.amount > 0 ? '+' : ''}$${Math.abs(t.amount).toFixed(2)}</td>
+                        <td class="px-6 py-4 text-gray-500">${t.order_id ? '#' + t.order_id : '-'}</td>
+                        <td class="px-6 py-4 text-gray-500">${date}</td>
+                    </tr>
+                `;
+            });
+        } catch(e) {
+            console.error(e);
+            tbody.innerHTML = '<tr><td colspan="6" class="px-6 py-4 text-center text-red-500">Error loading.</td></tr>';
+        }
+    }
+</script>
+<script src="/admin-auth.js"></script>
 </body>
 </html>
 
-<!-- Dashboard layout end -->
+<!-- dashboard layout end -->
+
+
