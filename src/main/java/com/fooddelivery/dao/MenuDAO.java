@@ -34,11 +34,11 @@ public class MenuDAO {
             if (conn == null) return;
             try (Statement stmt = conn.createStatement()) {
                 stmt.execute(sql);
-                // attempt to add the image_url column if it doesn't exist yet
+                // Attempt to add the image_url column if it doesn't exist yet
                 try {
                     stmt.execute("ALTER TABLE menu_items ADD COLUMN image_url VARCHAR(512)");
                 } catch (SQLException ignored) {
-                    // column already exists
+                    // Column already exists
                 }
             }
         } catch (SQLException e) {
@@ -156,4 +156,4 @@ public class MenuDAO {
     }
 }
 
-// menu retrieval logic verified
+// Menu retrieval logic verified

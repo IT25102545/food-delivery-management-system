@@ -494,12 +494,12 @@ public class UserDAO {
 
     public List<Map<String, Object>> getApprovedRiders() {
         List<Map<String, Object>> approved = new ArrayList<>();
-        String sql = "SELECT `id`, `username`, `full_name`, `mobile`, `address`, `nic`, `profile_pic`, `total_deliveries`, `total_earned`, `current_balance`, `is_online`, `unique_id`, `nic_image` FROM `delivery_users` WHERE `role` = 'RIDER' AND `status` = 'APPROVED'";
+        String sql = "SELECT `id`, `username`, `status`, `full_name`, `mobile`, `address`, `nic`, `profile_pic`, `total_deliveries`, `total_earned`, `current_balance`, `is_online`, `unique_id`, `nic_image` FROM `delivery_users` WHERE `role` = 'RIDER' AND `status` IN ('APPROVED', 'SUSPENDED')";
         try {
             Connection conn = DatabaseConnection.getInstance().getConnection();
             if (conn == null) {
                 for (Map<String, Object> u : fallbackUsers) {
-                    if ("RIDER".equals(u.get("role")) && "APPROVED".equals(u.get("status"))) {
+                    if ("RIDER".equals(u.get("role")) && ("APPROVED".equals(u.get("status")) || "SUSPENDED".equals(u.get("status")))) {
                         Map<String, Object> user = new HashMap<>(u);
                         user.remove("password");
                         approved.add(user);
@@ -513,6 +513,7 @@ public class UserDAO {
                     Map<String, Object> user = new HashMap<>();
                     user.put("id", rs.getInt("id"));
                     user.put("username", rs.getString("username"));
+                    user.put("status", rs.getString("status"));
                     user.put("full_name", rs.getString("full_name"));
                     user.put("mobile", rs.getString("mobile"));
                     user.put("address", rs.getString("address"));

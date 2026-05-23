@@ -472,6 +472,24 @@
                     </div>
                 </div>
 
+                <div id="card-details-form" style="display: none; margin-top: 20px; padding: 16px; background: rgba(255,255,255,.03); border: 1px solid rgba(255,255,255,.1); border-radius: 14px;">
+                    <div style="font-size:13px; color:rgba(255,255,255,.6); margin-bottom:12px; font-weight:600; text-transform:uppercase; letter-spacing:1px;">Enter Card Details</div>
+                    <div class="form-grid">
+                        <div class="form-group full">
+                            <label>Card Number</label>
+                            <input type="text" id="f-card-num" placeholder="0000 0000 0000 0000" maxlength="19">
+                        </div>
+                        <div class="form-group">
+                            <label>Expiry Date</label>
+                            <input type="text" id="f-card-exp" placeholder="MM/YY" maxlength="5">
+                        </div>
+                        <div class="form-group">
+                            <label>CVV</label>
+                            <input type="password" id="f-card-cvv" placeholder="•••" maxlength="4">
+                        </div>
+                    </div>
+                </div>
+
                 <!-- place order -->
                 <button id="place-order-btn" onclick="placeOrder()">
                     <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
@@ -544,7 +562,7 @@
                     document.getElementById('pm-credits-sub').textContent = 'Login required';
                 }
             }
-            updatePaymentBadge();
+            selectPayment(selectedPayment);
         });
 
         function selectPayment(method) {
@@ -562,6 +580,20 @@
             document.getElementById('pm-card').classList.toggle('selected', method === 'CARD');
             document.getElementById('pm-cod').classList.toggle('selected', method === 'COD');
             updatePaymentBadge();
+
+            const cardForm = document.getElementById('card-details-form');
+            if (cardForm) {
+                const userStr = localStorage.getItem('customerUser');
+                let hasSavedCard = false;
+                if (userStr) {
+                    try {
+                        const user = JSON.parse(userStr);
+                        const cards = JSON.parse(user.saved_cards || '[]');
+                        if (cards.length > 0) hasSavedCard = true;
+                    } catch(e) {}
+                }
+                cardForm.style.display = (method === 'CARD' && !hasSavedCard) ? 'block' : 'none';
+            }
         }
 
         function updatePaymentBadge() {
@@ -657,11 +689,16 @@
                 return;
             }
 
-            const valid =
+            let valid =
                 required('f-first') &
                 required('f-last')  &
                 validEmail('f-email') &
                 required('f-phone');
+
+            const cardForm = document.getElementById('card-details-form');
+            if (cardForm && cardForm.style.display === 'block') {
+                valid = valid & required('f-card-num') & required('f-card-exp') & required('f-card-cvv');
+            }
 
             if (!valid) return;
 

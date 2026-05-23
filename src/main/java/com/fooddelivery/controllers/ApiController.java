@@ -121,33 +121,25 @@ public class ApiController {
     /**
      * GET /api/menu/{id}/instructions
      * Demonstrates OOP Polymorphism by dynamically treating the item as either
-     * a FoodItem or a BeverageItem and calling the overridden method.
+     * a FoodItem or a BeverageItem based on its name, and calling the overridden method.
      */
     @GetMapping("/menu/{id}/instructions")
     public ResponseEntity<String> getInstructions(@PathVariable int id) {
-        MenuItem item = menuDAO.getAllMenuItems().stream()
-                .filter(m -> m.getId() == id).findFirst().orElse(null);
+        MenuItem item = menuDAO.getAllMenuItems().stream().filter(m -> m.getId() == id).findFirst().orElse(null);
         if (item == null) return ResponseEntity.notFound().build();
-
+        
         MenuItem specificItem;
         String nameLower = item.getName().toLowerCase();
-
-        // Dynamically instantiate the correct subclass based on item name
-        if (nameLower.contains("coffee") || nameLower.contains("tea")
-                || nameLower.contains("drink") || nameLower.contains("cola")
-                || nameLower.contains("water") || nameLower.contains("juice")) {
-            specificItem = new com.fooddelivery.models.BeverageItem(
-                    item.getId(), item.getName(), item.getDescription(),
-                    item.getPrice(), item.getImageUrl());
+        
+        // Dynamically instantiate the correct subclass
+        if (nameLower.contains("coffee") || nameLower.contains("tea") || nameLower.contains("drink") || nameLower.contains("cola") || nameLower.contains("water")) {
+            specificItem = new com.fooddelivery.models.BeverageItem(item.getId(), item.getName(), item.getDescription(), item.getPrice(), item.getImageUrl());
         } else {
-            specificItem = new com.fooddelivery.models.FoodItem(
-                    item.getId(), item.getName(), item.getDescription(),
-                    item.getPrice(), item.getImageUrl());
+            specificItem = new com.fooddelivery.models.FoodItem(item.getId(), item.getName(), item.getDescription(), item.getPrice(), item.getImageUrl());
         }
-
-        // Polymorphism in action: Java automatically calls the correct overridden method!
-        return ResponseEntity.ok("Instructions for " + specificItem.getName()
-                + ": " + specificItem.getPreparationInstructions());
+        
+        // Polymorphism in action: Java automatically calls the overridden method!
+        return ResponseEntity.ok("Instructions for " + specificItem.getName() + ": " + specificItem.getPreparationInstructions());
     }
 
     @GetMapping("/orders")
@@ -500,6 +492,24 @@ public class ApiController {
     @GetMapping("/orders/customer/{email}")
     public ResponseEntity<List<Order>> getCustomerOrders(@PathVariable String email) {
         return ResponseEntity.ok(orderDAO.getOrdersByEmail(email));
+    }
+
+    @GetMapping("/users/status")
+    public ResponseEntity<Map<String, String>> getUserStatus(@RequestParam String username) {
+        try {
+            java.sql.Connection conn = com.fooddelivery.utils.DatabaseConnection.getInstance().getConnection();
+            if (conn != null) {
+                try (java.sql.PreparedStatement ps = conn.prepareStatement("SELECT status FROM delivery_users WHERE username = ?")) {
+                    ps.setString(1, username);
+                    try (java.sql.ResultSet rs = ps.executeQuery()) {
+                        if (rs.next()) {
+                            return ResponseEntity.ok(Map.of("status", rs.getString("status")));
+                        }
+                    }
+                }
+            }
+        } catch (Exception e) {}
+        return ResponseEntity.notFound().build();
     }
 
     private String saveImage(MultipartFile file) {

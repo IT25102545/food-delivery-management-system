@@ -97,9 +97,9 @@
                 <div class="w-20 h-20 bg-yellow-100 rounded-full flex items-center justify-center mb-6">
                     <svg class="w-10 h-10 text-yellow-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/></svg>
                 </div>
-                <h2 class="text-3xl font-anton text-gray-900 mb-4 tracking-wide">Submitted!</h2>
-                <p class="text-[15px] text-gray-600 mb-8 leading-relaxed font-medium">Your application is currently <span class="font-bold text-yellow-600">Pending Review</span> by an administrator.<br><br>Please check back later.</p>
-                <a href="/rider.html" class="block w-full text-center bg-[#0b4d26] text-white font-bold py-4 rounded-full text-[17px] hover:bg-[#063017] transition shadow-lg mt-2">Return Home</a>
+                <h2 id="pending-title" class="text-3xl font-anton text-gray-900 mb-4 tracking-wide">Submitted!</h2>
+                <p id="approval-text" class="text-[15px] text-gray-600 mb-8 leading-relaxed font-medium">Your application is currently <span class="font-bold text-yellow-600">Pending Admin Approval</span>.<br><br>Please wait here, this page will update automatically when approved!</p>
+                <a id="login-btn" href="/rider-login.html" class="hidden block w-full text-center bg-[#0b4d26] text-white font-bold py-4 rounded-full text-[17px] hover:bg-[#063017] transition shadow-lg mt-2">Login to Account</a>
             </div>
 
         </div>
@@ -165,6 +165,24 @@
                     document.getElementById('register-actions').classList.add('hidden');
                     document.getElementById('message-box').classList.add('hidden');
                     document.getElementById('pending-screen').classList.replace('hidden', 'flex');
+                    
+                    const checkInterval = setInterval(async () => {
+                        try {
+                            const statusRes = await fetch('/api/users/status?username=' + encodeURIComponent(u));
+                            if (statusRes.ok) {
+                                const statusData = await statusRes.json();
+                                if (statusData.status === 'APPROVED') {
+                                    clearInterval(checkInterval);
+                                    document.getElementById('approval-text').innerHTML = 'Your application is <span class="font-bold text-green-600">APPROVED</span>!<br><br>You can now start delivering.';
+                                    document.getElementById('login-btn').classList.remove('hidden', 'block');
+                                    document.getElementById('login-btn').classList.add('block');
+                                    document.querySelector('#pending-screen .w-20').classList.replace('bg-yellow-100', 'bg-green-100');
+                                    document.querySelector('#pending-screen svg').outerHTML = '<svg class="w-10 h-10 text-green-600" fill="none" stroke="currentColor" viewBox="0 0 24 24"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 13l4 4L19 7"/></svg>';
+                                    document.getElementById('pending-title').innerText = 'Approved!';
+                                }
+                            }
+                        } catch(e) {}
+                    }, 3000);
                 } else {
                     showMessage(data.message || 'Registration failed', 'error');
                     btn.disabled = false;
